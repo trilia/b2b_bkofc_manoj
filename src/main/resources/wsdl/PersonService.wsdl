@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="PersonService" targetNamespace="http://trilia-cloud.com/webservices/entity/ut/ut-person-service/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://trilia-cloud.com/webservices/entity/ut/ut-person-service/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://trilia-cloud.com/webservices/entity/ut/ut-person-service/" schemaLocation="/schema/PersonService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="findPersonResponse">
+    <wsdl:part name="parameters" element="tns:findPersonResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addPersonResponse">
+    <wsdl:part name="parameters" element="tns:addPersonResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listAllPersons">
+    <wsdl:part name="parameters" element="tns:listAllPersons">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listAllPersonsResponse">
+    <wsdl:part name="parameters" element="tns:listAllPersonsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addPerson">
+    <wsdl:part name="parameters" element="tns:addPerson">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findPerson">
+    <wsdl:part name="parameters" element="tns:findPerson">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="PersonWebService">
+    <wsdl:operation name="findPerson">
+      <wsdl:input name="findPerson" message="tns:findPerson">
+    </wsdl:input>
+      <wsdl:output name="findPersonResponse" message="tns:findPersonResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listAllPersons">
+      <wsdl:input name="listAllPersons" message="tns:listAllPersons">
+    </wsdl:input>
+      <wsdl:output name="listAllPersonsResponse" message="tns:listAllPersonsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addPerson">
+      <wsdl:input name="addPerson" message="tns:addPerson">
+    </wsdl:input>
+      <wsdl:output name="addPersonResponse" message="tns:addPersonResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="PersonWebServiceServiceSoapBinding" type="tns:PersonWebService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="listAllPersons">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="listAllPersons">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listAllPersonsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findPerson">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findPerson">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findPersonResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addPerson">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="addPerson">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="addPersonResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="PersonService">
+    <wsdl:port name="PersonWebServicePort" binding="tns:PersonWebServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/PersonWebServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

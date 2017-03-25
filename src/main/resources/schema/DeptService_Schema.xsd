@@ -1,0 +1,237 @@
+<xs:schema xmlns:ns0="http://trilia-cloud.com/schema/common/fault" xmlns:ns1="http://trilia-cloud.com/schema/common/util" xmlns:ns2="http://trilia-cloud.com/schema/entity/ut/ut-dept" xmlns:ns3="http://trilia-cloud.com/schema/entity/ut/ut-emp" xmlns:tns="http://trilia-cloud.com/webservices/entity/ut/ut-dept-service" xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://trilia-cloud.com/webservices/entity/ut/ut-dept-service">
+
+  <xs:import namespace="http://trilia-cloud.com/schema/common/util" schemaLocation="Common.xsd"/>
+  <xs:import namespace="http://trilia-cloud.com/schema/entity/ut/ut-dept" schemaLocation="DeptTypes.xsd"/>
+  <xs:import namespace="http://trilia-cloud.com/schema/entity/ut/ut-emp" schemaLocation="EmpTypes.xsd"/>
+  <xs:import namespace="http://trilia-cloud.com/schema/common/fault" schemaLocation="Fault.xsd"/>
+  
+  <xs:element name="addAllDepts" type="tns:addAllDepts"/>
+  <xs:element name="addDept" type="tns:addDept"/>
+  <xs:element name="addDeptResponse" type="tns:addDeptResponse"/>
+  <xs:element name="deleteAllDepts" type="tns:deleteAllDepts"/>
+  <xs:element name="deleteAllDeptsResponse" type="tns:deleteAllDeptsResponse"/>
+  <xs:element name="deleteDeptByCode" type="tns:deleteDeptByCode"/>
+  <xs:element name="deleteDeptByCodeResponse" type="tns:deleteDeptByCodeResponse"/>
+  <xs:element name="deleteDeptById" type="tns:deleteDeptById"/>
+  <xs:element name="deleteDeptByIdResponse" type="tns:deleteDeptByIdResponse"/>
+  <xs:element name="doAdvancedSearch" type="tns:doAdvancedSearch"/>
+  <xs:element name="doAdvancedSearchPaged" type="tns:doAdvancedSearchPaged"/>
+  <xs:element name="doAdvancedSearchPagedResponse" type="tns:doAdvancedSearchPagedResponse"/>
+  <xs:element name="doSimpleSearch" type="tns:doSimpleSearch"/>
+  <xs:element name="doSimpleSearchPaged" type="tns:doSimpleSearchPaged"/>
+  <xs:element name="doSimpleSearchPagedResponse" type="tns:doSimpleSearchPagedResponse"/>
+  <xs:element name="findDeptByCode" type="tns:findDeptByCode"/>
+  <xs:element name="findDeptByCodeResponse" type="tns:findDeptByCodeResponse"/>
+  <xs:element name="findDeptById" type="tns:findDeptById"/>
+  <xs:element name="findDeptByIdResponse" type="tns:findDeptByIdResponse"/>
+  <xs:element name="getEmployeesByDeptCode" type="tns:getEmployeesByDeptCode"/>
+  <xs:element name="getEmployeesByDeptId" type="tns:getEmployeesByDeptId"/>
+  <xs:element name="getServiceVersion" type="tns:getServiceVersion"/>
+  <xs:element name="getServiceVersionResponse" type="tns:getServiceVersionResponse"/>
+  <xs:element name="listAllDepts" type="tns:listAllDepts"/>
+  <xs:element name="listAllDeptsPaged" type="tns:listAllDeptsPaged"/>
+  <xs:element name="listAllDeptsPagedResponse" type="tns:listAllDeptsPagedResponse"/>
+  <xs:element name="service-version" type="tns:serviceVersion"/>
+  <xs:element name="updateAllDepts" type="tns:updateAllDepts"/>
+  <xs:element name="updateDept" type="tns:updateDept"/>
+  <xs:element name="updateDeptResponse" type="tns:updateDeptResponse"/>
+  <xs:complexType name="listAllDeptsPaged">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="outputMode" type="xs:int"/>
+      <xs:element minOccurs="0" name="pageRequest" type="ns1:pageRequestBean"/>
+    </xs:sequence>
+  </xs:complexType>
+    <xs:complexType name="listAllDeptsPagedResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="deptListPagedResponse" type="ns1:pageResponseBean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="doSimpleSearchPaged">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="keywords" type="xs:string"/>
+      <xs:element minOccurs="0" name="isFuzzy" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="outputMode" type="xs:int"/>
+      <xs:element minOccurs="0" name="pageRequest" type="ns1:pageRequestBean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="doSimpleSearchPagedResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="deptListPagedResponse" type="ns1:pageResponseBean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="addDept">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="department" type="ns2:deptBeanPub"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="addDeptResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="department" type="ns2:deptBeanPub"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="doAdvancedSearch">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="search" type="ns1:searchCriteriaBean"/>
+      <xs:element minOccurs="0" name="sort" type="ns1:sortCriteriaBean"/>
+      <xs:element minOccurs="0" name="outputMode" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="searchCriteriaBean">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="keywords" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="search-field" type="xs:string"/>
+      <xs:element name="fuzzy" type="xs:boolean"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="filter" type="tns:searchFilterBean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="searchFilterBean">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="attribute-name" type="xs:string"/>
+      <xs:element minOccurs="0" name="filter-operation" type="tns:operator"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="filter-value" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deptContainer">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="department" type="ns2:deptBeanPub"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="doSimpleSearch">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="keywords" type="xs:string"/>
+      <xs:element minOccurs="0" name="isFuzzy" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="sort" type="ns1:sortCriteriaBean"/>
+      <xs:element minOccurs="0" name="outputMode" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="doAdvancedSearchPaged">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="search" type="tns:searchCriteriaBean"/>
+      <xs:element minOccurs="0" name="outputMode" type="xs:int"/>
+      <xs:element minOccurs="0" name="pageRequest" type="ns1:pageRequestBean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="doAdvancedSearchPagedResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="deptListPagedResponse" type="ns1:pageResponseBean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="findDeptById">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="deptIdReq" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="findDeptByIdResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="department" type="ns2:deptBeanPub"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="findDeptByCode">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="deptCodeReq" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="findDeptByCodeResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="department" type="ns2:deptBeanPub"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteDeptById">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="deptId" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteDeptByIdResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getEmployeesByDeptId">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="deptIdReq" type="xs:long"/>
+      <xs:element minOccurs="0" name="outputMode" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="listAllDepts">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="outputMode" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getEmployeesByDeptCode">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="deptCodeReq" type="xs:string"/>
+      <xs:element minOccurs="0" name="outputMode" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getServiceVersion">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getServiceVersionResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="serviceVersion" type="tns:serviceVersion"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="serviceVersion">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="version" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteAllDepts">
+    <xs:sequence>
+      <xs:element name="ignoreError" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteAllDeptsResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="addAllDepts">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="department" type="ns2:deptBeanPub"/>
+      <xs:element name="ignoreError" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="outputMode" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updateDept">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="department" type="ns2:deptBeanPub"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updateDeptResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="department" type="ns2:deptBeanPub"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updateAllDepts">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="department" type="ns2:deptBeanPub"/>
+      <xs:element name="ignoreError" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="outputMode" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteDeptByCode">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="deptCode" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteDeptByCodeResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:simpleType name="operator">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="EQ"/>
+      <xs:enumeration value="GT"/>
+      <xs:enumeration value="LT"/>
+      <xs:enumeration value="GE"/>
+      <xs:enumeration value="LE"/>
+      <xs:enumeration value="IN"/>
+      <xs:enumeration value="BN"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="serviceException" type="tns:serviceException"/>
+  <xs:complexType name="serviceException">
+    <xs:sequence>
+      <xs:element minOccurs="0" ref="ns0:fault-container"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="departments" nillable="true" type="tns:deptContainer"/>
+  <xs:element name="employees" nillable="true" type="ns3:empContainer"/>
+</xs:schema>

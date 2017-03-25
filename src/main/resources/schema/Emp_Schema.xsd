@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://trilia-cloud.com/schema/entity/ut/ut-emp" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://trilia-cloud.com/schema/entity/ut/ut-emp" elementFormDefault="unqualified">
+
+	<xs:include schemaLocation="EmpTypes.xsd"/>
+	
+	<xs:element name="employee" type="tns:empBeanPub"/>
+
+  	<xs:element name="employees" type="tns:empContainer"/>
+
+</schema>

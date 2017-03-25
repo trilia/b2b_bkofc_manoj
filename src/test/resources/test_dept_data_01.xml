@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<ns1:departments
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xmlns:ns1='http://trilia-cloud.com/schema/entity/ut/ut-dept'
+    xsi:schemaLocation='http://trilia-cloud.com/schema/entity/ut/ut-dept ../../main/resources/schema/Dept_Schema.xsd'>
+    <department dept-code="BOARD">
+        <dept-name>Management Office</dept-name>
+        <description>Trilia top management or Board of Directors</description>
+        <revisionControl>
+            <created-by-id>100</created-by-id>
+            <created-by>UT</created-by>
+            <created-date>2014-05-20T11:23:52Z</created-date>
+            <revised-by-id>100</revised-by-id>
+            <revised-by>UT</revised-by>
+            <revised-date>2014-05-20T11:23:52Z</revised-date>
+            <object-version-number>1.0</object-version-number>
+        </revisionControl>
+    </department>
+    <department dept-code="OPRTN">
+        <dept-name>Trilia Operations</dept-name>
+        <description>Trilia Operations is responsible for ensuring the business parameters are met</description>
+        <revisionControl>
+            <created-by-id>100</created-by-id>
+            <created-by>UT</created-by>
+            <created-date>2014-10-11T09:28:13Z</created-date>
+            <revised-by-id>100</revised-by-id>
+            <revised-by>UT</revised-by>
+            <revised-date>2015-01-21T16:24:31Z</revised-date>
+            <object-version-number>1.0</object-version-number>
+        </revisionControl>
+    </department>
+    <department dept-code="FINANCE">
+        <dept-name>Trilia Finance</dept-name>
+        <description>Trilia Finance group ensures financial health of the business</description>
+        <revisionControl>
+            <created-by-id>100</created-by-id>
+            <created-by>UT</created-by>
+            <created-date>2014-10-11T09:28:13Z</created-date>
+            <revised-by-id>100</revised-by-id>
+            <revised-by>UT</revised-by>
+            <revised-date>2015-01-21T16:24:31Z</revised-date>
+            <object-version-number>1.0</object-version-number>
+        </revisionControl>
+    </department>
+    <department dept-code="CX_ENGAGEMENT">
+        <dept-name>Trilia Customer Engagement</dept-name>
+        <description><![CDATA[Trilia Customer Engagement team consists of business associates, who engages with merchants
+           to help them design their portal and monitor health of their businesses]]></description>
+        <revisionControl>
+            <created-by-id>100</created-by-id>
+            <created-by>UT</created-by>
+            <created-date>2014-10-11T09:28:13Z</created-date>
+            <revised-by-id>100</revised-by-id>
+            <revised-by>UT</revised-by>
+            <revised-date>2015-01-21T16:24:31Z</revised-date>
+            <object-version-number>1.0</object-version-number>
+        </revisionControl>
+    </department>
+    <department dept-code="NETWORK">
+        <dept-name>Trilia IT and Networking</dept-name>
+        <description><![CDATA[This team manages the entire IT and Cloud infrastructure of Trilia]]></description>
+        <revisionControl>
+            <created-by-id>100</created-by-id>
+            <created-by>UT</created-by>
+            <created-date>2014-10-11T09:28:13Z</created-date>
+            <revised-by-id>100</revised-by-id>
+            <revised-by>UT</revised-by>
+            <revised-date>2015-01-21T16:24:31Z</revised-date>
+            <object-version-number>1.0</object-version-number>
+        </revisionControl>
+    </department>
+    <department dept-code="PROD_CTLG">
+        <dept-name>Product Catalog Management</dept-name>
+        <description>Product Catalog Management keeps the product definitions up to date and ensures that maximum standard products are in use</description>
+        <revisionControl>
+            <created-by-id>100</created-by-id>
+            <created-by>UT</created-by>
+            <created-date>2014-10-11T09:28:13Z</created-date>
+            <revised-by-id>100</revised-by-id>
+            <revised-by>UT</revised-by>
+            <revised-date>2015-01-22T16:24:31Z</revised-date>
+            <object-version-number>1.0</object-version-number>
+        </revisionControl>
+    </department>
+    <department dept-code="SW_DEV">
+        <dept-name>Software Development</dept-name>
+        <description><![CDATA[Trilia's product development team who developes & maintains the cloud application, mobile application etc. ]]></description>
+        <revisionControl>
+            <created-by-id>100</created-by-id>
+            <created-by>UT</created-by>
+            <created-date>2014-10-11T09:28:13Z</created-date>
+            <revised-by-id>100</revised-by-id>
+            <revised-by>UT</revised-by>
+            <revised-date>2015-01-21T16:24:31Z</revised-date>
+            <object-version-number>1.0</object-version-number>
+        </revisionControl>
+    </department>
+    <department dept-code="SW_QA">
+        <dept-name>Software Quality Assurance</dept-name>
+        <description><![CDATA[Trilia's software QA team who ensures the quality of all Trilia applications]]></description>
+        <revisionControl>
+            <created-by-id>100</created-by-id>
+            <created-by>UT</created-by>
+            <created-date>2014-10-11T09:28:13Z</created-date>
+            <revised-by-id>100</revised-by-id>
+            <revised-by>UT</revised-by>
+            <revised-date>2015-01-21T07:24:43Z</revised-date>
+            <object-version-number>1.0</object-version-number>
+        </revisionControl>
+    </department>
+    <department dept-code="HR">
+        <dept-name>Human Resources</dept-name>
+        <description>Human Resources division formulates policies to attract and retain best talent in the industry</description>
+        <revisionControl>
+            <created-by-id>100</created-by-id>
+            <created-by>UT</created-by>
+            <created-date>2015-10-22T09:25:36Z</created-date>
+            <revised-by-id>100</revised-by-id>
+            <revised-by>UT</revised-by>
+            <revised-date>2015-11-04T07:24:43Z</revised-date>
+            <object-version-number>1.0</object-version-number>
+        </revisionControl>
+    </department>
+    <department dept-code="BRM">
+        <dept-name>Business Risk Management</dept-name>
+        <description>Risk Management analyzes and tries to predict future risk to Trilia's business and formulates plans to mitigate them</description>
+        <revisionControl>
+            <created-by-id>100</created-by-id>
+            <created-by>UT</created-by>
+            <created-date>2015-03-22T09:25:36Z</created-date>
+            <revised-by-id>100</revised-by-id>
+            <revised-by>UT</revised-by>
+            <revised-date>2015-11-04T07:24:43Z</revised-date>
+            <object-version-number>1.0</object-version-number>
+        </revisionControl>
+    </department>
+    <department dept-code="TEST1">
+        <dept-name>Test Department 1</dept-name>
+        <description>Test Department 1</description>
+    </department>
+    <department dept-code="TEST2">
+        <dept-name>Test Department 2</dept-name>
+        <description>Test Department 2</description>
+    </department>
+</ns1:departments>
+

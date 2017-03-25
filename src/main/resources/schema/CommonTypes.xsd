@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://trilia-cloud.com/schema/common/util" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://trilia-cloud.com/schema/common/util" elementFormDefault="unqualified">
+
+	<xs:complexType name="sortCriteriaBean">
+	    <xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="ascending-field" type="xs:string"/>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="descending-field" type="xs:string"/>
+	    </xs:sequence>
+  	</xs:complexType>
+  
+	<xs:complexType name="pageRequestBean">
+	    <xs:sequence>
+			<xs:element name="offset" type="xs:int"/>
+			<xs:element name="page-num" type="xs:int"/>
+			<xs:element name="page-size" type="xs:int"/>
+			<xs:element minOccurs="0" name="sort" type="tns:sortCriteriaBean"/>
+	    </xs:sequence>
+  	</xs:complexType>
+  
+	<xs:complexType name="pageResponseBean">
+	    <xs:sequence>
+			<xs:element name="current-page" type="xs:int"/>
+			<xs:element name="page-size" type="xs:int"/>
+			<xs:element name="content-exists" type="xs:boolean"/>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="page-content" type="xs:anyType"/>
+			<xs:element name="actual-count" type="xs:int"/>
+			<xs:element minOccurs="0" name="estimated-count" type="xs:long"/>
+			<xs:element name="estimated-page-count" type="xs:int"/>
+			<xs:element name="previous-page-exist" type="xs:boolean"/>
+			<xs:element minOccurs="0" name="previous-page-request" type="tns:pageRequestBean"/>
+			<xs:element name="next-page-exist" type="xs:boolean"/>
+			<xs:element minOccurs="0" name="next-page-request" type="tns:pageRequestBean"/>
+			<xs:element name="is-first-page" type="xs:boolean"/>
+			<xs:element name="is-last-page" type="xs:boolean"/>
+	    </xs:sequence>
+  	</xs:complexType>
+  	
+  	<xs:complexType name="revisionControlBean">
+	    <xs:sequence>
+			<xs:element name="created-by-id" type="xs:int"/>
+			<xs:element minOccurs="0" name="created-by" type="xs:string"/>
+			<xs:element minOccurs="0" name="created-date" type="xs:dateTime"/>
+			<xs:element name="revised-by-id" type="xs:int"/>
+			<xs:element minOccurs="0" name="revised-by" type="xs:string"/>
+			<xs:element minOccurs="0" name="revised-date" type="xs:dateTime"/>
+			<xs:element minOccurs="0" name="object-version-number" type="xs:string"/>
+	    </xs:sequence>
+  	</xs:complexType>
+  	
+	<xs:simpleType name="operator">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="EQ"/>
+			<xs:enumeration value="GT"/>
+			<xs:enumeration value="LT"/>
+			<xs:enumeration value="GE"/>
+			<xs:enumeration value="LE"/>
+			<xs:enumeration value="IN"/>
+			<xs:enumeration value="BN"/>
+		</xs:restriction>
+	</xs:simpleType>
+  	
+  	<xs:complexType name="searchFilterBean">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="attribute-name" type="xs:string"/>
+			<xs:element minOccurs="0" name="filter-operation" type="tns:operator"/>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="filter-value" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+  	
+  	<xs:complexType name="searchCriteriaBean">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="keywords" type="xs:string"/>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="search-field" type="xs:string"/>
+			<xs:element name="fuzzy" type="xs:boolean"/>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="filter" type="tns:searchFilterBean"/>
+		</xs:sequence>
+  	</xs:complexType>
+	
+</schema>

@@ -1,0 +1,105 @@
+<application xmlns="http://wadl.dev.java.net/2009/02" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:prefix2="http://trilia-cloud.com/schema/entity/ut/ut-dept" xmlns:prefix1="http://trilia-cloud.com/schema/common/util"><grammars><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://trilia-cloud.com/schema/entity/ut/ut-dept" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://trilia-cloud.com/schema/entity/ut/ut-dept">
+    <xs:import/>
+    <xs:element name="department" type="deptBeanPub"/>
+    <xs:element name="departments">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="department"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://trilia-cloud.com/schema/entity/ut/ut-emp" xmlns:ns1="http://trilia-cloud.com/schema/common/util" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://trilia-cloud.com/schema/entity/ut/ut-emp">
+    <xs:import namespace="http://trilia-cloud.com/schema/common/util"/>
+    <xs:complexType name="empBeanPub">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="emp-id" type="xs:long"/>
+            <xs:element minOccurs="0" name="first-name" type="xs:string"/>
+            <xs:element minOccurs="0" name="last-name" type="xs:string"/>
+            <xs:element minOccurs="0" name="nick-name" type="xs:string"/>
+            <xs:element minOccurs="0" name="date-of-joining" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="email" type="xs:string"/>
+            <xs:element minOccurs="0" name="manager" type="xs:string"/>
+            <xs:element minOccurs="0" name="department" type="xs:string"/>
+            <xs:element minOccurs="0" name="revisionControl" type="revisionControlBean"/>
+        </xs:sequence>
+        <xs:attribute name="emp-code" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="revisionControlBean">
+        <xs:sequence>
+            <xs:element name="created-by-id" type="xs:int"/>
+            <xs:element minOccurs="0" name="created-by" type="xs:string"/>
+            <xs:element minOccurs="0" name="created-date" type="xs:dateTime"/>
+            <xs:element name="revised-by-id" type="xs:int"/>
+            <xs:element minOccurs="0" name="revised-by" type="xs:string"/>
+            <xs:element minOccurs="0" name="revised-date" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="object-version-number" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="pageResponseBean">
+        <xs:sequence>
+            <xs:element name="current-page" type="xs:int"/>
+            <xs:element name="page-size" type="xs:int"/>
+            <xs:element name="content-exists" type="xs:boolean"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="page-content" type="xs:anyType"/>
+            <xs:element name="actual-count" type="xs:int"/>
+            <xs:element minOccurs="0" name="estimated-count" type="xs:long"/>
+            <xs:element name="estimated-page-count" type="xs:int"/>
+            <xs:element name="previous-page-exist" type="xs:boolean"/>
+            <xs:element minOccurs="0" name="previous-page-request" type="pageRequestBean"/>
+            <xs:element name="next-page-exist" type="xs:boolean"/>
+            <xs:element minOccurs="0" name="next-page-request" type="pageRequestBean"/>
+            <xs:element name="is-first-page" type="xs:boolean"/>
+            <xs:element name="is-last-page" type="xs:boolean"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="pageRequestBean">
+        <xs:sequence>
+            <xs:element name="offset" type="xs:int"/>
+            <xs:element name="page-num" type="xs:int"/>
+            <xs:element name="page-size" type="xs:int"/>
+            <xs:element minOccurs="0" name="sort" type="sortCriteriaBean"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="sortCriteriaBean">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="ascending-field" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="descending-field" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="deptBeanPub">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="dept-id" type="xs:long"/>
+            <xs:element minOccurs="0" name="dept-name" type="xs:string"/>
+            <xs:element minOccurs="0" name="description" type="xs:string"/>
+            <xs:element minOccurs="0" name="revisionControl" type="revisionControlBean"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="employee" type="xs:string"/>
+        </xs:sequence>
+        <xs:attribute name="dept-code" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="serviceVersion">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="version" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://trilia-cloud.com/schema/entity/ut/ut-emp" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://trilia-cloud.com/schema/entity/ut/ut-emp">
+    <xs:import/>
+    <xs:element name="employee" type="empBeanPub"/>
+    <xs:element name="employees">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="employee"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://trilia-cloud.com/schema/common/util" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://trilia-cloud.com/schema/common/util">
+    <xs:import/>
+    <xs:element name="page-request" type="pageRequestBean"/>
+    <xs:element name="paged-response" type="pageResponseBean"/>
+    <xs:element name="revision-control" type="revisionControlBean"/>
+    <xs:element name="service-version" type="serviceVersion"/>
+    <xs:element name="sort-criteria" type="sortCriteriaBean"/>
+</xs:schema>
+</grammars><resources base="http://localhost/cxf/"><resource path="/departments"><method name="GET"><response><representation mediaType="application/json"></representation><representation mediaType="application/xml" element="prefix1:service-version"></representation></response></method><resource path="/bulk"><method name="DELETE"><request><param name="ignoreError" style="query" type="xs:boolean"></param></request><response status="204"></response></method><method name="POST"><request><representation mediaType="application/json"></representation><representation mediaType="application/xml" element="prefix2:departments"></representation><param name="ignoreError" style="query" type="xs:boolean"></param><param name="outputMode" style="query" type="xs:int"></param></request><response><representation mediaType="application/json"></representation><representation mediaType="application/xml" element="prefix2:departments"></representation></response></method><method name="PUT"><request><representation mediaType="application/json"></representation><representation mediaType="application/xml" element="prefix2:departments"></representation><param name="ignoreError" style="query" type="xs:boolean"></param><param name="outputMode" style="query" type="xs:int"></param></request><response><representation mediaType="application/json"></representation><representation mediaType="application/xml" element="prefix2:departments"></representation></response></method></resource><resource path="/department"><method name="POST"><request><representation mediaType="application/json"></representation><representation mediaType="application/xml" element="prefix2:department"></representation></request><response><representation mediaType="application/json"></representation><representation mediaType="application/xml" element="prefix2:department"></representation></response></method><method name="PUT"><request><representation mediaType="application/json"></representation><representation mediaType="application/xml" element="prefix2:department"></representation></request><response><representation mediaType="application/json"></representation><representation mediaType="application/xml" element="prefix2:department"></representation></response></method></resource><resource path="/department/{deptCode: ^[a-zA-Z]+(\d+)*}"><param name="deptCode" style="template" type="xs:string"></param><method name="DELETE"><request></request><response status="204"></response></method><method name="GET"><request></request><response><representation mediaType="application/json"></representation><representation mediaType="application/xml" element="prefix2:department"></representation></response></method></resource><resource path="/department/{deptCode: ^[a-zA-Z]+(\d+)*}/employees"><param name="deptCode" style="template" type="xs:string"></param><method name="GET"><request><param name="outputMode" style="query" type="xs:int"></param></request><response><representation mediaType="application/json"></representation><representation mediaType="application/xml" element="prefix3:employees"></representation></response></method></resource><resource path="/department/{deptId: \d+}"><param name="deptId" style="template" type="xs:long"></param><method name="DELETE"><request></request><response status="204"></response></method><method name="GET"><request></request><response><representation mediaType="application/json"></representation><representation mediaType="application/xml" element="prefix2:department"></representation></response></method></resource><resource path="/department/{deptId: \d+}/employees"><param name="deptId" style="template" type="xs:long"></param><method name="GET"><request><param name="outputMode" style="query" type="xs:int"></param></request><response><representation mediaType="application/json"></representation><representation mediaType="application/xml" element="prefix3:employees"></representation></response></method></resource><resource path="/list"><method name="GET"><request><param name="outputMode" style="query" type="xs:int"></param></request><response><representation mediaType="application/json"></representation><representation mediaType="application/xml" element="prefix2:departments"></representation></response></method></resource><resource path="/pagedList"><method name="GET"><request><param name="outputMode" style="query" type="xs:int"></param><param name="page" style="query" type="xs:int"></param><param name="pageSize" style="query" type="xs:int"></param><param name="asc" style="query" repeating="true" type="xs:string"></param><param name="desc" style="query" repeating="true" type="xs:string"></param></request><response><representation mediaType="application/json"></representation><representation mediaType="application/xml" element="prefix1:paged-response"></representation></response></method></resource><resource path="/pagedSearch"><method name="GET"><request><param name="q" style="query" type="xs:string"></param><param name="fuzzy" style="query" type="xs:boolean"></param><param name="outputMode" style="query" type="xs:int"></param><param name="page" style="query" type="xs:int"></param><param name="pageSize" style="query" type="xs:int"></param><param name="asc" style="query" repeating="true" type="xs:string"></param><param name="desc" style="query" repeating="true" type="xs:string"></param></request><response><representation mediaType="application/json"></representation><representation mediaType="application/xml" element="prefix1:paged-response"></representation></response></method></resource><resource path="/search"><method name="GET"><request><param name="q" style="query" type="xs:string"></param><param name="fuzzy" style="query" type="xs:boolean"></param><param name="asc" style="query" repeating="true" type="xs:string"></param><param name="desc" style="query" repeating="true" type="xs:string"></param><param name="outputMode" style="query" type="xs:int"></param></request><response><representation mediaType="application/json"></representation><representation mediaType="application/xml" element="prefix2:departments"></representation></response></method></resource><resource path="/test"><method name="POST"><request><representation mediaType="application/json"></representation><representation mediaType="application/xml" element="prefix2:departments"></representation></request><response><representation mediaType="application/json"></representation><representation mediaType="application/xml" element="prefix2:departments"></representation></response></method></resource></resource></resources></application>

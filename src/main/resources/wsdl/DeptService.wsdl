@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="DeptService" targetNamespace="http://trilia-cloud.com/webservices/entity/ut/ut-dept-service" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://trilia-cloud.com/webservices/entity/ut/ut-dept-service" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+<wsdl:documentation>Dept service is a sample service, which provides introduction to the underlying infrastructure and a default debugging mechanism. You may control the amount of data returned by the list types by setting the following outputmodes . Value - 0 (default) : complete definitionvalue - 1 : with child entities but without revisioncontrol information value - 2 : minimal information about department, preferably used as LOV</wsdl:documentation>
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://trilia-cloud.com/webservices/entity/ut/ut-dept-service" schemaLocation="../schema/DeptService_Schema.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="listAllDeptsPaged">
+    <wsdl:part name="parameters" element="tns:listAllDeptsPaged">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="doSimpleSearchPagedResponse">
+    <wsdl:part name="parameters" element="tns:doSimpleSearchPagedResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="doAdvancedSearchPagedResponse">
+    <wsdl:part name="parameters" element="tns:doAdvancedSearchPagedResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="doSimpleSearchPaged">
+    <wsdl:part name="parameters" element="tns:doSimpleSearchPaged">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateDeptResponse">
+    <wsdl:part name="parameters" element="tns:updateDeptResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="doSimpleSearch">
+    <wsdl:part name="parameters" element="tns:doSimpleSearch">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findDeptByCodeResponse">
+    <wsdl:part name="parameters" element="tns:findDeptByCodeResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="doAdvancedSearchPaged">
+    <wsdl:part name="parameters" element="tns:doAdvancedSearchPaged">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findDeptByCode">
+    <wsdl:part name="parameters" element="tns:findDeptByCode">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getEmployeesByDeptId">
+    <wsdl:part name="parameters" element="tns:getEmployeesByDeptId">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteDeptByIdResponse">
+    <wsdl:part name="parameters" element="tns:deleteDeptByIdResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listAllDepts">
+    <wsdl:part name="parameters" element="tns:listAllDepts">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteDeptByCodeResponse">
+    <wsdl:part name="parameters" element="tns:deleteDeptByCodeResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addDeptResponse">
+    <wsdl:part name="parameters" element="tns:addDeptResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ServiceException">
+    <wsdl:part name="ServiceException" element="tns:serviceException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteAllDepts">
+    <wsdl:part name="parameters" element="tns:deleteAllDepts">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addAllDepts">
+    <wsdl:part name="parameters" element="tns:addAllDepts">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listAllDeptsPagedResponse">
+    <wsdl:part name="parameters" element="tns:listAllDeptsPagedResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateDept">
+    <wsdl:part name="parameters" element="tns:updateDept">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteAllDeptsResponse">
+    <wsdl:part name="parameters" element="tns:deleteAllDeptsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="doSimpleSearchResponse">
+    <wsdl:part name="parameters" element="tns:departments">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getEmployeesByDeptIdResponse">
+    <wsdl:part name="parameters" element="tns:employees">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getEmployeesByDeptCodeResponse">
+    <wsdl:part name="parameters" element="tns:employees">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addDept">
+    <wsdl:part name="parameters" element="tns:addDept">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="doAdvancedSearch">
+    <wsdl:part name="parameters" element="tns:doAdvancedSearch">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findDeptByIdResponse">
+    <wsdl:part name="parameters" element="tns:findDeptByIdResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findDeptById">
+    <wsdl:part name="parameters" element="tns:findDeptById">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteDeptById">
+    <wsdl:part name="parameters" element="tns:deleteDeptById">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="listAllDeptsResponse">
+    <wsdl:part name="parameters" element="tns:departments">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getEmployeesByDeptCode">
+    <wsdl:part name="parameters" element="tns:getEmployeesByDeptCode">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getServiceVersion">
+    <wsdl:part name="parameters" element="tns:getServiceVersion">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateAllDeptsResponse">
+    <wsdl:part name="parameters" element="tns:departments">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addAllDeptsResponse">
+    <wsdl:part name="parameters" element="tns:departments">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="doAdvancedSearchResponse">
+    <wsdl:part name="parameters" element="tns:departments">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getServiceVersionResponse">
+    <wsdl:part name="parameters" element="tns:getServiceVersionResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateAllDepts">
+    <wsdl:part name="parameters" element="tns:updateAllDepts">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteDeptByCode">
+    <wsdl:part name="parameters" element="tns:deleteDeptByCode">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="DeptWebService">
+<wsdl:documentation>Dept Service Port Type</wsdl:documentation>
+    <wsdl:operation name="listAllDeptsPaged">
+<wsdl:documentation>Retrieves all departments with pagination support. See output mode definition.</wsdl:documentation>
+      <wsdl:input name="listAllDeptsPaged" message="tns:listAllDeptsPaged">
+    </wsdl:input>
+      <wsdl:output name="listAllDeptsPagedResponse" message="tns:listAllDeptsPagedResponse">
+    </wsdl:output>
+      <wsdl:fault name="ServiceException" message="tns:ServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="doSimpleSearchPaged">
+<wsdl:documentation>Performs a simple search. Produces paginated output. See output mode definition.</wsdl:documentation>
+      <wsdl:input name="doSimpleSearchPaged" message="tns:doSimpleSearchPaged">
+    </wsdl:input>
+      <wsdl:output name="doSimpleSearchPagedResponse" message="tns:doSimpleSearchPagedResponse">
+    </wsdl:output>
+      <wsdl:fault name="ServiceException" message="tns:ServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="addDept">
+<wsdl:documentation>Adds a new department to the persistent store</wsdl:documentation>
+      <wsdl:input name="addDept" message="tns:addDept">
+    </wsdl:input>
+      <wsdl:output name="addDeptResponse" message="tns:addDeptResponse">
+    </wsdl:output>
+      <wsdl:fault name="ServiceException" message="tns:ServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="doAdvancedSearch">
+<wsdl:documentation>Performs advanced search, with filters. See output mode definition.</wsdl:documentation>
+      <wsdl:input name="doAdvancedSearch" message="tns:doAdvancedSearch">
+    </wsdl:input>
+      <wsdl:output name="doAdvancedSearchResponse" message="tns:doAdvancedSearchResponse">
+    </wsdl:output>
+      <wsdl:fault name="ServiceException" message="tns:ServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="doSimpleSearch">
+<wsdl:documentation>Performs a simple search. See output mode definition.</wsdl:documentation>
+      <wsdl:input name="doSimpleSearch" message="tns:doSimpleSearch">
+    </wsdl:input>
+      <wsdl:output name="doSimpleSearchResponse" message="tns:doSimpleSearchResponse">
+    </wsdl:output>
+      <wsdl:fault name="ServiceException" message="tns:ServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="doAdvancedSearchPaged">
+<wsdl:documentation>Performs advanced search, with filters. Produces paginated output. See output mode definition.</wsdl:documentation>
+      <wsdl:input name="doAdvancedSearchPaged" message="tns:doAdvancedSearchPaged">
+    </wsdl:input>
+      <wsdl:output name="doAdvancedSearchPagedResponse" message="tns:doAdvancedSearchPagedResponse">
+    </wsdl:output>
+      <wsdl:fault name="ServiceException" message="tns:ServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="findDeptById">
+<wsdl:documentation>Finds Department by Id</wsdl:documentation>
+      <wsdl:input name="findDeptById" message="tns:findDeptById">
+    </wsdl:input>
+      <wsdl:output name="findDeptByIdResponse" message="tns:findDeptByIdResponse">
+    </wsdl:output>
+      <wsdl:fault name="ServiceException" message="tns:ServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="findDeptByCode">
+<wsdl:documentation>Finds Department by code</wsdl:documentation>
+      <wsdl:input name="findDeptByCode" message="tns:findDeptByCode">
+    </wsdl:input>
+      <wsdl:output name="findDeptByCodeResponse" message="tns:findDeptByCodeResponse">
+    </wsdl:output>
+      <wsdl:fault name="ServiceException" message="tns:ServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="deleteDeptById">
+<wsdl:documentation>Deletes an exiting department by matching id. Exception is thrown if not found.</wsdl:documentation>
+      <wsdl:input name="deleteDeptById" message="tns:deleteDeptById">
+    </wsdl:input>
+      <wsdl:output name="deleteDeptByIdResponse" message="tns:deleteDeptByIdResponse">
+    </wsdl:output>
+      <wsdl:fault name="ServiceException" message="tns:ServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getEmployeesByDeptId">
+<wsdl:documentation>Lists all employees in the department using department id</wsdl:documentation>
+      <wsdl:input name="getEmployeesByDeptId" message="tns:getEmployeesByDeptId">
+    </wsdl:input>
+      <wsdl:output name="getEmployeesByDeptIdResponse" message="tns:getEmployeesByDeptIdResponse">
+    </wsdl:output>
+      <wsdl:fault name="ServiceException" message="tns:ServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="listAllDepts">
+<wsdl:documentation>Finds all department. See outputmode definition.</wsdl:documentation>
+      <wsdl:input name="listAllDepts" message="tns:listAllDepts">
+    </wsdl:input>
+      <wsdl:output name="listAllDeptsResponse" message="tns:listAllDeptsResponse">
+    </wsdl:output>
+      <wsdl:fault name="ServiceException" message="tns:ServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getEmployeesByDeptCode">
+<wsdl:documentation>Lists all employees in the department using department code</wsdl:documentation>
+      <wsdl:input name="getEmployeesByDeptCode" message="tns:getEmployeesByDeptCode">
+    </wsdl:input>
+      <wsdl:output name="getEmployeesByDeptCodeResponse" message="tns:getEmployeesByDeptCodeResponse">
+    </wsdl:output>
+      <wsdl:fault name="ServiceException" message="tns:ServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getServiceVersion">
+<wsdl:documentation>Gets the service version</wsdl:documentation>
+      <wsdl:input name="getServiceVersion" message="tns:getServiceVersion">
+    </wsdl:input>
+      <wsdl:output name="getServiceVersionResponse" message="tns:getServiceVersionResponse">
+    </wsdl:output>
+      <wsdl:fault name="ServiceException" message="tns:ServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="deleteAllDepts">
+<wsdl:documentation>Deletes all departments from persistent store. This method can be called asynchronously by callback or polling method. The ignoreError parameter indicates whether to ignore errors with individual list elements or not.</wsdl:documentation>
+      <wsdl:input name="deleteAllDepts" message="tns:deleteAllDepts">
+    </wsdl:input>
+      <wsdl:output name="deleteAllDeptsResponse" message="tns:deleteAllDeptsResponse">
+    </wsdl:output>
+      <wsdl:fault name="ServiceException" message="tns:ServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="addAllDepts">
+<wsdl:documentation>Adds a list of departments into persistent store. The element dept-id should not be present. This method can be called asynchronously by callback or polling method. The ignoreError parameter indicates whether to ignore errors with individual list elements or not. See also outputmode definition</wsdl:documentation>
+      <wsdl:input name="addAllDepts" message="tns:addAllDepts">
+    </wsdl:input>
+      <wsdl:output name="addAllDeptsResponse" message="tns:addAllDeptsResponse">
+    </wsdl:output>
+      <wsdl:fault name="ServiceException" message="tns:ServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="updateDept">
+<wsdl:documentation>Updates an exiting department definition. The id and department code must match.</wsdl:documentation>
+      <wsdl:input name="updateDept" message="tns:updateDept">
+    </wsdl:input>
+      <wsdl:output name="updateDeptResponse" message="tns:updateDeptResponse">
+    </wsdl:output>
+      <wsdl:fault name="ServiceException" message="tns:ServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="updateAllDepts">
+<wsdl:documentation>Updates a list of departments in the persistent store. The element dept-id should be passed. This method can be called asynchronously by callback or polling method. The ignoreError parameter indicates whether to ignore errors with individual list elements or not. See also outputmode definition</wsdl:documentation>
+      <wsdl:input name="updateAllDepts" message="tns:updateAllDepts">
+    </wsdl:input>
+      <wsdl:output name="updateAllDeptsResponse" message="tns:updateAllDeptsResponse">
+    </wsdl:output>
+      <wsdl:fault name="ServiceException" message="tns:ServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="deleteDeptByCode">
+<wsdl:documentation>Deletes an exiting department by matching id. Exception is thrown if not found.</wsdl:documentation>
+      <wsdl:input name="deleteDeptByCode" message="tns:deleteDeptByCode">
+    </wsdl:input>
+      <wsdl:output name="deleteDeptByCodeResponse" message="tns:deleteDeptByCodeResponse">
+    </wsdl:output>
+      <wsdl:fault name="ServiceException" message="tns:ServiceException">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DeptWebServiceServiceSoapBinding" type="tns:DeptWebService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="listAllDeptsPaged">
+      <soap:operation soapAction="listAllDeptsPaged" style="document"/>
+      <wsdl:input name="listAllDeptsPaged">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listAllDeptsPagedResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceException">
+        <soap:fault name="ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="doSimpleSearchPaged">
+      <soap:operation soapAction="doSimpleSearchPaged" style="document"/>
+      <wsdl:input name="doSimpleSearchPaged">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="doSimpleSearchPagedResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceException">
+        <soap:fault name="ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="addDept">
+      <soap:operation soapAction="addDept" style="document"/>
+      <wsdl:input name="addDept">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="addDeptResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceException">
+        <soap:fault name="ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="doAdvancedSearch">
+      <soap:operation soapAction="doAdvancedSearch" style="document"/>
+      <wsdl:input name="doAdvancedSearch">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="doAdvancedSearchResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceException">
+        <soap:fault name="ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="doSimpleSearch">
+      <soap:operation soapAction="doSimpleSearch" style="document"/>
+      <wsdl:input name="doSimpleSearch">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="doSimpleSearchResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceException">
+        <soap:fault name="ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="doAdvancedSearchPaged">
+      <soap:operation soapAction="doAdvancedSearchPaged" style="document"/>
+      <wsdl:input name="doAdvancedSearchPaged">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="doAdvancedSearchPagedResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceException">
+        <soap:fault name="ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="findDeptById">
+      <soap:operation soapAction="findDeptById" style="document"/>
+      <wsdl:input name="findDeptById">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findDeptByIdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceException">
+        <soap:fault name="ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="findDeptByCode">
+      <soap:operation soapAction="findDeptByCode" style="document"/>
+      <wsdl:input name="findDeptByCode">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findDeptByCodeResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceException">
+        <soap:fault name="ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="deleteDeptById">
+      <soap:operation soapAction="deleteDeptById" style="document"/>
+      <wsdl:input name="deleteDeptById">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteDeptByIdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceException">
+        <soap:fault name="ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getEmployeesByDeptId">
+      <soap:operation soapAction="getEmployeesByDeptId" style="document"/>
+      <wsdl:input name="getEmployeesByDeptId">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getEmployeesByDeptIdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceException">
+        <soap:fault name="ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="listAllDepts">
+      <soap:operation soapAction="listAllDepts" style="document"/>
+      <wsdl:input name="listAllDepts">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listAllDeptsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceException">
+        <soap:fault name="ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getEmployeesByDeptCode">
+      <soap:operation soapAction="getEmployeesByDeptCode" style="document"/>
+      <wsdl:input name="getEmployeesByDeptCode">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getEmployeesByDeptCodeResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceException">
+        <soap:fault name="ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getServiceVersion">
+      <soap:operation soapAction="getServiceVersion" style="document"/>
+      <wsdl:input name="getServiceVersion">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getServiceVersionResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceException">
+        <soap:fault name="ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="deleteAllDepts">
+      <soap:operation soapAction="deleteAllDepts" style="document"/>
+      <wsdl:input name="deleteAllDepts">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteAllDeptsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceException">
+        <soap:fault name="ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="addAllDepts">
+      <soap:operation soapAction="addAllDepts" style="document"/>
+      <wsdl:input name="addAllDepts">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="addAllDeptsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceException">
+        <soap:fault name="ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="updateDept">
+      <soap:operation soapAction="updateDept" style="document"/>
+      <wsdl:input name="updateDept">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateDeptResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceException">
+        <soap:fault name="ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="updateAllDepts">
+      <soap:operation soapAction="updateAllDepts" style="document"/>
+      <wsdl:input name="updateAllDepts">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateAllDeptsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceException">
+        <soap:fault name="ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="deleteDeptByCode">
+      <soap:operation soapAction="deleteDeptByCode" style="document"/>
+      <wsdl:input name="deleteDeptByCode">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteDeptByCodeResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ServiceException">
+        <soap:fault name="ServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DeptService">
+    <wsdl:port name="DeptWebServicePort" binding="tns:DeptWebServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/DeptWebServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

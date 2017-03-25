@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://trilia-cloud.com/schema/entity/ut/ut-dept" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://trilia-cloud.com/schema/entity/ut/ut-dept" xmlns:ns1="http://trilia-cloud.com/schema/common/util" elementFormDefault="unqualified">
+
+	<xs:import namespace="http://trilia-cloud.com/schema/common/util" schemaLocation="CommonTypes.xsd"/>
+
+	<xs:complexType name="deptBeanPub">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="dept-id" type="xs:long"/>
+			<xs:element minOccurs="0" name="dept-name" type="xs:string"/>
+			<xs:element minOccurs="0" name="description" type="xs:string"/>
+			<xs:element minOccurs="0" name="revisionControl" type="ns1:revisionControlBean"/>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="employee" type="xs:string"/>
+		</xs:sequence>
+		<xs:attribute name="dept-code" type="xs:string"/>
+	</xs:complexType>
+	
+	<xs:complexType name="deptContainer">
+	    <xs:sequence>
+	      	<xs:element maxOccurs="unbounded" minOccurs="0" name="department" type="tns:deptBeanPub"/>
+	    </xs:sequence>
+  	</xs:complexType>
+
+</schema>

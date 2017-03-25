@@ -1,0 +1,61 @@
+<xs:schema xmlns:ns1="http://trilia-cloud.com/schema/entity/ut/ut-person/" xmlns:tns="http://trilia-cloud.com/webservices/entity/ut/ut-person-service/" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" targetNamespace="http://trilia-cloud.com/webservices/entity/ut/ut-person-service/" version="1.0">
+
+  <xs:import namespace="http://trilia-cloud.com/schema/entity/ut/ut-person/" schemaLocation="PersonService_schema2.xsd"/>
+
+  <xs:element name="addPerson" type="tns:addPerson"/>
+
+  <xs:element name="addPersonResponse" type="tns:addPersonResponse"/>
+
+  <xs:element name="findPerson" type="tns:findPerson"/>
+
+  <xs:element name="findPersonResponse" type="tns:findPersonResponse"/>
+
+  <xs:element name="listAllPersons" type="tns:listAllPersons"/>
+
+  <xs:element name="listAllPersonsResponse" type="tns:listAllPersonsResponse"/>
+
+  <xs:complexType name="findPerson">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="personId" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="findPersonResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="personResponse" type="tns:personEntityPub"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="personEntityPub">
+    <xs:all>
+      <xs:element minOccurs="0" name="personId" type="xs:long"/>
+      <xs:element minOccurs="0" name="firstName" type="xs:string"/>
+      <xs:element minOccurs="0" name="lastName" type="xs:string"/>
+      <xs:element name="age" type="xs:int"/>
+      <xs:element minOccurs="0" name="likes" type="xs:string"/>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="listAllPersons">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="listAllPersonsResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="personsResponse" type="tns:personEntityPub"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="addPerson">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="person" type="tns:personEntityPub"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="addPersonResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="personResponse" type="tns:personEntityPub"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

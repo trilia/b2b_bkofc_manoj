@@ -1,0 +1,188 @@
+<application xmlns="http://wadl.dev.java.net/2009/02" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:prefix1="http://trilia-cloud.com/schema/entity/ut/ut-dept" xmlns:prefix2="http://trilia-cloud.com/schema/entity/ut/ut-emp" xmlns:prefix3="http://trilia-cloud.com/schema/common/util">
+    <grammars>
+        <include href="../schema/Dept_Schema.xsd"/>
+        <include href="../schema/Emp_Schema.xsd"/>
+        <include href="../schema/Common.xsd"/>
+    </grammars>
+    <resources base="/departments">
+        <resource path="/">
+            <method name="GET">
+                <response>
+                    <representation mediaType="application/json"></representation>
+                    <representation mediaType="application/xml"></representation>
+                </response>
+            </method>
+        </resource>
+        <resource path="/bulk">
+            <method name="DELETE">
+                <request>
+                    <param name="ignoreError" style="query" type="xs:boolean"></param>
+                </request>
+                <response status="204">
+                </response>
+            </method>
+            <method name="POST">
+                <request>
+                    <representation mediaType="application/json"></representation>
+                    <representation mediaType="application/xml" element="prefix2:departments"></representation>
+                    <param name="ignoreError" style="query" type="xs:boolean"></param>
+                    <param name="outputMode" style="query" type="xs:int"></param>
+                </request>
+                <response>
+                    <representation mediaType="application/json"></representation>
+                    <representation mediaType="application/xml" element="prefix2:departments"></representation>
+                </response>
+            </method>
+            <method name="PUT">
+                <request>
+                    <representation mediaType="application/json"></representation>
+			<representation mediaType="application/xml" element="prefix2:departments"></representation>
+			<param name="ignoreError" style="query" type="xs:boolean"></param>
+			<param name="outputMode" style="query" type="xs:int"></param>
+                </request>
+                <response>
+                    <representation mediaType="application/json"></representation>
+                    <representation mediaType="application/xml" element="prefix1:departments"></representation>
+                </response>
+            </method>
+         </resource>
+         <resource path="/department">
+            <method name="POST">
+                <request>
+                    <representation mediaType="application/json"></representation>
+                    <representation mediaType="application/xml" element="prefix1:department"></representation>
+                </request>
+                <response>
+                    <representation mediaType="application/json"></representation>
+                    <representation mediaType="application/xml" element="prefix1:department"></representation>
+                </response>
+            </method>
+            <method name="PUT">
+                <request>
+                    <representation mediaType="application/json"></representation>
+                    <representation mediaType="application/xml" element="prefix1:department"></representation>
+                </request>
+                <response>
+                    <representation mediaType="application/json"></representation>
+                    <representation mediaType="application/xml" element="prefix1:department"></representation>
+                </response>
+            </method>
+        </resource>
+        <resource path="/department/{deptCode: ^[a-zA-Z]+(\d+)*}">
+            <param name="deptCode" style="template" type="xs:string"></param>
+            <method name="GET">
+                <request>
+                </request>
+                <response>
+                    <representation mediaType="application/json"></representation>
+                    <representation mediaType="application/xml" element="prefix1:department"></representation>
+                </response>
+            </method>
+        </resource>
+        <resource path="/department/{deptId: \d+}">
+            <param name="deptId" style="template" type="xs:long"></param>
+            <method name="GET">
+                <request>
+                </request>
+                <response>
+                    <representation mediaType="application/json"></representation>
+                    <representation mediaType="application/xml" element="prefix1:department"></representation>
+                </response>
+            </method>
+        </resource>
+        <resource path="/department/{deptCode: ^[a-zA-Z]+(\d+)*}/employees">
+            <param name="deptCode" style="template" type="xs:string"></param>
+            <method name="GET">
+                <request>
+                    <param name="outputMode" style="query" type="xs:int"></param>
+                </request>
+                <response>
+                    <representation mediaType="application/json"></representation>
+                    <representation mediaType="application/xml" element="prefix2:employees"></representation>
+                </response>
+            </method>
+        </resource>
+        <resource path="/department/{deptId: \d+}/employees">
+            <param name="deptId" style="template" type="xs:long"></param>
+            <method name="GET">
+                <request>
+                    <param name="outputMode" style="query" type="xs:int"></param>
+                </request>
+                <response>
+                    <representation mediaType="application/json"></representation>
+                    <representation mediaType="application/xml" element="prefix2:employees"></representation>
+                </response>
+            </method>
+        </resource>
+        <resource path="/list">
+            <method name="GET">
+                <request>
+                    <param name="outputMode" style="query" type="xs:int"></param>
+                </request>
+                <response>
+                    <representation mediaType="application/json"></representation>
+                    <representation mediaType="application/xml" element="prefix1:departments"></representation>
+                </response>
+            </method>
+        </resource>
+        <resource path="/pagedList">
+            <method name="GET">
+                <request>
+                    <param name="outputMode" style="query" type="xs:int"></param>
+                    <param name="page" style="query" type="xs:int"></param>
+                    <param name="pageSize" style="query" type="xs:int"></param>
+                    <param name="asc" style="query" repeating="true" type="xs:string"></param>
+                    <param name="desc" style="query" repeating="true" type="xs:string"></param>
+                </request>
+                <response>
+                    <representation mediaType="application/json"></representation>
+                    <representation mediaType="application/xml"></representation>
+                </response>
+            </method>
+        </resource>
+        <resource path="/pagedSearch">
+            <method name="GET">
+                <request>
+                    <param name="q" style="query" type="xs:string"></param>
+                    <param name="fuzzy" style="query" type="xs:boolean"></param>
+                    <param name="outputMode" style="query" type="xs:int"></param>
+                    <param name="page" style="query" type="xs:int"></param>
+                    <param name="pageSize" style="query" type="xs:int"></param>
+                    <param name="asc" style="query" repeating="true" type="xs:string"></param>
+                    <param name="desc" style="query" repeating="true" type="xs:string"></param>
+                </request>
+                <response>
+                    <representation mediaType="application/json"></representation>
+                    <representation mediaType="application/xml"></representation>
+                </response>
+            </method>
+        </resource>
+        <resource path="/search">
+            <method name="GET">
+                <request>
+                    <param name="q" style="query" type="xs:string"></param>
+                    <param name="fuzzy" style="query" type="xs:boolean"></param>
+                    <param name="asc" style="query" repeating="true" type="xs:string"></param>
+                    <param name="desc" style="query" repeating="true" type="xs:string"></param>
+                    <param name="outputMode" style="query" type="xs:int"></param>
+                </request>
+                <response>
+                    <representation mediaType="application/json"></representation>
+                    <representation mediaType="application/xml" element="prefix1:departments"></representation>
+                </response>
+            </method>
+        </resource>
+        <resource path="/test">
+            <method name="POST">
+                <request>
+                    <representation mediaType="application/json"></representation>
+                    <representation mediaType="application/xml" element="prefix2:departments"></representation>
+                </request>
+                <response>
+                    <representation mediaType="application/json"></representation>
+                    <representation mediaType="application/xml" element="prefix2:departments"></representation>
+                </response>
+            </method>
+	</resource>
+    </resources>
+</application>

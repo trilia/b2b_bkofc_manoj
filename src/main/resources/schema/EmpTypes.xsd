@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://trilia-cloud.com/schema/entity/ut/ut-emp" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://trilia-cloud.com/schema/entity/ut/ut-emp" xmlns:ns1="http://trilia-cloud.com/schema/common/util" elementFormDefault="unqualified">
+
+	<xs:import namespace="http://trilia-cloud.com/schema/common/util" schemaLocation="CommonTypes.xsd"/>
+
+	<xs:complexType name="empBeanPub">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="emp-id" type="xs:long"/>
+			<xs:element minOccurs="0" name="first-name" type="xs:string"/>
+			<xs:element minOccurs="0" name="last-name" type="xs:string"/>
+			<xs:element minOccurs="0" name="nick-name" type="xs:string"/>
+			<xs:element minOccurs="0" name="date-of-joining" type="xs:dateTime"/>
+			<xs:element minOccurs="0" name="email" type="xs:string"/>
+			<xs:element minOccurs="0" name="manager" type="xs:string"/>
+			<xs:element minOccurs="0" name="department" type="xs:string"/>
+			<xs:element minOccurs="0" name="revisionControl" type="ns1:revisionControlBean"/>
+		</xs:sequence>
+		<xs:attribute name="emp-code" type="xs:string"/>
+	</xs:complexType>
+	
+	<xs:complexType name="empContainer">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="employee" type="tns:empBeanPub"/>
+		</xs:sequence>
+  	</xs:complexType>
+
+</schema>

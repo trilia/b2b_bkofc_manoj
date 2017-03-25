@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://trilia-cloud.com/schema/common/fault" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://trilia-cloud.com/schema/common/fault" elementFormDefault="unqualified">
+
+	<xs:complexType name="faultContainer">
+		<xs:all>
+			<xs:element minOccurs="0" name="fault-code" type="xs:string"/>
+			<xs:element minOccurs="0" name="fault-message" type="xs:string"/>
+		</xs:all>
+	</xs:complexType>
+
+</schema>

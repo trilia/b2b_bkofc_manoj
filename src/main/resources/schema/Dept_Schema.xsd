@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://trilia-cloud.com/schema/entity/ut/ut-dept" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://trilia-cloud.com/schema/entity/ut/ut-dept" elementFormDefault="unqualified">
+
+    <xs:include schemaLocation="DeptTypes.xsd"/>
+
+    <xs:element name="department" type="tns:deptBeanPub"/>
+
+    <xs:element name="departments" type="tns:deptContainer"/>
+
+</schema>
