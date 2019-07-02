@@ -63,7 +63,7 @@ public class UomConversionRepositoryImpl extends AbstractRepositoryImpl<UomConve
 
 	@Override
 	public String getLazyLoadElements() {
-		return ("t.srcUomRef , t.destUomRef");// need to check if this is how multiple child lazy loads 
+		return ("");// need to check if this is how multiple child lazy loads 
 	}
 
 }

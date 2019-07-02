@@ -12,9 +12,11 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import com.olp.jpa.common.CommonEnums.LifeCycleStatus;
+import com.olp.jpa.common.RevisionControlBean;
 
 @XmlRootElement(name = "unitofconversion", namespace = "http://trilia-cloud.com/schema/entity/wm")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -27,10 +29,10 @@ public class UomConversion implements Serializable {
 	@XmlElement(name = "uomConvId")
 	private Long id;
 
-	@XmlElement
+	@XmlTransient
 	private String tenantId;
 
-	@XmlElement
+	@XmlElement(name="entrySequence")
 	private int entrySequence;
 
 	@XmlElement
@@ -47,6 +49,8 @@ public class UomConversion implements Serializable {
 
 	@XmlElement
 	private LifeCycleStatus lifecycleStatus;
+	
+	private RevisionControlBean revisionControl;
 
 	/**
 	 * @return the id
@@ -168,15 +172,25 @@ public class UomConversion implements Serializable {
 		this.lifecycleStatus = lifecycleStatus;
 	}
 
+	public RevisionControlBean getRevisionControl() {
+		return revisionControl;
+	}
+
+	public void setRevisionControl(RevisionControlBean revisionControl) {
+		this.revisionControl = revisionControl;
+	}
+
 	public UomConversionEntity covertTo(int mode) {
-		UomConversionEntity bean = new UomConversionEntity();
-		bean.setId(this.id);
-		bean.setTenantId(this.tenantId);
-		bean.setEntrySequence(entrySequence);
-		bean.setSrcUomCode(srcUomCode);
-		bean.setDestUomCode(destUomCode);
-		bean.setConvFactor(convFactor);
-		bean.setConvFunction(convFunction);
-		return bean;
+		UomConversionEntity entity = new UomConversionEntity();
+		entity.setId(this.id);
+		entity.setTenantId(this.tenantId);
+		entity.setEntrySequence(this.entrySequence);
+		entity.setSrcUomCode(this.srcUomCode);
+		entity.setDestUomCode(this.destUomCode);
+		entity.setConvFactor(this.convFactor);
+		entity.setConvFunction(this.convFunction);
+		entity.setLifecycleStatus(this.lifecycleStatus);
+		entity.setRevisionControl(this.revisionControl);
+		return entity;
 	}
 }

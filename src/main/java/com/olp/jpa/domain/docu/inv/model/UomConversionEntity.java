@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -36,13 +37,14 @@ import com.olp.annotations.KeyAttribute;
 import com.olp.annotations.MultiTenant;
 import com.olp.fwk.common.Constants;
 import com.olp.jpa.common.CommonEnums.LifeCycleStatus;
+import com.olp.jpa.common.RevisionControlBean;
 
 @Entity
-@Table(name = "trl_uom_conversions",uniqueConstraints=@UniqueConstraint(columnNames={"tenant_id", "entry_sequence","src_uom_code","dest_uom_code"}))
+@Table(name = "trl_uom_conversions",uniqueConstraints=@UniqueConstraint(columnNames={"tenant_id", "entry_sequence"}))
 @NamedQueries({
-		@NamedQuery(name = "UomConversionEntity.srcUomCode", query = "SELECT t FROM UomConversionEntity t JOIN FETCH t.srcUomRef WHERE t.srcUomCode = :srcUomCode and t.tenantId = :tenant "),
-		@NamedQuery(name = "UomConversionEntity.findByDestUom", query = "SELECT t FROM UomConversionEntity t JOIN FETCH t.destUomRef WHERE t.destUomCode = :destUomCode and t.tenantId = :tenant "),
-		@NamedQuery(name = "UomConversionEntity.findBySrcTarget", query = "SELECT t FROM UomConversionEntity t JOIN FETCH t.srcUomRef JOIN FETCH t.destUomRef WHERE t.srcUomCode = :srcUomCode and t.destUomCode = :destUomCode and t.tenantId = :tenant ") })
+		@NamedQuery(name = "UomConversionEntity.srcUomCode", query = "SELECT t FROM UomConversionEntity t  WHERE t.srcUomCode = :srcUomCode and t.tenantId = :tenant "),
+		@NamedQuery(name = "UomConversionEntity.findByDestUom", query = "SELECT t FROM UomConversionEntity t WHERE t.destUomCode = :destUomCode and t.tenantId = :tenant "),
+		@NamedQuery(name = "UomConversionEntity.findBySrcTarget", query = "SELECT t FROM UomConversionEntity t WHERE t.srcUomCode = :srcUomCode and t.destUomCode = :destUomCode and t.tenantId = :tenant ") })
 @Cacheable(true)
 @Indexed(index = "SetupDataIndex")
 @MultiTenant(level = MultiTenant.Levels.ONE_TENANT)
@@ -65,17 +67,17 @@ public class UomConversionEntity implements Serializable{
 	@Fields({ @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO) })
 	private int entrySequence;
 
-	@ManyToOne
-	@JoinColumn(name = "unit_of_measure_ref")
+	@ManyToOne(optional=true)
+	@JoinColumn(name = "src_uom_ref")
 	@ContainedIn
 	private UnitOfMeasureEntity srcUomRef;
 
-	@Column(name = "src_uom_code", nullable = false)
+	@Column(name = "src_uom_code", nullable = true)
 	@Fields({ @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO) })
 	private String srcUomCode;
 
-	@ManyToOne
-	@JoinColumn(name = "unit_of_measure_ref")
+	@ManyToOne(optional=true)
+	@JoinColumn(name = "dest_uom_ref")
 	@ContainedIn
 	private UnitOfMeasureEntity destUomRef;
 
@@ -94,6 +96,9 @@ public class UomConversionEntity implements Serializable{
 	@Fields({ @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO) })
 	@Enumerated(EnumType.STRING)
 	private LifeCycleStatus lifecycleStatus;
+	
+	@Embedded
+	private RevisionControlBean	revisionControl;
 
 	/**
 	 * @return the id
@@ -244,18 +249,32 @@ public class UomConversionEntity implements Serializable{
 	public void setLifecycleStatus(LifeCycleStatus lifecycleStatus) {
 		this.lifecycleStatus = lifecycleStatus;
 	}
+	
+	
+	public RevisionControlBean getRevisionControl() {
+		return revisionControl;
+	}
+
+	public void setRevisionControl(RevisionControlBean revisionControl) {
+		this.revisionControl = revisionControl;
+	}
 
 	public UomConversion convertTo(int mode) {
+		
 		UomConversion bean = new UomConversion();
 		if (mode <= Constants.CONV_COMPLETE_DEFINITION)// todo - check referred
 			bean.setId(this.id);
-		bean.setId(this.id);
+		
 		bean.setTenantId(this.tenantId);
-		bean.setEntrySequence(entrySequence);
-		bean.setSrcUomCode(srcUomCode);
-		bean.setDestUomCode(destUomCode);
-		bean.setConvFactor(convFactor);
-		bean.setConvFunction(convFunction);
+		bean.setEntrySequence(this.entrySequence);
+		bean.setSrcUomCode(this.srcUomCode);
+		bean.setDestUomCode(this.destUomCode);
+		bean.setConvFactor(this.convFactor);
+		bean.setConvFunction(this.convFunction);
+		bean.setLifecycleStatus(this.lifecycleStatus);
+		
+		if (mode < Constants.CONV_WITH_REVISION_INFO)
+			bean.setRevisionControl(this.revisionControl);
 
 		return bean;
 	}

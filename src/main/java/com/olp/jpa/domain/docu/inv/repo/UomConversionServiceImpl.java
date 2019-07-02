@@ -52,55 +52,65 @@ public class UomConversionServiceImpl extends AbstractServiceImpl<UomConversionE
 	@Transactional(readOnly = true, noRollbackFor = { javax.persistence.NoResultException.class })
 	public void validate(UomConversionEntity entity, boolean valParent, EntityVdationType type)
 			throws EntityValidationException {
+		
 		if (valParent) {
-			UnitOfMeasureEntity uom = entity.getDestUomRef(), uom2 = null;
-			if (uom == null)
-				throw new EntityValidationException("UnitOfMeasure reference cannot be null !!");
+			
+			if (entity.getDestUomRef() != null) {
+				
+				// it is possible to have destination uom null
+				UnitOfMeasureEntity uom = entity.getDestUomRef(), uom2 = null;
+				
+				if (uom.getId() == null) {
+					try {
+						uom2 = uomUnitOfMeasureRepo.findByUomCode(uom.getUomCode());
+					} catch (javax.persistence.NoResultException ex) {
+						throw new EntityValidationException("Could not find UnitOfMeasure with code - " + uom.getUomCode());
+					}
+				} else {
+					try {
+						uom2 = uomUnitOfMeasureRepo.findOne(uom.getId());
+					} catch (javax.persistence.NoResultException ex) {
+						throw new EntityValidationException("Could not find UnitOfMeasure with id - " + uom.getId());
+					}
+				}
 
-			if (uom.getId() == null) {
-				try {
-					uom2 = uomUnitOfMeasureRepo.findByUomCode(uom.getUomCode());
-				} catch (javax.persistence.NoResultException ex) {
-					throw new EntityValidationException("Could not find UnitOfMeasure with code - " + uom.getUomCode());
-				}
-			} else {
-				try {
-					uom2 = uomUnitOfMeasureRepo.findOne(uom.getId());
-				} catch (javax.persistence.NoResultException ex) {
-					throw new EntityValidationException("Could not find UnitOfMeasure with id - " + uom.getId());
-				}
+				if (uom2 == null)
+					throw new EntityValidationException("Could not find UnitOfMeasure using either code or id !");
+
+				entity.setDestUomRef(uom2);
+				entity.setDestUomCode(uom.getUomCode());
+				
 			}
+			
+			if (entity.getSrcUomRef() != null) {
+				
+				// it is possible to have source uom null
+				
+				UnitOfMeasureEntity uom = entity.getSrcUomRef(), uom2 = null;
+				if (uom == null)
+					throw new EntityValidationException("UnitOfMeasure reference cannot be null !!");
 
-			if (uom2 == null)
-				throw new EntityValidationException("Could not find UnitOfMeasure using either code or id !");
-
-			entity.setDestUomRef(uom2);
-			entity.setDestUomCode(uom.getUomCode());
-
-			uom = entity.getSrcUomRef();
-			uom2 = null;
-			if (uom == null)
-				throw new EntityValidationException("UnitOfMeasure reference cannot be null !!");
-
-			if (uom.getId() == null) {
-				try {
-					uom2 = uomUnitOfMeasureRepo.findByUomCode(uom.getUomCode());
-				} catch (javax.persistence.NoResultException ex) {
-					throw new EntityValidationException("Could not find UnitOfMeasure with code - " + uom.getUomCode());
+				if (uom.getId() == null) {
+					try {
+						uom2 = uomUnitOfMeasureRepo.findByUomCode(uom.getUomCode());
+					} catch (javax.persistence.NoResultException ex) {
+						throw new EntityValidationException("Could not find UnitOfMeasure with code - " + uom.getUomCode());
+					}
+				} else {
+					try {
+						uom2 = uomUnitOfMeasureRepo.findOne(uom.getId());
+					} catch (javax.persistence.NoResultException ex) {
+						throw new EntityValidationException("Could not find UnitOfMeasure with id - " + uom.getId());
+					}
 				}
-			} else {
-				try {
-					uom2 = uomUnitOfMeasureRepo.findOne(uom.getId());
-				} catch (javax.persistence.NoResultException ex) {
-					throw new EntityValidationException("Could not find UnitOfMeasure with id - " + uom.getId());
-				}
+
+				if (uom2 == null)
+					throw new EntityValidationException("Could not find UnitOfMeasure using either code or id !");
+
+				entity.setSrcUomRef(uom2);
+				entity.setSrcUomCode(uom.getUomCode());
 			}
-
-			if (uom2 == null)
-				throw new EntityValidationException("Could not find UnitOfMeasure using either code or id !");
-
-			entity.setSrcUomRef(uom2);
-			entity.setSrcUomCode(uom.getUomCode());
+			
 
 		}
 
@@ -111,26 +121,85 @@ public class UomConversionServiceImpl extends AbstractServiceImpl<UomConversionE
 		}
 
 	}
-
+	
 	@Override
-	public boolean checkForUpdate(UomConversionEntity newUoc, UomConversionEntity oldUoc) {
-		boolean result = false;
-
-		if (!Objects.equals(newUoc.getEntrySequence(), oldUoc.getEntrySequence())
-				|| !Objects.equals(newUoc.getConvFactor(), oldUoc.getConvFactor())
-				|| !Objects.equals(newUoc.getConvFunction(), oldUoc.getConvFunction())
-				|| !Objects.equals(newUoc.getDestUomCode(), oldUoc.getDestUomCode())
-				|| !Objects.equals(newUoc.getSrcUomCode(), oldUoc.getSrcUomCode())) {
-
-			result = true;
-			return (result);
+	protected UomConversionEntity doUpdate(UomConversionEntity neu, UomConversionEntity old) throws EntityValidationException {
+		
+		if (!Objects.equals(neu.getEntrySequence(), old.getEntrySequence()))
+			throw new EntityValidationException("The entry sequence does not match, existing - " + old.getEntrySequence() + " , new - " + neu.getEntrySequence());
+		
+		if (!Objects.equals(neu.getLifecycleStatus(), old.getLifecycleStatus())) {
+			if (!isPrivilegedContext())
+				throw new EntityValidationException("Cannot update status. Use requestStatusChange api instead !!");
 		}
-		return result;
-
+		
+		if (checkForUpdate(neu, old)) {
+			old.setConvFactor(neu.getConvFactor());
+			old.setConvFunction(neu.getConvFunction());
+			old.setDestUomCode(neu.getDestUomCode());
+			old.setDestUomRef(neu.getDestUomRef());
+			old.setSrcUomCode(neu.getSrcUomCode());
+			old.setSrcUomRef(neu.getSrcUomRef());
+			
+			JpaUtil.updateRevisionControl(old, true);
+		}
+		
+		return(old);
 	}
 
 	@Override
-	protected AbstractServiceImpl<UomConversionEntity, Long>.Outcome postProcess(int opCode, UomConversionEntity arg1)
+	public boolean checkForUpdate(UomConversionEntity neu, UomConversionEntity old) {
+		// TODO Auto-generated method stub
+		
+		boolean result = false;
+		
+		if (!Objects.equals(neu.getConvFactor(), old.getConvFactor()) ||
+				!Objects.equals(neu.getConvFunction(), old.getConvFunction()) ||
+				!Objects.equals(neu.getEntrySequence(), old.getEntrySequence()) ||
+				!Objects.equals(neu.getLifecycleStatus(), old.getLifecycleStatus())
+				) {
+			result = true;
+		}
+		
+		if (result)
+			return(true);
+		
+		if (neu.getDestUomRef() == null) {
+			if (old.getDestUomRef() != null)
+				result = true;
+		} else {
+			if (old.getDestUomRef() == null) {
+				result = true;
+			} else {
+				// both not null
+				if (!Objects.equals(neu.getDestUomRef().getId(), old.getDestUomRef().getId())) {
+					result = true;
+				}
+			}
+		}
+		
+		if (result)
+			return(true);
+		
+		if (neu.getSrcUomRef() == null) {
+			if (old.getSrcUomRef() != null)
+				result = true;
+		} else {
+			if (old.getSrcUomRef() == null) {
+				result = true;
+			} else {
+				// both not null
+				if (!Objects.equals(neu.getSrcUomRef().getId(), old.getSrcUomRef().getId())) {
+					result = true;
+				}
+			}
+		}
+		
+		return result;
+	}
+
+	@Override
+	protected Outcome postProcess(int opCode, UomConversionEntity arg1)
 			throws EntityValidationException {
 		Outcome result = new Outcome();
 		result.setResult(true);
@@ -150,8 +219,9 @@ public class UomConversionServiceImpl extends AbstractServiceImpl<UomConversionE
 	}
 
 	@Override
-	protected AbstractServiceImpl<UomConversionEntity, Long>.Outcome preProcess(int opCode, UomConversionEntity entity)
+	protected Outcome preProcess(int opCode, UomConversionEntity entity)
 			throws EntityValidationException {
+		
 		Outcome result = new Outcome();
 		result.setResult(true);
 
@@ -192,7 +262,7 @@ public class UomConversionServiceImpl extends AbstractServiceImpl<UomConversionE
 	}
 
 	private void preProcessAdd(UomConversionEntity entity) throws EntityValidationException {
-		validate(entity, true, EntityVdationType.PRE_INSERT);
+		validate(entity, false, EntityVdationType.PRE_INSERT);
 		this.updateTenantWithRevision(entity);
 	}
 

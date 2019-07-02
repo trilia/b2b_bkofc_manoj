@@ -192,7 +192,10 @@ public class UnitOfMeasure implements Serializable {
 	 *            the srcConversions to set
 	 */
 	public void setSrcConversions(Set<UomConversion> srcConversions) {
-		this.srcConversions = srcConversions;
+		if (srcConversions != null)
+			this.srcConversions = srcConversions;
+		else
+			this.srcConversions.clear();
 	}
 
 	/**
@@ -207,7 +210,10 @@ public class UnitOfMeasure implements Serializable {
 	 *            the destConversions to set
 	 */
 	public void setDestConversions(Set<UomConversion> destConversions) {
-		this.destConversions = destConversions;
+		if (destConversions != null)
+			this.destConversions = destConversions;
+		else
+			this.destConversions.clear();
 	}
 
 	/**

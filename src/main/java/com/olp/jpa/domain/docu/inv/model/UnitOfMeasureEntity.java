@@ -42,9 +42,11 @@ import com.olp.jpa.domain.docu.inv.model.InvEnums.UomClass;
 import com.olp.jpa.domain.docu.inv.model.InvEnums.UomType;
 
 @Entity
-@Table(name = "trl_uoms", uniqueConstraints = @UniqueConstraint(columnNames = { "tenant_id", "uom_code" }))
+@Table(name = "trl_uoms"
+	// , uniqueConstraints = @UniqueConstraint(columnNames = { "tenant_id", "uom_code" })
+)
 @NamedQueries({
-		@NamedQuery(name = "UnitOfMeasureEntity.findByUomCode", query = "SELECT t FROM UnitOfMeasureEntity t JOIN FETCH t.srcConversions WHERE t.uomCode = :code and t.tenantId = :tenant ") })
+		@NamedQuery(name = "UnitOfMeasureEntity.findByUomCode", query = "SELECT t FROM UnitOfMeasureEntity t JOIN FETCH t.srcConversions JOIN FETCH t.destConversions WHERE t.uomCode = :code and t.tenantId = :tenant ") })
 @Cacheable(true)
 @Indexed(index = "SetupDataIndex")
 @MultiTenant(level = MultiTenant.Levels.ONE_TENANT)
@@ -234,7 +236,10 @@ public class UnitOfMeasureEntity implements Serializable {
 	 *            the srcConversions to set
 	 */
 	public void setSrcConversions(Set<UomConversionEntity> srcConversions) {
-		this.srcConversions = srcConversions;
+		if (srcConversions != null)
+			this.srcConversions = srcConversions;
+		else
+			this.srcConversions.clear();
 	}
 
 	/**
@@ -249,7 +254,10 @@ public class UnitOfMeasureEntity implements Serializable {
 	 *            the destConversions to set
 	 */
 	public void setDestConversions(Set<UomConversionEntity> destConversions) {
-		this.destConversions = destConversions;
+		if (destConversions != null)
+			this.destConversions = destConversions;
+		else
+			this.destConversions.clear();
 	}
 
 	/**

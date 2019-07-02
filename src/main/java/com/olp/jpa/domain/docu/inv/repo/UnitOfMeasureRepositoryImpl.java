@@ -8,10 +8,13 @@ package com.olp.jpa.domain.docu.inv.repo;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
+
 import com.olp.fwk.common.ContextManager;
 import com.olp.fwk.common.IContext;
 import com.olp.jpa.common.AbstractRepositoryImpl;
 import com.olp.jpa.domain.docu.inv.model.UnitOfMeasureEntity;
+import com.olp.jpa.domain.docu.ut.model.DepartmentBean;
+import com.olp.jpa.domain.docu.wm.model.WarehouseEntity;
 
 @Repository("unitOfMeasureRepository")
 public class UnitOfMeasureRepositoryImpl extends AbstractRepositoryImpl<UnitOfMeasureEntity, Long>

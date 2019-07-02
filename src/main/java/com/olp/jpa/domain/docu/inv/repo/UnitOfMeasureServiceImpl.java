@@ -2,7 +2,6 @@ package com.olp.jpa.domain.docu.inv.repo;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 import com.olp.fwk.common.error.EntityValidationException;
 import com.olp.jpa.common.AbstractServiceImpl;
 import com.olp.jpa.common.CommonEnums.EntityVdationType;
@@ -63,9 +62,9 @@ public class UnitOfMeasureServiceImpl extends AbstractServiceImpl<UnitOfMeasureE
 	}
 
 	@Override
-	@Transactional(readOnly = true, noRollbackFor = { javax.persistence.NoResultException.class })
-	protected AbstractServiceImpl<UnitOfMeasureEntity, Long>.Outcome postProcess(int opCode, UnitOfMeasureEntity entity)
+	protected Outcome postProcess(int opCode, UnitOfMeasureEntity entity)
 			throws EntityValidationException {
+		
 		Outcome result = new Outcome();
 		result.setResult(true);
 
@@ -84,8 +83,9 @@ public class UnitOfMeasureServiceImpl extends AbstractServiceImpl<UnitOfMeasureE
 	}
 
 	@Override
-	protected AbstractServiceImpl<UnitOfMeasureEntity, Long>.Outcome preProcess(int opCode, UnitOfMeasureEntity entity)
+	protected Outcome preProcess(int opCode, UnitOfMeasureEntity entity)
 			throws EntityValidationException {
+		
 		Outcome result = new Outcome();
 		result.setResult(true);
 
@@ -122,6 +122,7 @@ public class UnitOfMeasureServiceImpl extends AbstractServiceImpl<UnitOfMeasureE
 	@Override
 	@Transactional(readOnly = true, noRollbackFor = { javax.persistence.NoResultException.class })
 	public void validate(UnitOfMeasureEntity entity, EntityVdationType type) throws EntityValidationException {
+		
 		Set<UomConversionEntity> srcConversionList = entity.getSrcConversions();
 		if (srcConversionList != null && !srcConversionList.isEmpty()) {
 			for (UomConversionEntity srcConversion : srcConversionList) {
@@ -234,22 +235,22 @@ public class UnitOfMeasureServiceImpl extends AbstractServiceImpl<UnitOfMeasureE
 					+ ", new - " + neu.getUomCode());
 		}
 
-		// validate(neu, EntityVdationType.PRE_UPDATE);
-
-		if (!Objects.equal(neu.getLifecycleStatus(), old.getLifecycleStatus())) {
+		if (!Objects.equals(neu.getLifecycleStatus(), old.getLifecycleStatus())) {
 			if (!isPrivilegedContext())
 				throw new EntityValidationException("Cannot update status. Use requestStatusChange api instead !!");
 		}
-
+		
+		
 		ArrayList<Long> deletedDestUomConversions = new ArrayList<>();
 		ArrayList<Long> deletedSrcUomConversions = new ArrayList<>();
 
 		if (old.getDestConversions() != null && !old.getDestConversions().isEmpty()) {
 			for (UomConversionEntity oldUoc : old.getDestConversions()) {
 				boolean foundDest = false;
+				
 				if (neu.getDestConversions() != null && !neu.getDestConversions().isEmpty()) {
 					for (UomConversionEntity newUoc : neu.getDestConversions()) {
-						if (Objects.equal(newUoc.getId(), oldUoc.getId())) {
+						if (Objects.equals(newUoc.getId(), oldUoc.getId())) {
 							foundDest = true;
 							break;
 						}
@@ -269,19 +270,23 @@ public class UnitOfMeasureServiceImpl extends AbstractServiceImpl<UnitOfMeasureE
 						deletedDestUomConversions.add(oldUoc.getId());
 					}
 				}
-			}
+
+			} // end for old measure
 		}
 		
-		if (neu.getSrcConversions() != null && !neu.getSrcConversions().isEmpty()) {
+		
+		if (old.getSrcConversions() != null && !old.getSrcConversions().isEmpty()) {
 			for (UomConversionEntity oldUoc : old.getSrcConversions()) {
+				boolean foundDest = false;
 				boolean foundSrc = false;
-				for (UomConversionEntity newUoc : neu.getSrcConversions()) {
-					if (Objects.equal(newUoc.getId(), oldUoc.getId())) {
-						foundSrc = true;
-						break;
-					}
-				} // end for Src Uoc
-
+				if (neu.getSrcConversions() != null && !neu.getSrcConversions().isEmpty()) {
+					for (UomConversionEntity newUoc : neu.getSrcConversions()) {
+						if (Objects.equals(newUoc.getId(), oldUoc.getId())) {
+							foundSrc = true;
+							break;
+						}
+					} // end for Src Uoc
+				}
 				if (!foundSrc) {
 					// Conversion deleted
 					if (old.getLifecycleStatus() != LifeCycleStatus.INACTIVE) {
@@ -297,25 +302,24 @@ public class UnitOfMeasureServiceImpl extends AbstractServiceImpl<UnitOfMeasureE
 					}
 				}
 			}
-		} // end for old measure
-
+		}
+		
 		boolean updated = false;
+		
 		if (!deletedDestUomConversions.isEmpty() || !deletedSrcUomConversions.isEmpty()) {
 			updated = true;
 		} else {
 			updated = checkForUpdate(neu, old);
 		}
+		
 		if (updated) {
 			if (isPrivilegedContext()) {
+				
 				// carry out the update
-				if (neu.getDestConversions() != null && !neu.getDestConversions().isEmpty()) {
-					updateDistConversions(neu, old);
-				} // end if neu.Uoc != null
-
-				if (neu.getSrcConversions() != null && !neu.getSrcConversions().isEmpty()) {
-					updateSrcConversions(neu, old);
-				}
-
+				updateDestConversions(neu, old);
+				
+				updateSrcConversions(neu, old);
+				
 				if (!deletedDestUomConversions.isEmpty()) {
 					// dissociate Uoc
 					deleteUocEntity(old.getDestConversions(), old, deletedDestUomConversions, "dest");
@@ -325,7 +329,17 @@ public class UnitOfMeasureServiceImpl extends AbstractServiceImpl<UnitOfMeasureE
 					// dissociate Uoc
 					deleteUocEntity(old.getSrcConversions(), old, deletedSrcUomConversions, "src");
 				} // end if srcUoc not empty
+				
+				old.setStrictConv(neu.isStrictConv());
+				old.setUomClass(neu.getUomClass());
+				old.setUomCode(neu.getUomCode());
+				old.setUomDesc(neu.getUomDesc());
+				old.setUomType(neu.getUomType());
+				
 				JpaUtil.updateRevisionControl(old, true);
+				
+			} else {
+				//TODO: submit a workflow for the changes
 			}
 		}
 		return (old);
@@ -333,86 +347,95 @@ public class UnitOfMeasureServiceImpl extends AbstractServiceImpl<UnitOfMeasureE
 
 	private void updateSrcConversions(UnitOfMeasureEntity neu, UnitOfMeasureEntity old)
 			throws EntityValidationException {
-		for (UomConversionEntity newUoc : neu.getSrcConversions()) {
-			UomConversionEntity oldUoc2 = null;
-			boolean found = false;
-			if (old.getSrcConversions() != null && !old.getSrcConversions().isEmpty()) {
-				for (UomConversionEntity oldUoc : old.getSrcConversions()) {
-					if (Objects.equal(newUoc.getId(), oldUoc.getId())) {
-						oldUoc2 = oldUoc;
-						found = true;
-						break;
+		
+		if (neu.getSrcConversions() != null && !neu.getSrcConversions().isEmpty()) {
+			for (UomConversionEntity newUoc : neu.getSrcConversions()) {
+				UomConversionEntity oldUoc2 = null;
+				boolean found = false;
+				if (old.getSrcConversions() != null && !old.getSrcConversions().isEmpty()) {
+					for (UomConversionEntity oldUoc : old.getSrcConversions()) {
+						if (Objects.equals(newUoc.getId(), oldUoc.getId())) {
+							oldUoc2 = oldUoc;
+							found = true;
+							break;
+						}
+					} // end for old.getSrcConversions
+				} // end if old.getSrcConversions
+
+				if (!found) {
+					// new zone being added
+					newUoc.setSrcUomRef(old);
+					newUoc.setSrcUomCode(old.getUomCode());
+					newUoc.setTenantId(getTenantId());
+
+					uomConversionService.validate(newUoc, false, EntityVdationType.PRE_INSERT);
+					old.getSrcConversions().add(newUoc);
+				} else {
+					boolean uocUpdated = uomConversionService.checkForUpdate(newUoc, oldUoc2);
+					if (uocUpdated) {
+						uomConversionService.update(newUoc);
 					}
-				} // end for old.getSrcConversions
-			} // end if old.getSrcConversions
-
-			if (!found) {
-				// new zone being added
-				newUoc.setSrcUomRef(old);
-				newUoc.setSrcUomCode(old.getUomCode());
-				newUoc.setTenantId(getTenantId());
-
-				uomConversionService.validate(newUoc, false, EntityVdationType.PRE_INSERT);
-				old.getSrcConversions().add(newUoc);
-			} else {
-				boolean uocUpdated = uomConversionService.checkForUpdate(newUoc, oldUoc2);
-				if (uocUpdated) {
-					uomConversionService.update(newUoc);
 				}
-			}
-		} // end for neu.Uoc
+			} // end for neu.Uoc
+		}
+		
 	}
 
-	private void updateDistConversions(UnitOfMeasureEntity neu, UnitOfMeasureEntity old)
+	private void updateDestConversions(UnitOfMeasureEntity neu, UnitOfMeasureEntity old)
 			throws EntityValidationException {
-		for (UomConversionEntity newUoc : neu.getDestConversions()) {
-			UomConversionEntity oldUoc2 = null;
-			boolean found = false;
-			if (old.getDestConversions() != null && !old.getDestConversions().isEmpty()) {
-				for (UomConversionEntity oldUoc : old.getDestConversions()) {
-					if (Objects.equal(newUoc.getId(), oldUoc.getId())) {
-						oldUoc2 = oldUoc;
-						found = true;
-						break;
+		
+		if (neu.getSrcConversions() != null && !neu.getSrcConversions().isEmpty()) {
+			for (UomConversionEntity newUoc : neu.getDestConversions()) {
+				UomConversionEntity oldUoc2 = null;
+				boolean found = false;
+				if (old.getDestConversions() != null && !old.getDestConversions().isEmpty()) {
+					for (UomConversionEntity oldUoc : old.getDestConversions()) {
+						if (Objects.equals(newUoc.getId(), oldUoc.getId())) {
+							oldUoc2 = oldUoc;
+							found = true;
+							break;
+						}
+					} // end for old.getDestConversions
+				} // end if old.getDestConversions
+
+				if (!found) {
+					// new zone being added
+					newUoc.setDestUomRef(old);
+					newUoc.setDestUomCode(old.getUomCode());
+					newUoc.setTenantId(getTenantId());
+
+					uomConversionService.validate(newUoc, false, EntityVdationType.PRE_INSERT);
+					old.getDestConversions().add(newUoc);
+				} else {
+					boolean uocUpdated = uomConversionService.checkForUpdate(newUoc, oldUoc2);
+					if (uocUpdated) {
+						uomConversionService.update(newUoc);
 					}
-				} // end for old.getDestConversions
-			} // end if old.getDestConversions
-
-			if (!found) {
-				// new zone being added
-				newUoc.setDestUomRef(old);
-				newUoc.setDestUomCode(old.getUomCode());
-				newUoc.setTenantId(getTenantId());
-
-				uomConversionService.validate(newUoc, false, EntityVdationType.PRE_INSERT);
-				old.getDestConversions().add(newUoc);
-			} else {
-				boolean uocUpdated = uomConversionService.checkForUpdate(newUoc, oldUoc2);
-				if (uocUpdated) {
-					uomConversionService.update(newUoc);
 				}
-			}
-		} // end for neu.Uoc
+			} // end for neu.Uoc
+		}
+		
 	}
 
 	private void deleteUocEntity(Set<UomConversionEntity> uomConversions, UnitOfMeasureEntity old,
-			List<Long> deletedUomConversions, String conversionType) {
+			ArrayList<Long> deletedUomConversions, String conversionType) {
+		
 		Iterator<UomConversionEntity> uocEntityIter = uomConversions.iterator();
 		for (Long id : deletedUomConversions) {
 			boolean found = false;
 			UomConversionEntity oldUoc = null;
 			while (uocEntityIter.hasNext()) {
 				oldUoc = uocEntityIter.next();
-				if (Objects.equal(id, oldUoc.getId())) {
+				if (Objects.equals(id, oldUoc.getId())) {
 					found = true;
 					break;
 				}
 			}
 			if (found) {
 				if (conversionType.equals("src")) {
-					old.getSrcConversions().remove(oldUoc.getId());
+					old.getSrcConversions().remove(oldUoc);
 				} else if (conversionType.equals("dest")) {
-					old.getDestConversions().remove(oldUoc.getId());
+					old.getDestConversions().remove(oldUoc);
 				}
 				uomConversionService.delete(id);
 			}
@@ -422,12 +445,17 @@ public class UnitOfMeasureServiceImpl extends AbstractServiceImpl<UnitOfMeasureE
 	private boolean checkForUpdate(UnitOfMeasureEntity neu, UnitOfMeasureEntity old) {
 		boolean result = false;
 
-		if (!Objects.equal(neu.getUomCode(), old.getUomCode()) || !Objects.equal(neu.getUomDesc(), old.getUomDesc())
-				|| !Objects.equal(neu.getUomType(), old.getUomType())) {
+		if (!Objects.equals(neu.getUomCode(), old.getUomCode()) || 
+				!Objects.equals(neu.getUomDesc(), old.getUomDesc()) ||
+				!Objects.equals(neu.getUomType(), old.getUomType()) ||
+				!Objects.equals(neu.getUomClass(), old.getUomClass()) ||
+				!Objects.equals(neu.isStrictConv(), old.isStrictConv())
+				) {
 
 			result = true;
 			return (result);
 		}
+		
 		if (neu.getDestConversions() == null || neu.getDestConversions().isEmpty()) {
 			if (old.getDestConversions() != null && !old.getDestConversions().isEmpty()) {
 				result = true;
@@ -439,11 +467,11 @@ public class UnitOfMeasureServiceImpl extends AbstractServiceImpl<UnitOfMeasureE
 				return (result);
 			} else {
 				// both are not null
-				if (!Objects.equal(neu.getDestConversions().size(), old.getDestConversions().size())) {
+				if (!Objects.equals(neu.getDestConversions().size(), old.getDestConversions().size())) {
 					result = true;
 					return (result);
 				} else {
-					result = checkForUpdateWhenBothEntityNotNull(old, neu);
+					result = checkForUpdateConversions(neu.getDestConversions(), old.getDestConversions());
 					return (result);
 				}
 			}
@@ -459,17 +487,24 @@ public class UnitOfMeasureServiceImpl extends AbstractServiceImpl<UnitOfMeasureE
 				result = true;
 				return (result);
 			} else {
-				result = checkForUpdateWhenBothEntityNotNull(old, neu);
-				return (result);
+				if (!Objects.equals(neu.getDestConversions().size(), old.getDestConversions().size())) {
+					result = true;
+					return (result);
+				} else {
+					result = checkForUpdateConversions(neu.getSrcConversions(), old.getSrcConversions());
+					return (result);
+				}
 			}
 		}
+		
 		return result;
 	}
 
-	private boolean checkForUpdateWhenBothEntityNotNull(UnitOfMeasureEntity old, UnitOfMeasureEntity neu) {
+	private boolean checkForUpdateConversions(Set<UomConversionEntity> newConvs, Set<UomConversionEntity> oldConvs) {
+		
 		boolean result = false;
-		Iterator<UomConversionEntity> oldUocEntityIter = old.getDestConversions().iterator();
-		Iterator<UomConversionEntity> newUocEntityIter = neu.getDestConversions().iterator();
+		Iterator<UomConversionEntity> oldUocEntityIter = oldConvs.iterator();
+		Iterator<UomConversionEntity> newUocEntityIter = newConvs.iterator();
 		UomConversionEntity oldUoc = null;
 		UomConversionEntity newUoc = null;
 
@@ -480,7 +515,7 @@ public class UnitOfMeasureServiceImpl extends AbstractServiceImpl<UnitOfMeasureE
 				while (oldUocEntityIter.hasNext()) {
 					oldUoc = oldUocEntityIter.next();
 					Long oldEntityId = oldUoc.getId();
-					if (Objects.equal(newEntityId, oldEntityId)) {
+					if (Objects.equals(newEntityId, oldEntityId)) {
 						boolean outcome = uomConversionService.checkForUpdate(newUoc, oldUoc);
 						if (!outcome) {
 							result = true;
@@ -499,4 +534,6 @@ public class UnitOfMeasureServiceImpl extends AbstractServiceImpl<UnitOfMeasureE
 		}
 		return result;
 	}
+	
+	
 }
