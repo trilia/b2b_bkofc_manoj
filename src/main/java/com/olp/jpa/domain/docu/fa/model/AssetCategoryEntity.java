@@ -28,6 +28,7 @@ import org.hibernate.search.annotations.Store;
 
 import com.olp.annotations.KeyAttribute;
 import com.olp.annotations.MultiTenant;
+import com.olp.fwk.common.Constants;
 import com.olp.jpa.common.RevisionControlBean;
 
 @Entity
@@ -200,7 +201,8 @@ public class AssetCategoryEntity implements Serializable {
 	public AssetCategory convertTo(int mode) {
 		AssetCategory bean = new AssetCategory();
 
-		bean.setId(this.id);
+		if (mode <= Constants.CONV_COMPLETE_DEFINITION)
+			bean.setId(this.id);
 		bean.setTenantId(this.tenantId);
 		bean.setCategoryCode(categoryCode);
 		bean.setDefaultDeprScheduleCode(defaultDeprScheduleCode);

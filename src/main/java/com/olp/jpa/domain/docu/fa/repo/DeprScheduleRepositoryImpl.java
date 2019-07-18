@@ -28,7 +28,7 @@ public class DeprScheduleRepositoryImpl extends AbstractRepositoryImpl<DeprSched
 
 	@Override
 	public String getLazyLoadElements() {		
-		return "";
+		return null;
 	}
 
 }

@@ -25,6 +25,7 @@ import org.hibernate.search.annotations.Store;
 
 import com.olp.annotations.KeyAttribute;
 import com.olp.annotations.MultiTenant;
+import com.olp.fwk.common.Constants;
 import com.olp.jpa.common.RevisionControlBean;
 import com.olp.jpa.domain.docu.fa.model.FaEnums.DepreciationType;
 
@@ -214,18 +215,20 @@ public class DeprScheduleEntity implements Serializable {
 		this.revisionControl = revisionControl;
 	}
 
-	public DeprScheduleEntity convertTo(int mode) {
-		DeprScheduleEntity entity = new DeprScheduleEntity();
-		entity.setId(this.id);
-		entity.setTenantId(this.tenantId);
-		entity.setDeprScheduleCode(deprScheduleCode);
-		entity.setDeprScheduleName(deprScheduleName);
-		entity.setDeprType(deprType);
-		entity.setDeprTypeImpl(deprTypeImpl);
-		entity.setLifecycleStage(lifecycleStage);
-		entity.setRevisionControl(revisionControl);
+	public DeprSchedule convertTo(int mode) {
+		DeprSchedule bean = new DeprSchedule();
+		if (mode <= Constants.CONV_COMPLETE_DEFINITION)
+			// existing
+			bean.setId(this.id);
+		bean.setTenantId(this.tenantId);
+		bean.setDeprScheduleCode(deprScheduleCode);
+		bean.setDeprScheduleName(deprScheduleName);
+		bean.setDeprType(deprType);
+		bean.setDeprTypeImpl(deprTypeImpl);
+		bean.setLifecycleStage(lifecycleStage);
+		bean.setRevisionControl(revisionControl);
 
-		return entity;
+		return bean;
 	}
 
 }

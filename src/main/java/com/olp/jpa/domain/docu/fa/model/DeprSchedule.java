@@ -170,6 +170,34 @@ public class DeprSchedule implements Serializable {
 		this.revisionControl = revisionControl;
 	}
 
+	/**
+	 * @return the deprTypeImpl
+	 */
+	public String getDeprTypeImpl() {
+		return deprTypeImpl;
+	}
+
+	/**
+	 * @param deprTypeImpl the deprTypeImpl to set
+	 */
+	public void setDeprTypeImpl(String deprTypeImpl) {
+		this.deprTypeImpl = deprTypeImpl;
+	}
+
+	/**
+	 * @return the lifeCycleStage
+	 */
+	public LifeCycleStage getLifeCycleStage() {
+		return lifeCycleStage;
+	}
+
+	/**
+	 * @param lifeCycleStage the lifeCycleStage to set
+	 */
+	public void setLifeCycleStage(LifeCycleStage lifeCycleStage) {
+		this.lifeCycleStage = lifeCycleStage;
+	}
+
 	public DeprScheduleEntity convertTo(int mode) {
 		DeprScheduleEntity entity = new DeprScheduleEntity();
 		entity.setId(this.id);
@@ -184,4 +212,5 @@ public class DeprSchedule implements Serializable {
 
 		return entity;
 	}
+
 }
