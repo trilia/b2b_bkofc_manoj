@@ -127,6 +127,30 @@ public class OrgCalendarServiceImpl extends AbstractServiceImpl<OrgCalendarEntit
 			throw new EntityValidationException("OrgCalendarEntity cannot be updated ! Existing - "
 					+ old.getCalendarCode() + ", new - " + neu.getCalendarCode());
 		}
+		
+		//If usageType is FINANCIAL, when status is changed from NEW to ACTIVE, 
+				//create entries in trl_fin_cal_periods for one year. Start with startYear (if provided) .
+				//If not use current year.
+		if (old.getUsageType() == CalUsageType.FINANCIAL && old.getLifecycleStage() == LifeCycleStage.NEW
+				&& neu.getLifecycleStage() == LifeCycleStage.ACTIVE) {
+
+			FinCalendarEntity finEntity = new FinCalendarEntity();
+			finEntity.setOrgCalendarCode(old.getCalendarCode());
+			finEntity.setOrgCalendarRef(old);
+			if (old.getStartYear() != null) {
+				finEntity.setPeriodYear(old.getStartYear());
+			}else{
+				finEntity.setPeriodYear(Year.now().getValue());
+			}
+			LocalDate today = LocalDate.now(); 
+			String periodName = today.format(DateTimeFormatter.ofPattern("MMM-yyyy"));
+			finEntity.setPeriodName(periodName);
+			YearMonth yearMonth = YearMonth.now();
+			
+			finEntity.setPeriodMonth(CalendarMonth.decode(yearMonth.getMonth().getValue()));
+			finEntity.setPeriodStatus(CalPeriodStatus.READY);//TODO -Check
+			finCalendarService.add(finEntity);
+		}
 
 		boolean updated = checkForUpdate(neu, old);
 		if (updated) {
@@ -141,10 +165,7 @@ public class OrgCalendarServiceImpl extends AbstractServiceImpl<OrgCalendarEntit
 				old.setStartMonth(neu.getStartMonth());
 				old.setStartYear(neu.getStartYear());
 				old.setUsageType(neu.getUsageType());
-
-				//If usageType is FINANCIAL, when status is changed from NEW to ACTIVE, 
-				//create entries in trl_fin_cal_periods for one year. Start with startYear (if provided) .
-				//If not use current year.
+				JpaUtil.updateRevisionControl(old, true);
 			}
 		}
 		return old;
