@@ -81,7 +81,7 @@ public class AccountSubCategoryServiceImpl extends AbstractServiceImpl<AccountSu
 					throw new EntityValidationException("Could not find AccountCategory using either code or id !");
 
 				entity.setCategoryRef(ac2);
-				entity.setCategoryCode(ac.getCategoryCode());
+				entity.setCategoryCode(ac2.getCategoryCode());
 
 			}
 
