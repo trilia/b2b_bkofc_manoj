@@ -64,4 +64,16 @@ public class FinEnums {
         INCOME,
         EXPENSE
     }
+    
+    public static enum LedgerStatus {
+    	NEW,
+    	POSTED,
+    	CANCELLED
+    }
+    
+    public static enum LedgerLineType {
+    	CREDIT,
+    	DEBIT
+    }
+
 }

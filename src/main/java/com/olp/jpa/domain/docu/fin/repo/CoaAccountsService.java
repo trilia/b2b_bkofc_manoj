@@ -10,10 +10,10 @@ import com.olp.jpa.domain.docu.fin.model.CoaAccountsEntity;
 @NoRepositoryBean
 public interface CoaAccountsService extends IJpaService<CoaAccountsEntity, Long> {
 	public CoaAccountsEntity findbyAccountCatg(String catgCode, String subCatgCode);
-	public void validate(CoaAccountsEntity lovValues, boolean b, EntityVdationType type)
+	
+	public void validate(CoaAccountsEntity coaValues, boolean b, EntityVdationType type)
 			throws EntityValidationException;
 
-	public boolean checkForUpdate(CoaAccountsEntity newLovValues, CoaAccountsEntity oldLuvValues2);
-
+	public boolean checkForUpdate(CoaAccountsEntity neu, CoaAccountsEntity old);
 
 }

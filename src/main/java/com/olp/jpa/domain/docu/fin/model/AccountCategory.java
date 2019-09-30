@@ -15,7 +15,7 @@ import com.olp.jpa.common.CommonEnums.LifeCycleStatus;
 import com.olp.jpa.common.RevisionControlBean;
 import com.olp.jpa.domain.docu.fin.model.FinEnums.AccountClass;
 
-@XmlRootElement(name = "fincalendar", namespace = "http://trilia-cloud.com/schema/entity/wm")
+@XmlRootElement(name = "accountCategory", namespace = "http://trilia-cloud.com/schema/entity/wm")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = { "id", "tenantId", "categoryCode", "categoryName", "accountClass", "lifeCycleStatus",
 		"accountSubCategories", "revisionControl" })

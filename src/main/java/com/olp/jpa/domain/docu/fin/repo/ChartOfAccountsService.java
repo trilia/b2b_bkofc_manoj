@@ -11,8 +11,8 @@ import com.olp.jpa.domain.docu.fin.model.ChartOfAccountsEntity;
 public interface ChartOfAccountsService extends IJpaService<ChartOfAccountsEntity, Long> {
 	public ChartOfAccountsEntity findbyCoaCode(String coaCode);
 
-	public void validate(ChartOfAccountsEntity lovValues, boolean b, EntityVdationType type)
+	public void validate(ChartOfAccountsEntity coaValues, boolean b, EntityVdationType type)
 			throws EntityValidationException;
 
-	public boolean checkForUpdate(ChartOfAccountsEntity newLovValues, ChartOfAccountsEntity oldLuvValues2);
+	public boolean checkForUpdate(ChartOfAccountsEntity neu, ChartOfAccountsEntity old);
 }

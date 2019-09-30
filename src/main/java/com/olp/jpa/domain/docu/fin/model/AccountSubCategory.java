@@ -11,7 +11,6 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import com.olp.jpa.common.CommonEnums.LifeCycleStatus;
-import com.olp.jpa.domain.docu.inv.model.UnitOfMeasureEntity;
 import com.olp.jpa.common.RevisionControlBean;
 
 @XmlRootElement(name = "fincalendar", namespace = "http://trilia-cloud.com/schema/entity/wm")
