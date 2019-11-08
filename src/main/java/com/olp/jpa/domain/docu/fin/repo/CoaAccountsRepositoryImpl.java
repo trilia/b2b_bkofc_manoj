@@ -3,6 +3,7 @@ package com.olp.jpa.domain.docu.fin.repo;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.olp.fwk.common.ContextManager;
 import com.olp.fwk.common.IContext;
@@ -14,13 +15,14 @@ public class CoaAccountsRepositoryImpl extends AbstractRepositoryImpl<CoaAccount
 implements CoaAccountsRepository {
 
 	@Override
+	@Transactional(readOnly=true)
 	public CoaAccountsEntity findbyAccountCatg(String catgCode, String subCatgCode) {
 		IContext ctx = ContextManager.getContext();
         String tid = ctx.getTenantId();
         
         TypedQuery<CoaAccountsEntity> query = getEntityManager().createNamedQuery("CoaAccountsEntity.findbyAccountCatg", CoaAccountsEntity.class);
-        query.setParameter("catgCode", catgCode);
-        query.setParameter("subCatgCode", subCatgCode);
+        query.setParameter("accountCatgCode", catgCode);
+        query.setParameter("accountSubCatgCode", subCatgCode);
         query.setParameter("tenant", tid);
         CoaAccountsEntity bean = query.getSingleResult();
         
@@ -29,6 +31,6 @@ implements CoaAccountsRepository {
 
 	@Override
 	public String getLazyLoadElements() {
-		return null;
+		return "";
 	}
 }

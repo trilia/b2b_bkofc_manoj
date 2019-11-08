@@ -40,6 +40,7 @@ public class ChartOfAccountsServiceImpl extends AbstractServiceImpl<ChartOfAccou
 	}
 
 	@Override
+	@Transactional(readOnly = true, noRollbackFor = { javax.persistence.NoResultException.class })
 	public ChartOfAccountsEntity findbyCoaCode(String coaCode) {
 		return chartOfAccountsRepository.findbyCoaCode(coaCode);
 	}

@@ -18,7 +18,7 @@ import com.olp.jpa.domain.docu.fin.model.ChartOfAccountsEntity;
 import com.olp.jpa.domain.docu.fin.model.CoaAccountsEntity;
 import com.olp.jpa.util.JpaUtil;
 
-@Service("CoaAccountsService")
+@Service("coaAccountsService")
 public class CoaAccountsServiceImpl extends AbstractServiceImpl<CoaAccountsEntity, Long> implements CoaAccountsService {
 
 	@Autowired
@@ -56,6 +56,7 @@ public class CoaAccountsServiceImpl extends AbstractServiceImpl<CoaAccountsEntit
 	}
 
 	@Override
+	@Transactional(readOnly = true, noRollbackFor = { javax.persistence.NoResultException.class })
 	public CoaAccountsEntity findbyAccountCatg(String catgCode, String subCatgCode) {
 		return coaAccountsRepository.findbyAccountCatg(catgCode, subCatgCode);
 	}
@@ -368,9 +369,9 @@ public class CoaAccountsServiceImpl extends AbstractServiceImpl<CoaAccountsEntit
 	}
 
 	private void preDelete(CoaAccountsEntity entity) throws EntityValidationException {
-		if (!isPrivilegedContext()) {
+		/*if (!isPrivilegedContext()) {
 			throw new EntityValidationException("Cannot delete CoaAccounts  " + entity.getCoaCode());
-		}
+		}*/
 	}
 
 }

@@ -474,7 +474,24 @@ public class CoaAccounts implements Serializable {
 
 	public CoaAccounts convertTo(int mode) {
 		CoaAccounts bean = new CoaAccounts();
-
+		bean.setAccountCatgCode(accountCatgCode);
+		bean.setAccountCode(accountCode);
+		bean.setAccountSubCatgCode(accountSubCatgCode);
+		bean.setAccountSubCatgRef(accountSubCatgRef);
+		bean.setAccountCatgRef(accountCatgRef);
+		bean.setChild(isChild);
+		bean.setCoaCode(coaCode);
+		bean.setCoaRef(coaRef);
+		bean.setEnabled(isEnabled);
+		bean.setId(id);
+		bean.setParentAccountCode(parentAccountCode);
+		bean.setTenantId(tenantId);
+		bean.setParentAccountCode(parentAccountCode);
+		bean.setParentAccountRef(parentAccountRef);
+		bean.setSegment1LovCode(segment1LovCode);
+		bean.setSegment1Value(segment1Value);
+		
+		
 		return bean;
 	}
 

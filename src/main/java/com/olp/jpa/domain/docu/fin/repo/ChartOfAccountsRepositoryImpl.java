@@ -3,6 +3,7 @@ package com.olp.jpa.domain.docu.fin.repo;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.olp.fwk.common.ContextManager;
 import com.olp.fwk.common.IContext;
@@ -14,6 +15,7 @@ public class ChartOfAccountsRepositoryImpl extends AbstractRepositoryImpl<ChartO
 		implements ChartOfAccountsRepository {
 
 	@Override
+	@Transactional(readOnly=true)
 	public ChartOfAccountsEntity findbyCoaCode(String coaCode) {
 		IContext ctx = ContextManager.getContext();
 		String tid = ctx.getTenantId();
@@ -29,6 +31,6 @@ public class ChartOfAccountsRepositoryImpl extends AbstractRepositoryImpl<ChartO
 
 	@Override
 	public String getLazyLoadElements() {
-		return null;
+		return "";
 	}
 }
