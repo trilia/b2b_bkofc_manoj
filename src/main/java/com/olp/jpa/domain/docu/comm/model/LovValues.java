@@ -143,19 +143,19 @@ public class LovValues implements Serializable {
 		this.revisionControl = revisionControl;
 	}
 
-	public LovDefinition convertTo(int mode) {
-		LovDefinition bean = new LovDefinition();
-		/*
-		 * bean.setId(this.id); bean.setTenantId(this.tenantId);
-		 * bean.setCalendarCode(calendarCode);
-		 * bean.setCalendarName(calendarName); bean.setUsageType(usageType);
-		 * bean.setPeriodicity(periodicity); bean.setStartMonth(startMonth);
-		 * bean.setEndMonth(endMonth); bean.setStartYear(startYear);
-		 * bean.setEndYear(endYear); bean.setStartDay(startDay);
-		 * bean.setEndDay(endDay);
-		 * 
-		 * bean.setRevisionControl(revisionControl);
-		 */
+	public LovValuesEntity convertTo(int mode) {
+		LovValuesEntity bean = new LovValuesEntity();
+		bean.setEnabled(isEnabled);
+		bean.setId(id);
+		bean.setLovCode(lovCode);
+		bean.setRevisionControl(revisionControl);
+		bean.setTenantId(tenantId);
+		bean.setValue(value);
+		
+		LovDefinitionEntity lovDefintionEntity = new LovDefinitionEntity();
+		lovDefintionEntity.setLovCode(lovDefRef);
+		bean.setLovDefRef(lovDefintionEntity);
+		
 		return bean;
 	}
 

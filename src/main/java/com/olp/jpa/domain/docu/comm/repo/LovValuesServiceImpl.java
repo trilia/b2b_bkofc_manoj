@@ -14,7 +14,7 @@ import com.olp.jpa.domain.docu.comm.model.LovDefinitionEntity;
 import com.olp.jpa.domain.docu.comm.model.LovValuesEntity;
 import com.olp.jpa.util.JpaUtil;
 
-@Service("lovValuesServcie")
+@Service("lovValuesService")
 public class LovValuesServiceImpl extends AbstractServiceImpl<LovValuesEntity, Long> implements LovValuesService {
 
 	@Autowired
@@ -183,8 +183,8 @@ public class LovValuesServiceImpl extends AbstractServiceImpl<LovValuesEntity, L
 
 	private void preDelete(LovValuesEntity entity) throws EntityValidationException {
 		if (entity.getLovDefRef() != null) {
-			if (!isPrivilegedContext())
-				throw new EntityValidationException("Cannot delete lovValues");
+			/*if (!isPrivilegedContext())
+				throw new EntityValidationException("Cannot delete lovValues");*/
 		}
 	}
 }

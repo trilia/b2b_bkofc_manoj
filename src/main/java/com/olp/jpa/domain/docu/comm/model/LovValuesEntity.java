@@ -30,9 +30,9 @@ import com.olp.fwk.common.Constants;
 import com.olp.jpa.common.RevisionControlBean;
 
 @Entity
-@Table(name = "trl_lov_values", uniqueConstraints = @UniqueConstraint(columnNames = { "tenant_id", "lov_code" }))
+@Table(name = "trl_lov_values", uniqueConstraints = @UniqueConstraint(columnNames = { "tenant_id", "lov_code" ,"lov_value" }))
 @NamedQueries({
-		@NamedQuery(name = "LovValuesEntity.findByLovValue", query = "SELECT t FROM LovValuesEntity t WHERE t.lovCode = :lovCode and t:value = value and t.tenantId = :tenant ") })
+		@NamedQuery(name = "LovValuesEntity.findByLovValue", query = "SELECT t FROM LovValuesEntity t WHERE t.lovCode = :lovCode and t.value = :value and t.tenantId = :tenant ") })
 @Cacheable(true)
 @Indexed(index = "SetupDataIndex")
 @MultiTenant(level = MultiTenant.Levels.ONE_TENANT)

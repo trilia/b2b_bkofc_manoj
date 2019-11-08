@@ -205,10 +205,17 @@ public class LovDefinitionEntity implements Serializable {
 		if (mode <= Constants.CONV_COMPLETE_DEFINITION)
 			bean.setId(this.id);
 		bean.setTenantId(this.tenantId);
-		bean.setIsEnabled(isEnabled);
+		bean.setEnabled(isEnabled);
 		bean.setLovCode(lovCode);
 		bean.setLovType(lovType);
-		bean.setLovValues(lovValues);
+		bean.setLovName(lovName);
+		
+		List<LovValues> lovValuesList = new ArrayList<LovValues>();
+		for(LovValuesEntity lovValEntity : lovValues){
+			LovValues lovValue = lovValEntity.convertTo(0);
+			lovValuesList.add(lovValue);
+		}
+		bean.setLovValues(lovValuesList);
 		bean.setRevisionControl(revisionControl);
 
 		return bean;

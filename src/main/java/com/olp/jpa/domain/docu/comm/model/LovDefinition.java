@@ -1,6 +1,7 @@
 package com.olp.jpa.domain.docu.comm.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,9 +15,8 @@ import com.olp.jpa.common.RevisionControlBean;
 
 @XmlRootElement(name = "lovDefinition", namespace = "http://trilia-cloud.com/schema/entity/wm")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "id", "tenantId", "lovCode", "lovName", "lovType",
-		"isEnabled", "lovValues", "revisionControl" })
-public class LovDefinition implements Serializable{
+@XmlType(propOrder = { "id", "tenantId", "lovCode", "lovName", "lovType", "isEnabled", "lovValues", "revisionControl" })
+public class LovDefinition implements Serializable {
 
 	private static final long serialVersionUID = -1L;
 
@@ -28,18 +28,18 @@ public class LovDefinition implements Serializable{
 
 	@XmlElement
 	private String lovCode;
-	
+
 	@XmlElement
 	private String lovName;
 
 	@XmlElement
 	private LovType lovType;
-	
+
 	@XmlElement
 	private boolean isEnabled;
-	
-	private List<LovValuesEntity> lovValues;
-	
+
+	private List<LovValues> lovValues;
+
 	private RevisionControlBean revisionControl;
 
 	/**
@@ -50,7 +50,8 @@ public class LovDefinition implements Serializable{
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(Long id) {
 		this.id = id;
@@ -64,7 +65,8 @@ public class LovDefinition implements Serializable{
 	}
 
 	/**
-	 * @param tenantId the tenantId to set
+	 * @param tenantId
+	 *            the tenantId to set
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
@@ -78,7 +80,8 @@ public class LovDefinition implements Serializable{
 	}
 
 	/**
-	 * @param lovCode the lovCode to set
+	 * @param lovCode
+	 *            the lovCode to set
 	 */
 	public void setLovCode(String lovCode) {
 		this.lovCode = lovCode;
@@ -92,7 +95,8 @@ public class LovDefinition implements Serializable{
 	}
 
 	/**
-	 * @param lovName the lovName to set
+	 * @param lovName
+	 *            the lovName to set
 	 */
 	public void setLovName(String lovName) {
 		this.lovName = lovName;
@@ -106,7 +110,8 @@ public class LovDefinition implements Serializable{
 	}
 
 	/**
-	 * @param lovType the lovType to set
+	 * @param lovType
+	 *            the lovType to set
 	 */
 	public void setLovType(LovType lovType) {
 		this.lovType = lovType;
@@ -115,28 +120,30 @@ public class LovDefinition implements Serializable{
 	/**
 	 * @return the isEnabled
 	 */
-	public boolean getIsEnabled() {
+	public boolean isEnabled() {
 		return isEnabled;
 	}
 
 	/**
-	 * @param isEnabled the isEnabled to set
+	 * @param isEnabled
+	 *            the isEnabled to set
 	 */
-	public void setIsEnabled(boolean isEnabled) {
+	public void setEnabled(boolean isEnabled) {
 		this.isEnabled = isEnabled;
 	}
 
 	/**
 	 * @return the lovValues
 	 */
-	public List<LovValuesEntity> getLovValues() {
+	public List<LovValues> getLovValues() {
 		return lovValues;
 	}
 
 	/**
-	 * @param lovValues the lovValues to set
+	 * @param lovValues
+	 *            the lovValues to set
 	 */
-	public void setLovValues(List<LovValuesEntity> lovValues) {
+	public void setLovValues(List<LovValues> lovValues) {
 		this.lovValues = lovValues;
 	}
 
@@ -148,29 +155,32 @@ public class LovDefinition implements Serializable{
 	}
 
 	/**
-	 * @param revisionControl the revisionControl to set
+	 * @param revisionControl
+	 *            the revisionControl to set
 	 */
 	public void setRevisionControl(RevisionControlBean revisionControl) {
 		this.revisionControl = revisionControl;
 	}
-	
-	public LovValuesEntity convertTo(int mode){
-		LovValuesEntity bean = new LovValuesEntity();
-		/*bean.setId(this.id);
+
+	public LovDefinitionEntity convertTo(int mode){
+		LovDefinitionEntity bean = new LovDefinitionEntity();
+		bean.setId(this.id);
 		bean.setTenantId(this.tenantId);
-		bean.setCalendarCode(calendarCode);
-		bean.setCalendarName(calendarName);
-		bean.setUsageType(usageType);		
-		bean.setPeriodicity(periodicity);
-		bean.setStartMonth(startMonth);
-		bean.setEndMonth(endMonth);
-		bean.setStartYear(startYear);
-		bean.setEndYear(endYear);
-		bean.setStartDay(startDay);
-		bean.setEndDay(endDay);
+		bean.setEnabled(isEnabled);
+		bean.setLovCode(lovCode);
+		bean.setLovName(lovName);
+		bean.setLovType(lovType);
 		
-		bean.setRevisionControl(revisionControl);*/
+		List<LovValuesEntity> lovValuesEntityList = new ArrayList<LovValuesEntity>();
+		for(LovValues lovValue:lovValues){
+			LovValuesEntity lovValEntity = lovValue.convertTo(0);
+			lovValEntity.setLovDefRef(bean);
+			lovValuesEntityList.add(lovValEntity);
+		}
+		bean.setLovValues(lovValuesEntityList);
+		
+		bean.setRevisionControl(revisionControl);
 		return bean;
 	}
-	
+
 }

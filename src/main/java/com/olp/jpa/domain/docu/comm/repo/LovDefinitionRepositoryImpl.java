@@ -2,6 +2,8 @@ package com.olp.jpa.domain.docu.comm.repo;
 
 import javax.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.olp.fwk.common.ContextManager;
 import com.olp.fwk.common.IContext;
 import com.olp.jpa.common.AbstractRepositoryImpl;
@@ -12,6 +14,7 @@ public class LovDefinitionRepositoryImpl extends AbstractRepositoryImpl<LovDefin
 implements LovDefinitionRepository {
 
 	@Override
+	@Transactional(readOnly=true)
 	public LovDefinitionEntity findByLovCode(String lovCode) {
 		IContext ctx = ContextManager.getContext();
         String tid = ctx.getTenantId();
@@ -26,6 +29,6 @@ implements LovDefinitionRepository {
 
 	@Override
 	public String getLazyLoadElements() {
-		return null;
+		return "";
 	}
 }

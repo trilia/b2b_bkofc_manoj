@@ -23,7 +23,7 @@ public class LovDefinitionServiceImpl extends AbstractServiceImpl<LovDefinitionE
 		implements LovDefinitionService {
 
 	@Autowired
-	@Qualifier("orgCalendarRepository")
+	@Qualifier("lovDefinitionRepository")
 	private LovDefinitionRepository lovDefinitionRepository;
 
 	@Autowired
@@ -302,8 +302,8 @@ public class LovDefinitionServiceImpl extends AbstractServiceImpl<LovDefinitionE
 	}
 
 	private void preDelete(LovDefinitionEntity entity) throws EntityValidationException {
-		if (!isPrivilegedContext()) {
+		/*if (!isPrivilegedContext()) {
 			throw new EntityValidationException("Cannot delete LovDefinition ");
-		}
+		}*/
 	}
 }
