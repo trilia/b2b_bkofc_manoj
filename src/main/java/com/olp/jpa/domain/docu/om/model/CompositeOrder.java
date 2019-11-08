@@ -2,13 +2,16 @@ package com.olp.jpa.domain.docu.om.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+
 import com.olp.jpa.common.RevisionControlBean;
 import com.olp.jpa.domain.docu.om.model.OmEnums.CompOrderStatus;
 import com.olp.jpa.domain.docu.om.model.OmEnums.PaymentMethod;
@@ -16,10 +19,10 @@ import com.olp.jpa.domain.docu.om.model.OmEnums.PaymentStatus;
 
 @XmlRootElement(name = "compositeorder", namespace = "http://trilia-cloud.com/schema/entity/wm")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "id", "compOrderNum", "compOrderDate", "compOrderStatus", "orderValue",
-		"paymentStatus", "paymentMethod", "orderLines", "revisionControl" })
-public class CompositeOrder implements Serializable{
-	
+@XmlType(propOrder = { "id", "compOrderNum", "compOrderDate", "compOrderStatus", "orderValue", "paymentStatus",
+		"paymentMethod", "orderLines", "revisionControl" })
+public class CompositeOrder implements Serializable {
+
 	private static final long serialVersionUID = -1L;
 
 	@XmlElement(name = "compOrderId")
@@ -36,10 +39,10 @@ public class CompositeOrder implements Serializable{
 
 	@XmlElement
 	private BigDecimal orderValue;
-	
+
 	@XmlElement
 	private PaymentStatus paymentStatus;
-	
+
 	@XmlElement
 	private PaymentMethod paymentMethod;
 
@@ -56,7 +59,8 @@ public class CompositeOrder implements Serializable{
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(Long id) {
 		this.id = id;
@@ -70,7 +74,8 @@ public class CompositeOrder implements Serializable{
 	}
 
 	/**
-	 * @param compOrderNum the compOrderNum to set
+	 * @param compOrderNum
+	 *            the compOrderNum to set
 	 */
 	public void setCompOrderNum(String compOrderNum) {
 		this.compOrderNum = compOrderNum;
@@ -84,7 +89,8 @@ public class CompositeOrder implements Serializable{
 	}
 
 	/**
-	 * @param compOrderDate the compOrderDate to set
+	 * @param compOrderDate
+	 *            the compOrderDate to set
 	 */
 	public void setCompOrderDate(Date compOrderDate) {
 		this.compOrderDate = compOrderDate;
@@ -98,7 +104,8 @@ public class CompositeOrder implements Serializable{
 	}
 
 	/**
-	 * @param compOrderStatus the compOrderStatus to set
+	 * @param compOrderStatus
+	 *            the compOrderStatus to set
 	 */
 	public void setCompOrderStatus(CompOrderStatus compOrderStatus) {
 		this.compOrderStatus = compOrderStatus;
@@ -112,7 +119,8 @@ public class CompositeOrder implements Serializable{
 	}
 
 	/**
-	 * @param orderValue the orderValue to set
+	 * @param orderValue
+	 *            the orderValue to set
 	 */
 	public void setOrderValue(BigDecimal orderValue) {
 		this.orderValue = orderValue;
@@ -126,7 +134,8 @@ public class CompositeOrder implements Serializable{
 	}
 
 	/**
-	 * @param paymentStatus the paymentStatus to set
+	 * @param paymentStatus
+	 *            the paymentStatus to set
 	 */
 	public void setPaymentStatus(PaymentStatus paymentStatus) {
 		this.paymentStatus = paymentStatus;
@@ -140,7 +149,8 @@ public class CompositeOrder implements Serializable{
 	}
 
 	/**
-	 * @param paymentMethod the paymentMethod to set
+	 * @param paymentMethod
+	 *            the paymentMethod to set
 	 */
 	public void setPaymentMethod(PaymentMethod paymentMethod) {
 		this.paymentMethod = paymentMethod;
@@ -154,7 +164,8 @@ public class CompositeOrder implements Serializable{
 	}
 
 	/**
-	 * @param orderLines the orderLines to set
+	 * @param orderLines
+	 *            the orderLines to set
 	 */
 	public void setOrderLines(List<CompositeOrderLine> orderLines) {
 		this.orderLines = orderLines;
@@ -168,24 +179,32 @@ public class CompositeOrder implements Serializable{
 	}
 
 	/**
-	 * @param revisionControl the revisionControl to set
+	 * @param revisionControl
+	 *            the revisionControl to set
 	 */
 	public void setRevisionControl(RevisionControlBean revisionControl) {
 		this.revisionControl = revisionControl;
 	}
-	
-	public CompositeOrder convertTo(int mode){
-		CompositeOrder bean = new CompositeOrder();
+
+	public CompositeOrderEntity convertTo(int mode) {
+		CompositeOrderEntity bean = new CompositeOrderEntity();
 		bean.setId(id);
 		bean.setCompOrderDate(compOrderDate);
 		bean.setCompOrderNum(compOrderNum);
 		bean.setCompOrderStatus(compOrderStatus);
-		bean.setOrderLines(orderLines);
+
+		List<CompositeOrderLineEntity> compOrderEnityList = new ArrayList<>();
+		for (CompositeOrderLine compOrder : orderLines) {
+			CompositeOrderLineEntity compOrderLineEntity = compOrder.convertTo(0);
+			compOrderEnityList.add(compOrderLineEntity);
+		}
+
+		bean.setOrderLines(compOrderEnityList);
 		bean.setOrderValue(orderValue);
 		bean.setPaymentMethod(paymentMethod);
 		bean.setPaymentStatus(paymentStatus);
 		bean.setRevisionControl(revisionControl);
-		
+
 		return bean;
 	}
 }
