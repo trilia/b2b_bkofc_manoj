@@ -20,7 +20,7 @@ import com.olp.jpa.domain.docu.org.model.EmployeeEntity;
 import com.olp.jpa.domain.docu.wm.model.WmEnums.WaveResourceRole;
 import com.olp.jpa.domain.docu.wm.model.WmEnums.WaveResourceType;
 
-@XmlRootElement(name = "wavebatch", namespace = "http://trilia-cloud.com/schema/entity/wm")
+@XmlRootElement(name = "waveresources", namespace = "http://trilia-cloud.com/schema/entity/wm")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = { "id", "tenantId", "warehouseCode", "batchNumber", "employeeCode",
 		"resourceType", "resourceRole", "revisionControl" })

@@ -24,7 +24,7 @@ import com.olp.jpa.domain.docu.org.model.Employee;
 import com.olp.jpa.domain.docu.org.model.EmployeeEntity;
 import com.olp.jpa.domain.docu.wm.model.WmEnums.WaveTaskStatus;
 
-@XmlRootElement(name = "wavebatch", namespace = "http://trilia-cloud.com/schema/entity/wm")
+@XmlRootElement(name = "wavetasks", namespace = "http://trilia-cloud.com/schema/entity/wm")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = { "id", "tenantId", "warehouseCode", "batchNumber", "matPipeCode", "serials", "quantity",
 		"quantityUomRef", "uomCode", "palletNum", "assignedTo", "employeeCode", "estimatedStartDate", "actualStartDate",

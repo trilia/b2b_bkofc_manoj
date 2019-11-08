@@ -255,7 +255,7 @@ public class WaveBatchServiceImpl extends AbstractServiceImpl<WaveBatchEntity, L
 						} else {
 							throw new EntityValidationException(
 									"Cannot delete Wave Resource " + oldWaveResource.getBatchNumber()
-											+ " when warehouse is " + old.getLifecycleStatus());
+											+ " when lifecycle is " + old.getLifecycleStatus());
 						}
 					} else {
 						deletedWaveResources.add(oldWaveResource.getId());
