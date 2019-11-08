@@ -3,6 +3,7 @@ package com.olp.jpa.domain.docu.fin.repo;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.olp.fwk.common.ContextManager;
 import com.olp.fwk.common.IContext;
@@ -14,6 +15,7 @@ public class AccountCategoryRepositoryImpl extends AbstractRepositoryImpl<Accoun
 implements AccountCategoryRepository {
 
 	@Override
+	@Transactional(readOnly=true)
 	public AccountCategoryEntity findbyCategoryCode(String  catgCode) {
 		 IContext ctx = ContextManager.getContext();
 	        String tid = ctx.getTenantId();

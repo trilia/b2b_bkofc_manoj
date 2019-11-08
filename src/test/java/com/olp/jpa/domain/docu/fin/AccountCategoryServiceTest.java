@@ -41,7 +41,7 @@ public class AccountCategoryServiceTest extends BaseSpringAwareTest{
 	@Test
 	public void testAccountCategory() {
 		List<AccountCategoryEntity> accountCategories = accountCategoryService.findAll();
-		assertNotNull("wavebatch list cannot be null", accountCategories);
+		assertNotNull("accountCategories list cannot be null", accountCategories);
 	}
 
 	@Test
@@ -66,6 +66,7 @@ public class AccountCategoryServiceTest extends BaseSpringAwareTest{
 		accountCategories= accountCategoryService.findAll();
 		assertEquals("accountSubCategories size", accountCategories.get(0).getAccountSubCategories().size(), 3);
 	}
+	
 	public void setup() {
 		AccountCategoryEntity accountCategory = CommonFin.makeAccountCategory();
 		

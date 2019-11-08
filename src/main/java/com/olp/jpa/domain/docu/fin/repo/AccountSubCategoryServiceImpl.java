@@ -40,6 +40,7 @@ public class AccountSubCategoryServiceImpl extends AbstractServiceImpl<AccountSu
 	}
 
 	@Override
+	@Transactional(readOnly = true, noRollbackFor = { javax.persistence.NoResultException.class })
 	public AccountSubCategoryEntity findbySubCatgCode(String catgCode, String subCatgCode) {
 		AccountSubCategoryEntity entity = accountSubCategoryRepository.findbySubCatgCode(catgCode, subCatgCode);
 
