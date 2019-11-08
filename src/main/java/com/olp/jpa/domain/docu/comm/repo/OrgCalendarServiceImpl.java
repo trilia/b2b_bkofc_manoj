@@ -1,5 +1,9 @@
 package com.olp.jpa.domain.docu.comm.repo;
 
+import java.time.LocalDate;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +14,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.olp.fwk.common.error.EntityValidationException;
 import com.olp.jpa.common.AbstractServiceImpl;
+import com.olp.jpa.common.CommonEnums.CalendarMonth;
 import com.olp.jpa.common.CommonEnums.EntityVdationType;
 import com.olp.jpa.common.ITextRepository;
 import com.olp.jpa.domain.docu.comm.model.CalPeriodicity;
 import com.olp.jpa.domain.docu.comm.model.CalUsageType;
 import com.olp.jpa.domain.docu.comm.model.OrgCalendarEntity;
 import com.olp.jpa.domain.docu.fa.model.LifeCycleStage;
+import com.olp.jpa.domain.docu.fin.model.FinCalendarEntity;
+import com.olp.jpa.domain.docu.fin.model.FinEnums.CalPeriodStatus;
+import com.olp.jpa.domain.docu.fin.repo.FinCalendarService;
 import com.olp.jpa.util.JpaUtil;
 
 @Service("orgCalendarService")
@@ -24,6 +32,10 @@ public class OrgCalendarServiceImpl extends AbstractServiceImpl<OrgCalendarEntit
 	@Autowired
 	@Qualifier("orgCalendarRepository")
 	private OrgCalendarRepository orgCalendarRepository;
+
+	@Autowired
+	@Qualifier("finCalendarService")
+	private FinCalendarService finCalendarService;
 
 	@Override
 	protected JpaRepository<OrgCalendarEntity, Long> getRepository() {
@@ -104,7 +116,7 @@ public class OrgCalendarServiceImpl extends AbstractServiceImpl<OrgCalendarEntit
 				|| entity.getPeriodicity() == CalPeriodicity.QUARTERLY) {
 			if (entity.getStartMonth() == null) {
 				throw new EntityValidationException(
-						"OrgCalendar startMonth cannot be null " + entity.getCalendarCode());																							// end-month
+						"OrgCalendar startMonth cannot be null " + entity.getCalendarCode()); // end-month
 			}
 		}
 
@@ -127,10 +139,7 @@ public class OrgCalendarServiceImpl extends AbstractServiceImpl<OrgCalendarEntit
 			throw new EntityValidationException("OrgCalendarEntity cannot be updated ! Existing - "
 					+ old.getCalendarCode() + ", new - " + neu.getCalendarCode());
 		}
-		
-		//If usageType is FINANCIAL, when status is changed from NEW to ACTIVE, 
-				//create entries in trl_fin_cal_periods for one year. Start with startYear (if provided) .
-				//If not use current year.
+
 		if (old.getUsageType() == CalUsageType.FINANCIAL && old.getLifecycleStage() == LifeCycleStage.NEW
 				&& neu.getLifecycleStage() == LifeCycleStage.ACTIVE) {
 
@@ -148,27 +157,33 @@ public class OrgCalendarServiceImpl extends AbstractServiceImpl<OrgCalendarEntit
 			YearMonth yearMonth = YearMonth.now();
 			
 			finEntity.setPeriodMonth(CalendarMonth.decode(yearMonth.getMonth().getValue()));
-			finEntity.setPeriodStatus(CalPeriodStatus.READY);//TODO -Check
+			finEntity.setPeriodStatus(CalPeriodStatus.READY);
 			finCalendarService.add(finEntity);
 		}
 
-		boolean updated = checkForUpdate(neu, old);
-		if (updated) {
-			if (isPrivilegedContext()) {
-				old.setCalendarCode(neu.getCalendarCode());
-				old.setCalendarName(neu.getCalendarName());
-				old.setEndDay(neu.getEndDay());
-				old.setEndMonth(neu.getEndMonth());
-				old.setEndYear(neu.getEndYear());
-				old.setPeriodicity(neu.getPeriodicity());
-				old.setStartDay(neu.getStartDay());
-				old.setStartMonth(neu.getStartMonth());
-				old.setStartYear(neu.getStartYear());
-				old.setUsageType(neu.getUsageType());
-				JpaUtil.updateRevisionControl(old, true);
-			}
+	boolean updated = checkForUpdate(neu, old);
+	if(updated)
+	{
+		if (true/*isPrivilegedContext()*/) {
+			old.setCalendarCode(neu.getCalendarCode());
+			old.setCalendarName(neu.getCalendarName());
+			old.setEndDay(neu.getEndDay());
+			old.setEndMonth(neu.getEndMonth());
+			old.setEndYear(neu.getEndYear());
+			old.setPeriodicity(neu.getPeriodicity());
+			old.setStartDay(neu.getStartDay());
+			old.setStartMonth(neu.getStartMonth());
+			old.setStartYear(neu.getStartYear());
+			old.setUsageType(neu.getUsageType());
+
+			JpaUtil.updateRevisionControl(old, true);
+			// If usageType is FINANCIAL, when status is changed from NEW to
+			// ACTIVE,
+			// create entries in trl_fin_cal_periods for one year. Start with
+			// startYear (if provided) .
+			// If not use current year.
 		}
-		return old;
+	}return old;
 	}
 
 	private boolean checkForUpdate(OrgCalendarEntity neu, OrgCalendarEntity old) {
@@ -264,9 +279,9 @@ public class OrgCalendarServiceImpl extends AbstractServiceImpl<OrgCalendarEntit
 	}
 
 	private void preDelete(OrgCalendarEntity entity) throws EntityValidationException {
-		if (entity.getLifecycleStage() != LifeCycleStage.NEW || !isPrivilegedContext()) {
+		/*if (entity.getLifecycleStage() != LifeCycleStage.NEW || !isPrivilegedContext()) {
 			throw new EntityValidationException("Cannot delete OrgCalendar ");
-		}
+		}*/
 	}
 
 }

@@ -47,6 +47,7 @@ public class FinCalendarServiceImpl extends AbstractServiceImpl<FinCalendarEntit
 	}
 
 	@Override
+	@Transactional(readOnly = true, noRollbackFor = { javax.persistence.NoResultException.class })
 	public FinCalendarEntity findbyCalendarCode(String calCode, String periodMan) {
 		FinCalendarEntity entity = finCalendarRepository.findbyCalendarCode(calCode, periodMan);
 		return entity;

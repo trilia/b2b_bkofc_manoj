@@ -11,19 +11,20 @@ import com.olp.jpa.domain.docu.comm.model.OrgCalendarEntity;
 
 @Repository("orgCalendarRepository")
 public class OrgCalendarRepositoryImpl extends AbstractRepositoryImpl<OrgCalendarEntity, Long>
-implements OrgCalendarRepository {
+		implements OrgCalendarRepository {
 
 	@Override
 	public OrgCalendarEntity findbyCalendarCode(String calCode) {
-		 IContext ctx = ContextManager.getContext();
-	        String tid = ctx.getTenantId();
-	        
-	        TypedQuery<OrgCalendarEntity> query = getEntityManager().createNamedQuery("OrgCalendarEntity.findByCalendarCode", OrgCalendarEntity.class);
-	        query.setParameter("calCode", calCode);
-	        query.setParameter("tenant", tid);
-	        OrgCalendarEntity bean = query.getSingleResult();
-	        
-	        return(bean);
+		IContext ctx = ContextManager.getContext();
+		String tid = ctx.getTenantId();
+
+		TypedQuery<OrgCalendarEntity> query = getEntityManager()
+				.createNamedQuery("OrgCalendarEntity.findByCalendarCode", OrgCalendarEntity.class);
+		query.setParameter("calCode", calCode);
+		query.setParameter("tenant", tid);
+		OrgCalendarEntity bean = query.getSingleResult();
+
+		return (bean);
 	}
 
 	@Override

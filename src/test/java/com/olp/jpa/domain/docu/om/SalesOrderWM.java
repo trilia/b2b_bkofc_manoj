@@ -27,12 +27,12 @@ public class SalesOrderWM extends BaseSpringAwareTest{
 		salesOrder.setDeliverByDate(new Date());
 		salesOrder.setDeliveryType(DeliveryType.STANDARD);
 		salesOrder.setOrderDate(new Date());
-		salesOrder.setOrderNumber("12");
+		salesOrder.setOrderNumber(str);
 		salesOrder.setOrderPart(1);
 		salesOrder.setOrderSource(OrderSource.INTERNAL);
 		salesOrder.setOrderStatus(OrderStatus.RECEIVED);
 		salesOrder.setOrderType(OrderType.FIXED_COST);
-		salesOrder.setParentOrderNum("11");
+		salesOrder.setParentOrderNum(getRandom());
 		//salesOrder.setParentOrderRef(parentOrderRef);
 		salesOrder.setShippingAddress("TestAddr");
 		

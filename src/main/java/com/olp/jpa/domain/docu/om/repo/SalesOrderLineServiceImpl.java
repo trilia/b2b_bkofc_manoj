@@ -315,10 +315,10 @@ public class SalesOrderLineServiceImpl extends AbstractServiceImpl<SalesOrderLin
 	}
 
 	private void preDelete(SalesOrderLineEntity entity) throws EntityValidationException {
-		if (entity.getOrderRef() != null || entity.getOrderRef() != null) {
-			if (!isPrivilegedContext())
-				throw new EntityValidationException("Cannot delete SalesOrderLine ");
-		}
+		//if (entity.getOrderRef() != null || entity.getOrderRef() != null) {
+			/*if (!isPrivilegedContext())*/
+				//throw new EntityValidationException("Cannot delete SalesOrderLine ");
+		//}
 	}
 
 }
