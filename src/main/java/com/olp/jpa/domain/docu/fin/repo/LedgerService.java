@@ -15,6 +15,6 @@ public interface LedgerService extends IJpaService<LedgerEntity, Long> {
 	public void validate(LedgerEntity ledger, EntityVdationType type)
 			throws EntityValidationException;
 
-	Long requestStatusChange(String ledgerName, LedgerStatus status) throws EntityValidationException;
+	public Long requestStatusChange(String ledgerName, LedgerStatus status) throws EntityValidationException;
 	
 }

@@ -3,6 +3,7 @@ package com.olp.jpa.domain.docu.fin.repo;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.olp.fwk.common.ContextManager;
 import com.olp.fwk.common.IContext;
@@ -14,6 +15,7 @@ public class LedgerLineRepositoryImpl extends AbstractRepositoryImpl<LedgerLineE
 implements LedgerLineRepository {
 
 	@Override
+	@Transactional(readOnly=true)
 	public LedgerLineEntity findbyLedgerLine(String ledgerName, int lineNum) {
 		IContext ctx = ContextManager.getContext();
 		String tid = ctx.getTenantId();
@@ -30,7 +32,7 @@ implements LedgerLineRepository {
 
 	@Override
 	public String getLazyLoadElements() {
-		return null;
+		return "";
 	}
 
 }

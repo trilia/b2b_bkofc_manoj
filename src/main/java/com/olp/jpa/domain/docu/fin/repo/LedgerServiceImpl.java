@@ -98,8 +98,12 @@ public class LedgerServiceImpl extends AbstractServiceImpl<LedgerEntity, Long> i
 			// Status cannot be updated to POSTED if the sum of CREDIT type
 			// lineAmount in LedgerLineEntity for
 			// the ledger is equal to the sum of DEBIT type lineAmount
-			if (sumOfCreditTypeLineAmount != sumOfDebitTypeLineAmount) {
-				entity.setLifecycleStatus(LedgerStatus.POSTED);
+			if (sumOfCreditTypeLineAmount == sumOfDebitTypeLineAmount
+					&& entity.getLifecycleStatus() == LedgerStatus.POSTED) {
+				throw new EntityValidationException(
+						"Entity cannot be updated Status cannot be updated to POSTED if the sum of CREDIT type lineAmount in LedgerLineEntity"
+								+ "for the ledger is equal to the sum of DEBIT type lineAmount is "
+								+ entity.getLifecycleStatus());
 			}
 			JpaUtil.updateRevisionControl(entity, true);
 		}
@@ -202,7 +206,7 @@ public class LedgerServiceImpl extends AbstractServiceImpl<LedgerEntity, Long> i
 					+ ", new - " + neu.getLedgerName());
 		}
 
-		// validate(neu, EntityVdationType.PRE_UPDATE);
+		validate(neu, EntityVdationType.PRE_UPDATE);
 
 		if (!Objects.equals(neu.getLifecycleStatus(), old.getLifecycleStatus())) {
 			if (!isPrivilegedContext())
@@ -259,13 +263,17 @@ public class LedgerServiceImpl extends AbstractServiceImpl<LedgerEntity, Long> i
 
 	private void preProcessAdd(LedgerEntity entity) throws EntityValidationException {
 		validate(entity, EntityVdationType.PRE_INSERT);
+		String ledgerName = Long.toHexString(Double.doubleToLongBits(Math.random()));
+		entity.setLedgerName(ledgerName);
 		this.updateTenantWithRevision(entity);
 	}
 
 	private void preDelete(LedgerEntity entity) throws EntityValidationException {
-		if (!isPrivilegedContext() && entity.getLifecycleStatus() != LedgerStatus.NEW) // todo
-																						// check
-			throw new EntityValidationException("Cannot delete ledger when state is " + entity.getLifecycleStatus());
+		// if (!isPrivilegedContext() && entity.getLifecycleStatus() !=
+		// LedgerStatus.NEW) // todo
+		// check
+		// throw new EntityValidationException("Cannot delete ledger when state
+		// is " + entity.getLifecycleStatus());
 	}
 
 	private void updateLedgerLines(LedgerEntity neu, LedgerEntity old) throws EntityValidationException {
@@ -300,8 +308,7 @@ public class LedgerServiceImpl extends AbstractServiceImpl<LedgerEntity, Long> i
 		}
 	}
 
-	private void deleteLedgerLines(LedgerEntity old,
-			List<Long> deletedLedgerLines) {
+	private void deleteLedgerLines(LedgerEntity old, List<Long> deletedLedgerLines) {
 		Iterator<LedgerLineEntity> ledgerLinesEntityIter = old.getLedgerLines().iterator();
 		for (Long id : deletedLedgerLines) {
 			boolean found = false;

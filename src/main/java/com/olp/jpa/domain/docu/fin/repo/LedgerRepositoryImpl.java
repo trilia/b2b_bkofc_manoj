@@ -3,6 +3,7 @@ package com.olp.jpa.domain.docu.fin.repo;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.olp.fwk.common.ContextManager;
 import com.olp.fwk.common.IContext;
@@ -14,6 +15,7 @@ public class LedgerRepositoryImpl extends AbstractRepositoryImpl<LedgerEntity, L
 implements LedgerRepository{
 
 	@Override
+	@Transactional(readOnly=true)
 	public LedgerEntity findbyLedgerName(String ledgerName) {
 		IContext ctx = ContextManager.getContext();
 		String tid = ctx.getTenantId();

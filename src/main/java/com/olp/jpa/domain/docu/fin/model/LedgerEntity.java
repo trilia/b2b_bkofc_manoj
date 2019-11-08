@@ -201,11 +201,17 @@ public class LedgerEntity implements Serializable {
 		bean.setId(id);
 		bean.setTenantId(tenantId);
 		bean.setLedgerDesc(ledgerDesc);
-		bean.setLedgerLines(ledgerLines);
+		
+		List<LedgerLine> ledgerLinesList = new ArrayList<LedgerLine>();
+		for(LedgerLineEntity ledgerLineTemp : ledgerLines){
+			ledgerLinesList.add(ledgerLineTemp.convertTo(0));
+		}	
+		bean.setLedgerLines(ledgerLinesList);
 		bean.setLedgerName(ledgerName);
 		bean.setPostingDate(postingDate);
 		bean.setRevisionControl(revisionControl);
 		bean.setRevisionControl(revisionControl);
+		bean.setLifeCycleStatus(lifecycleStatus);
 		
 		return bean;
 	}

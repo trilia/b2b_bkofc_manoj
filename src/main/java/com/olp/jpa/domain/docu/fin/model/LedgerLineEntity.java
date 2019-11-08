@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -16,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.ContainedIn;
@@ -25,14 +25,16 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Fields;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 
 import com.olp.annotations.KeyAttribute;
 import com.olp.annotations.MultiTenant;
+import com.olp.jpa.common.RevisionControlBean;
 import com.olp.jpa.domain.docu.fin.model.FinEnums.LedgerLineType;
 
 @Entity
-@Table(name = "trl_ledger_line", uniqueConstraints = @UniqueConstraint(columnNames = { "tenant_id", "ledger_name" }))
+@Table(name = "trl_ledger_line"/*, uniqueConstraints = @UniqueConstraint(columnNames = { "tenant_id", "ledger_name" }*/)
 @NamedQueries({
 		@NamedQuery(name = "LedgerLineEntity.findbyLedgerLine", query = "SELECT t FROM LedgerLineEntity t WHERE t.ledgerName = :ledgerName and t.lineNum = :lineNum ") })
 @Cacheable(true)
@@ -86,6 +88,24 @@ public class LedgerLineEntity implements Serializable {
 	@Column(name = "line_desc", nullable = false)
 	@Fields({ @Field(index = Index.YES, analyze = Analyze.NO, store = Store.YES) })
 	private String lineDesc;
+	
+	@Embedded
+	@IndexedEmbedded
+	private RevisionControlBean revisionControl;
+
+	/**
+	 * @return the revisionControl
+	 */
+	public RevisionControlBean getRevisionControl() {
+		return revisionControl;
+	}
+
+	/**
+	 * @param revisionControl the revisionControl to set
+	 */
+	public void setRevisionControl(RevisionControlBean revisionControl) {
+		this.revisionControl = revisionControl;
+	}
 
 	/**
 	 * @return the id

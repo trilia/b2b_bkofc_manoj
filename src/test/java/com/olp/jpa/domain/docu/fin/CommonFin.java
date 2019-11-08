@@ -6,17 +6,23 @@
 package com.olp.jpa.domain.docu.fin;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import com.olp.fwk.common.BaseSpringAwareTest;
 import com.olp.fwk.common.ContextManager;
 import com.olp.fwk.common.IContext;
 import com.olp.jpa.common.CommonEnums.LifeCycleStatus;
+import com.olp.jpa.common.RevisionControlBean;
 import com.olp.jpa.domain.docu.fin.model.AccountCategoryEntity;
 import com.olp.jpa.domain.docu.fin.model.AccountSubCategoryEntity;
 import com.olp.jpa.domain.docu.fin.model.FinEnums;
 import com.olp.jpa.domain.docu.fin.model.FinEnums.AccountClass;
+import com.olp.jpa.domain.docu.fin.model.FinEnums.LedgerLineType;
+import com.olp.jpa.domain.docu.fin.model.FinEnums.LedgerStatus;
 import com.olp.jpa.domain.docu.fin.model.FinEnums.TaxApplicationType;
 import com.olp.jpa.domain.docu.fin.model.FinEnums.TaxDirectionType;
+import com.olp.jpa.domain.docu.fin.model.LedgerEntity;
+import com.olp.jpa.domain.docu.fin.model.LedgerLineEntity;
 import com.olp.jpa.domain.docu.fin.model.TaxElementEntity;
 import com.olp.jpa.domain.docu.fin.model.TaxGroupEntity;
 
@@ -83,6 +89,37 @@ public class CommonFin extends BaseSpringAwareTest {
 		entity.setTenantId(tid);
 		entity.setLifecycleStatus(LifeCycleStatus.ACTIVE);
 		
+    	return entity;
+    }
+    
+    public static LedgerEntity makeLedger(){
+    	LedgerEntity entity = new LedgerEntity();
+    	
+    	IContext ctx = ContextManager.getContext();
+		String tid = ctx.getTenantId();
+		String str = getRandom().toUpperCase();
+		
+		entity.setLedgerDesc("LedgerDesc");
+		entity.setLedgerName("LN_"+str);
+		entity.setTenantId(tid);
+		entity.setPostingDate(new Date());
+		entity.setLifecycleStatus(LedgerStatus.POSTED);
+    	
+    	return entity;
+    }
+    
+    public static LedgerLineEntity makeLedgerLine(){
+    	LedgerLineEntity entity = new LedgerLineEntity();
+    	IContext ctx = ContextManager.getContext();
+		String tid = ctx.getTenantId();
+		RevisionControlBean reviisonControl = new RevisionControlBean();
+		
+		entity.setLineType(LedgerLineType.CREDIT);
+		entity.setLineAmount(new BigDecimal(12));
+		entity.setLineDesc("LineDesc");
+		entity.setLineNum(11);
+		
+    	
     	return entity;
     }
     

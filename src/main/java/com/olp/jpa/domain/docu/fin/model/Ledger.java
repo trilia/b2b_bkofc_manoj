@@ -1,6 +1,7 @@
 package com.olp.jpa.domain.docu.fin.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class Ledger implements Serializable{
 	private LedgerStatus lifeCycleStatus;
 
 	@XmlElement
-	private List<LedgerLineEntity> ledgerLines;
+	private List<LedgerLine> ledgerLines;
 
 	private RevisionControlBean revisionControl;
 
@@ -131,14 +132,14 @@ public class Ledger implements Serializable{
 	/**
 	 * @return the ledgerLines
 	 */
-	public List<LedgerLineEntity> getLedgerLines() {
+	public List<LedgerLine> getLedgerLines() {
 		return ledgerLines;
 	}
 
 	/**
 	 * @param ledgerLines the ledgerLines to set
 	 */
-	public void setLedgerLines(List<LedgerLineEntity> ledgerLines) {
+	public void setLedgerLines(List<LedgerLine> ledgerLines) {
 		this.ledgerLines = ledgerLines;
 	}
 
@@ -161,10 +162,17 @@ public class Ledger implements Serializable{
     	bean.setId(id);
     	bean.setTenantId(tenantId);
     	bean.setLedgerDesc(ledgerDesc);
-    	bean.setLedgerLines(ledgerLines);
+    	List<LedgerLineEntity> ledgerLineList = new ArrayList<>();
+		for (LedgerLine ledgerLine : ledgerLines) {
+			LedgerLineEntity ledgerLineEntity = ledgerLine.convertTo(mode);
+			ledgerLineList.add(ledgerLineEntity);
+		}
+		
+    	bean.setLedgerLines(ledgerLineList);
     	bean.setLedgerName(ledgerName);
     	bean.setPostingDate(postingDate);
     	bean.setRevisionControl(revisionControl);
+    	bean.setLifecycleStatus(lifeCycleStatus);
     	
     	return bean;
     }	

@@ -14,8 +14,8 @@ import com.olp.jpa.domain.docu.fin.model.FinEnums.LedgerLineType;
 
 @XmlRootElement(name = "ledgerline", namespace = "http://trilia-cloud.com/schema/entity/wm")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "id", "tenantId", "ledgerName", "ledgerName", "accountRef","lineType", 
-		"lineAmount", "lineDesc"})
+@XmlType(propOrder = { "id", "tenantId", "ledgerName", "ledgerName", "accountRef", "lineType", "lineAmount",
+		"lineDesc" })
 public class LedgerLine implements Serializable {
 
 	private static final long serialVersionUID = -1L;
@@ -40,7 +40,7 @@ public class LedgerLine implements Serializable {
 
 	@XmlElement
 	private BigDecimal lineAmount;
-	
+
 	@XmlElement
 	private String lineDesc;
 
@@ -52,7 +52,8 @@ public class LedgerLine implements Serializable {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(Long id) {
 		this.id = id;
@@ -66,7 +67,8 @@ public class LedgerLine implements Serializable {
 	}
 
 	/**
-	 * @param tenantId the tenantId to set
+	 * @param tenantId
+	 *            the tenantId to set
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
@@ -80,7 +82,8 @@ public class LedgerLine implements Serializable {
 	}
 
 	/**
-	 * @param ledgerName the ledgerName to set
+	 * @param ledgerName
+	 *            the ledgerName to set
 	 */
 	public void setLedgerName(String ledgerName) {
 		this.ledgerName = ledgerName;
@@ -94,7 +97,8 @@ public class LedgerLine implements Serializable {
 	}
 
 	/**
-	 * @param lineNum the lineNum to set
+	 * @param lineNum
+	 *            the lineNum to set
 	 */
 	public void setLineNum(Integer lineNum) {
 		this.lineNum = lineNum;
@@ -108,7 +112,8 @@ public class LedgerLine implements Serializable {
 	}
 
 	/**
-	 * @param accountRef the accountRef to set
+	 * @param accountRef
+	 *            the accountRef to set
 	 */
 	public void setAccountRef(String accountRef) {
 		this.accountRef = accountRef;
@@ -122,7 +127,8 @@ public class LedgerLine implements Serializable {
 	}
 
 	/**
-	 * @param lineType the lineType to set
+	 * @param lineType
+	 *            the lineType to set
 	 */
 	public void setLineType(LedgerLineType lineType) {
 		this.lineType = lineType;
@@ -136,7 +142,8 @@ public class LedgerLine implements Serializable {
 	}
 
 	/**
-	 * @param lineAmount the lineAmount to set
+	 * @param lineAmount
+	 *            the lineAmount to set
 	 */
 	public void setLineAmount(BigDecimal lineAmount) {
 		this.lineAmount = lineAmount;
@@ -150,15 +157,34 @@ public class LedgerLine implements Serializable {
 	}
 
 	/**
-	 * @param lineDesc the lineDesc to set
+	 * @param lineDesc
+	 *            the lineDesc to set
 	 */
 	public void setLineDesc(String lineDesc) {
 		this.lineDesc = lineDesc;
 	}
-	
-	public LedgerLineEntity convertTo(int mode){
+
+	public LedgerLineEntity convertTo(int mode) {
 		LedgerLineEntity bean = new LedgerLineEntity();
-		
+		bean.setId(id);
+
+		bean.setAccountCode(accountRef);
+		bean.setLedgerName(ledgerName);
+
+		CoaAccountsEntity coaAccountsEntity = new CoaAccountsEntity();
+		coaAccountsEntity.setAccountCode(accountRef);
+		bean.setAccountRef(coaAccountsEntity);
+
+		LedgerEntity ledgerEntity = new LedgerEntity();
+		ledgerEntity.setLedgerName(ledgerName);
+
+		bean.setLedgerRef(ledgerEntity);
+		bean.setLineAmount(lineAmount);
+		bean.setLineDesc(lineDesc);
+		bean.setLineNum(lineNum);
+		bean.setLineType(lineType);
+		bean.setTenantId(tenantId);
+
 		return bean;
 	}
 }

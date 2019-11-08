@@ -112,10 +112,18 @@ public class LedgerLineServiceImpl extends AbstractServiceImpl<LedgerLineEntity,
 				entity.setAccountCode(ae2.getAccountCode());
 			}
 		}
-
+		boolean isLedgerStatusCancelledOrPosted = checkIfLedgerStatusCancelledOrPosted(entity);
 		if (EntityVdationType.PRE_INSERT == type) {
+			if (isLedgerStatusCancelledOrPosted) {
+				throw new EntityValidationException("Could not add new LedgerLine record as "
+						+ "LedgerEntity lifecycleStatus is in " + entity.getLedgerRef().getLifecycleStatus());
+			}
 			this.updateTenantWithRevision(entity);
 		} else if (EntityVdationType.PRE_UPDATE == type) {
+			if (isLedgerStatusCancelledOrPosted) {
+				throw new EntityValidationException("Could not update LedgerLine record as "
+						+ "LedgerEntity lifecycleStatus is in " + entity.getLedgerRef().getLifecycleStatus());
+			}
 			JpaUtil.updateRevisionControl(entity, true);
 		}
 
@@ -238,16 +246,28 @@ public class LedgerLineServiceImpl extends AbstractServiceImpl<LedgerLineEntity,
 
 	private void preProcessAdd(LedgerLineEntity entity) throws EntityValidationException {
 		validate(entity, false, EntityVdationType.PRE_INSERT);
+		String ledgerName = Long.toHexString(Double.doubleToLongBits(Math.random()));
+		entity.setLedgerName(ledgerName);
 		this.updateTenantWithRevision(entity);
 	}
 
 	private void preDelete(LedgerLineEntity entity) throws EntityValidationException {
 		if (entity.getLedgerRef() != null) {
 			LedgerEntity ledger = entity.getLedgerRef();
-			if (!isPrivilegedContext() && ledger.getLifecycleStatus() != LedgerStatus.CANCELLED)// status to check																				// checked
+			/*if (!isPrivilegedContext() || ledger.getLifecycleStatus() != LedgerStatus.CANCELLED)// status to check
 				throw new EntityValidationException(
-						"Cannot delete ledgerLine when ledgerLine status is " + ledger.getLifecycleStatus());
+						"Cannot delete ledgerLine when ledgerLine status is " + ledger.getLifecycleStatus());*/
 		}
 	}
 
+	private boolean checkIfLedgerStatusCancelledOrPosted(LedgerLineEntity entity) {
+		boolean ledgerStatusCancelledOrPosted = false;
+		LedgerEntity ledger = entity.getLedgerRef();
+
+		if (ledger != null && ledger.getLifecycleStatus() == LedgerStatus.CANCELLED
+				|| ledger.getLifecycleStatus() == LedgerStatus.POSTED) {
+
+		}
+		return ledgerStatusCancelledOrPosted;
+	}
 }
