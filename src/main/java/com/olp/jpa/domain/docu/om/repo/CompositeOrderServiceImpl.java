@@ -28,7 +28,7 @@ public class CompositeOrderServiceImpl extends AbstractServiceImpl<CompositeOrde
 	private CompositeOrderRepository compositeOrderRepository;
 
 	@Autowired
-	@Qualifier
+	@Qualifier("compositeOrderLineService")
 	private CompositeOrderLineService compositeOrderLineService;
 
 	@Override
@@ -183,9 +183,9 @@ public class CompositeOrderServiceImpl extends AbstractServiceImpl<CompositeOrde
 	}
 
 	private void preDelete(CompositeOrderEntity entity) throws EntityValidationException {
-		if (!isPrivilegedContext())
+		/*if (!isPrivilegedContext())
 			throw new EntityValidationException("Cannot delete compositeorder when state is ");
-	}
+	*/}
 
 	private void updateOrderLines(CompositeOrderEntity neu, CompositeOrderEntity old) throws EntityValidationException {
 		for (CompositeOrderLineEntity newCompositeOrderLine : neu.getOrderLines()) {

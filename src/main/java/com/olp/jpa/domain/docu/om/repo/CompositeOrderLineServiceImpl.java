@@ -93,7 +93,7 @@ public class CompositeOrderLineServiceImpl extends AbstractServiceImpl<Composite
 			}
 
 			// check for merchant
-			if (entity.getMerchantRef() != null) {
+			/*if (entity.getMerchantRef() != null) {
 				// it is possible to have destination compositeOrder null
 				MerchantEntity me = entity.getMerchantRef(), me2 = null;
 
@@ -118,7 +118,7 @@ public class CompositeOrderLineServiceImpl extends AbstractServiceImpl<Composite
 				entity.setMerchantRef(me2);
 				entity.setMerchTenantId(me2.getTenantId());
 			}
-
+*/
 			// check for salesOrder
 			if (entity.getSalesOrderRef() != null) {
 				// it is possible to have destination compositeOrder null
@@ -287,8 +287,8 @@ public class CompositeOrderLineServiceImpl extends AbstractServiceImpl<Composite
 	}
 
 	private void preDelete(CompositeOrderLineEntity entity) throws EntityValidationException {
-		if (!isPrivilegedContext())
+		/*if (!isPrivilegedContext())
 			throw new EntityValidationException("Cannot delete compositeOrderLine ");
-
+*/
 	}
 }

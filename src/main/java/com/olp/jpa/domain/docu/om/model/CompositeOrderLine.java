@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import com.olp.jpa.common.RevisionControlBean;
+import com.olp.jpa.domain.docu.be.model.MerchantEntity;
 import com.olp.jpa.domain.docu.om.model.OmEnums.CompOrderLineStatus;
 
 @XmlRootElement(name = "compositeorderline", namespace = "http://trilia-cloud.com/schema/entity/wm")
@@ -198,17 +199,15 @@ public class CompositeOrderLine implements Serializable {
 		this.revisionControl = revisionControl;
 	}
 
-	public CompositeOrderLine convertTo(int mode) {
-		CompositeOrderLine bean = new CompositeOrderLine();
+	public CompositeOrderLineEntity convertTo(int mode) {
+		CompositeOrderLineEntity bean = new CompositeOrderLineEntity();
 		bean.setId(id);
 		bean.setCompOrderNum(compOrderNum);
 		bean.setCompOrderRef(compOrderRef);
 		bean.setLineNum(lineNum);
-		bean.setMerchantRef(merchantRef);
 		bean.setMerchTenantId(merchTenantId);
 		bean.setOrderStatus(orderStatus);
 		bean.setSalesOrderNum(salesOrderNum);
-		bean.setSalesOrderRef(salesOrderRef);
 		bean.setRevisionControl(revisionControl);
 
 		return bean;

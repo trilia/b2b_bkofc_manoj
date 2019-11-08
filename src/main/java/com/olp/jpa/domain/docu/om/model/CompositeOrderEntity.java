@@ -18,7 +18,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.DocumentId;
@@ -29,8 +28,11 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 
+import com.olp.annotations.KeyAttribute;
 import com.olp.annotations.MultiTenant;
 import com.olp.jpa.common.RevisionControlBean;
+import com.olp.jpa.domain.docu.fin.model.AccountSubCategory;
+import com.olp.jpa.domain.docu.fin.model.AccountSubCategoryEntity;
 import com.olp.jpa.domain.docu.om.model.OmEnums.CompOrderStatus;
 import com.olp.jpa.domain.docu.om.model.OmEnums.PaymentMethod;
 import com.olp.jpa.domain.docu.om.model.OmEnums.PaymentStatus;
@@ -41,7 +43,7 @@ import com.olp.jpa.domain.docu.om.model.OmEnums.PaymentStatus;
 		@NamedQuery(name = "CompositeOrderEntity.findByCompOrderNum", query = "SELECT t FROM CompositeOrderEntity t WHERE t.compOrderNum = :compOrderNum") })
 @Cacheable(true)
 @Indexed(index = "SetupDataIndex")
-@MultiTenant(level = MultiTenant.Levels.ALLOW_GLOBAL)
+@MultiTenant(level = MultiTenant.Levels.NO_MT)
 public class CompositeOrderEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -51,6 +53,11 @@ public class CompositeOrderEntity implements Serializable {
 	@Column(name = "ledger_id", nullable = false)
 	@DocumentId
 	private Long id;
+	
+	/*@KeyAttribute
+	@Fields({ @Field(index = Index.NO, store = Store.YES, analyze = Analyze.NO) })
+	@Column(name = "tenant_id", nullable = false)
+	private String tenantId;*/
 
 	@Column(name = "comp_order_num", nullable = false)
 	@Fields({ @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO) })
@@ -76,7 +83,7 @@ public class CompositeOrderEntity implements Serializable {
 	@Fields({ @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO) })
 	private PaymentMethod paymentMethod;
 
-	@OneToMany(mappedBy = "orderLinesRef", cascade = { CascadeType.ALL })
+	@OneToMany(mappedBy = "compOrderRef", cascade = { CascadeType.ALL })
 	@IndexedEmbedded(includeEmbeddedObjectId = true, depth = 1)
 	private List<CompositeOrderLineEntity> orderLines = new ArrayList<>();
 
@@ -225,7 +232,16 @@ public class CompositeOrderEntity implements Serializable {
 		bean.setCompOrderDate(compOrderDate);
 		bean.setCompOrderNum(compOrderNum);
 		bean.setCompOrderStatus(compOrderStatus);
-		bean.setOrderLines(orderLines);
+		if (orderLines != null && !orderLines.isEmpty()) {
+			List<CompositeOrderLine> compOrderLinesList = new ArrayList<>();
+			for (CompositeOrderLineEntity compOrderLine : orderLines) {
+				CompositeOrderLine compOrdLine = compOrderLine.convertTo(mode);
+				compOrderLinesList.add(compOrdLine);
+			}
+			bean.setOrderLines(compOrderLinesList);
+		}
+
+		//bean.setOrderLines(orderLines);
 		bean.setOrderValue(orderValue);
 		bean.setPaymentMethod(paymentMethod);
 		bean.setPaymentStatus(paymentStatus);

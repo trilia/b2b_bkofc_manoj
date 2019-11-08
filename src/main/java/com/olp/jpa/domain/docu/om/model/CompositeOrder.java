@@ -44,7 +44,7 @@ public class CompositeOrder implements Serializable{
 	private PaymentMethod paymentMethod;
 
 	@XmlElement
-	private List<CompositeOrderLineEntity> orderLines;
+	private List<CompositeOrderLine> orderLines;
 
 	private RevisionControlBean revisionControl;
 
@@ -149,14 +149,14 @@ public class CompositeOrder implements Serializable{
 	/**
 	 * @return the orderLines
 	 */
-	public List<CompositeOrderLineEntity> getOrderLines() {
+	public List<CompositeOrderLine> getOrderLines() {
 		return orderLines;
 	}
 
 	/**
 	 * @param orderLines the orderLines to set
 	 */
-	public void setOrderLines(List<CompositeOrderLineEntity> orderLines) {
+	public void setOrderLines(List<CompositeOrderLine> orderLines) {
 		this.orderLines = orderLines;
 	}
 

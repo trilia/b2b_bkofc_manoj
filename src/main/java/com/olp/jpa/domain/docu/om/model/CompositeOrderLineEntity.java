@@ -28,6 +28,7 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 
+import com.olp.annotations.KeyAttribute;
 import com.olp.annotations.MultiTenant;
 import com.olp.jpa.common.RevisionControlBean;
 import com.olp.jpa.domain.docu.be.model.MerchantEntity;
@@ -40,7 +41,7 @@ import com.olp.jpa.domain.docu.om.model.OmEnums.CompOrderLineStatus;
 		@NamedQuery(name = "CompositeOrderLineEntity.findByCompOrderLine", query = "SELECT t FROM CompositeOrderLineEntity t WHERE t.compOrderNum = :compOrderNum and t.lineNum = :lineNum ") })
 @Cacheable(true)
 @Indexed(index = "SetupDataIndex")
-@MultiTenant(level = MultiTenant.Levels.ALLOW_GLOBAL)
+@MultiTenant(level = MultiTenant.Levels.NO_MT)
 public class CompositeOrderLineEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -49,6 +50,11 @@ public class CompositeOrderLineEntity implements Serializable {
 	@Column(name = "comp_order_line_id", nullable = false)
 	@DocumentId
 	private Long id;
+	
+	/*@KeyAttribute
+	@Fields({ @Field(index = Index.NO, store = Store.YES, analyze = Analyze.NO) })
+	@Column(name = "tenant_id", nullable = false)
+	private String tenantId;*/
 
 	@Column(name = "line_num", nullable = false)
 	@Fields({ @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO) })
@@ -246,8 +252,10 @@ public class CompositeOrderLineEntity implements Serializable {
 		bean.setCompOrderNum(compOrderNum);
 		bean.setCompOrderRef(compOrderRef);
 		bean.setLineNum(lineNum);
-		bean.setMerchantRef(merchantRef.getTenantId());
-		bean.setMerchTenantId(merchantRef.getTenantId());// need to check
+		if(merchantRef != null){
+			bean.setMerchantRef(merchantRef.getTenantId());
+			bean.setMerchTenantId(merchantRef.getTenantId());// need to check
+		}
 		bean.setOrderStatus(orderStatus);
 		bean.setSalesOrderNum(salesOrderNum);
 		bean.setSalesOrderRef(salesOrderRef.getOrderNumber());
