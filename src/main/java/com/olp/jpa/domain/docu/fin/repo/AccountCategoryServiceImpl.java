@@ -332,6 +332,7 @@ public class AccountCategoryServiceImpl extends AbstractServiceImpl<AccountCateg
 				}
 			}
 			if (found) {
+				old.getAccountSubCategories().remove(oldAccountSubCategory);
 				accountSubCategoryService.delete(id);
 			}
 		}

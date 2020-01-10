@@ -1,7 +1,10 @@
 package com.olp.jpa.domain.docu.logist.repo;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -39,6 +42,10 @@ public class ServiceClassServiceImpl extends AbstractServiceImpl<ServiceClassEnt
 	@Autowired
 	@Qualifier("logisticsCostRepository")
 	private LogisticsCostRepository logisticsCostRepository;
+
+	@Autowired
+	@Qualifier("serviceCategorySvc")
+	private ServiceCategoryService serviceCategoryService;
 
 	@Override
 	protected JpaRepository<ServiceClassEntity, Long> getRepository() {
@@ -165,7 +172,7 @@ public class ServiceClassServiceImpl extends AbstractServiceImpl<ServiceClassEnt
 		// no method of lifecyclestatus - not defined in requirement spec
 		JpaUtil.updateRevisionControl(serviceCategories, true);
 
-		//update logisticsInfo
+		// update logisticsInfo
 		List<LogisticsCostEntity> logisticsCostEntities = logisticsCostRepository.findAll();
 		for (LogisticsCostEntity logisticsCost : logisticsCostEntities) {
 			ServiceCategoryEntity serviceCategory = logisticsCost.getSvcCatgRef();
@@ -192,12 +199,103 @@ public class ServiceClassServiceImpl extends AbstractServiceImpl<ServiceClassEnt
 				throw new EntityValidationException("Cannot update status. Use requestStatusChange api instead !!");
 		}
 
-		boolean updated = checkForUpdate(neu, old);
+		List<Long> deletedServiceDestCategories = new ArrayList<Long>();
+		List<Long> deletedServiceSrcCategories = new ArrayList<Long>();
+
+		if (old.getDestSvcCategories() != null && !old.getDestSvcCategories().isEmpty()) {
+			for (ServiceCategoryEntity oldServiceDestCategory : old.getDestSvcCategories()) {
+				boolean found = false;
+				if (neu.getDestSvcCategories() != null && !neu.getDestSvcCategories().isEmpty()) {
+					for (ServiceCategoryEntity newServiceDestCategory : neu.getDestSvcCategories()) {
+						if (Objects.equals(newServiceDestCategory.getId(), oldServiceDestCategory.getId())) {
+							found = true;
+							break;
+						}
+						// } // end for new serviceCategory
+					}
+				}
+				if (!found) {
+					// accountSubCategory deleted
+					if (old.getLifeCycleStatus() != LifeCycleStatus.INACTIVE) {
+						// if (isPrivilegedContext()) {
+						deletedServiceDestCategories.add(oldServiceDestCategory.getId());
+						/*
+						 * } else { throw new EntityValidationException(
+						 * "Cannot delete ServiceCategory  " +
+						 * oldServiceDestCategory.getDestSvcClassCode() +
+						 * " when lifeCycle is " + old.getLifeCycleStatus()); }
+						 */
+					} else {
+						deletedServiceDestCategories.add(oldServiceDestCategory.getId());
+					}
+				}
+
+			}
+
+		}
+
+		if (old.getSrcSvcCategories() != null && !old.getSrcSvcCategories().isEmpty()) {
+			for (ServiceCategoryEntity oldServiceSrcCategory : old.getSrcSvcCategories()) {
+				boolean found = false;
+				if (neu.getSrcSvcCategories() != null && !neu.getSrcSvcCategories().isEmpty()) {
+					for (ServiceCategoryEntity newServiceSrcCategory : neu.getSrcSvcCategories()) {
+						if (Objects.equals(newServiceSrcCategory.getId(), oldServiceSrcCategory.getId())) {
+							found = true;
+							break;
+						}
+						// } // end for new serviceCategory
+					}
+				}
+				if (!found) {
+					// serviceCategory deleted
+					if (old.getLifeCycleStatus() != LifeCycleStatus.INACTIVE) {
+						// if (isPrivilegedContext()) {
+						deletedServiceSrcCategories.add(oldServiceSrcCategory.getId());
+						/*
+						 * } else { throw new EntityValidationException(
+						 * "Cannot delete ServiceCategory  " +
+						 * oldServiceSrcCategory.getSrcSvcClassCode() +
+						 * " when lifeCycle is " + old.getLifeCycleStatus()); }
+						 */
+					} else {
+						deletedServiceSrcCategories.add(oldServiceSrcCategory.getId());
+					}
+				}
+
+			}
+
+		}
+		
+		boolean updated = false;
+		if (!deletedServiceDestCategories.isEmpty() || !deletedServiceSrcCategories.isEmpty()) {
+			updated = true;
+		} else {
+			updated = checkForUpdate(neu, old);
+		}
 
 		if (updated) {
 			// if (isPrivilegedContext()) {
 			// carry out the update
-			// end if deletedLovValues not empty
+
+			// carry out the update
+			if (neu.getDestSvcCategories() != null && !neu.getDestSvcCategories().isEmpty()) {
+				updateDestServiceCategories(neu, old);
+			}
+
+			if (neu.getSrcSvcCategories() != null && !neu.getSrcSvcCategories().isEmpty()) {
+				updateSrcServiceCategories(neu, old);
+
+			}
+
+			if (!deletedServiceDestCategories.isEmpty()) {
+				// dissociate DestServiceCategories
+				deleteServiceCategory(old.getDestSvcCategories(),old, deletedServiceDestCategories,"dest");
+			}
+
+			if (!deletedServiceSrcCategories.isEmpty()) {
+				// dissociate SrcServiceCategories
+				deleteServiceCategory(old.getSrcSvcCategories(),old, deletedServiceSrcCategories,"src");
+			}
 
 			old.setPartnerId(neu.getPartnerId());
 			old.setSvcClassName(neu.getSvcClassName());
@@ -214,7 +312,178 @@ public class ServiceClassServiceImpl extends AbstractServiceImpl<ServiceClassEnt
 
 			result = true;
 		}
+
+		if (neu.getDestSvcCategories() == null || neu.getDestSvcCategories().isEmpty()) {
+			if (old.getDestSvcCategories() != null && !old.getDestSvcCategories().isEmpty()) {
+				result = true;
+				return (result);
+			}
+		} else {
+			if (old.getDestSvcCategories() == null || old.getDestSvcCategories().isEmpty()) {
+				result = true;
+				return (result);
+			} else {
+				// both are not null
+				if (!Objects.equals(neu.getDestSvcCategories().size(), old.getDestSvcCategories().size())) {
+					result = true;
+					return (result);
+				} else {
+					result = checkForSvcCategories(neu.getDestSvcCategories(), old.getDestSvcCategories());
+					return (result);
+				}
+			}
+		}
+
+		if (neu.getSrcSvcCategories() == null || neu.getSrcSvcCategories().isEmpty()) {
+			if (old.getSrcSvcCategories() != null && !old.getSrcSvcCategories().isEmpty()) {
+				result = true;
+				return (result);
+			}
+		} else {
+			if (old.getSrcSvcCategories() == null || old.getSrcSvcCategories().isEmpty()) {
+				result = true;
+				return (result);
+			} else {
+				// both are not null
+				if (!Objects.equals(neu.getSrcSvcCategories().size(), old.getSrcSvcCategories().size())) {
+					result = true;
+					return (result);
+				} else {
+					result = checkForSvcCategories(neu.getSrcSvcCategories(), old.getSrcSvcCategories());
+					return (result);
+				}
+			}
+		}
+
 		return result;
+	}
+
+	private boolean checkForSvcCategories(Set<ServiceCategoryEntity> newServiceCategories,
+			Set<ServiceCategoryEntity> oldServiceCategories) {
+
+		boolean result = false;
+		Iterator<ServiceCategoryEntity> oldServiceCategoryEntityIter = oldServiceCategories.iterator();
+		Iterator<ServiceCategoryEntity> newServiceCategoryEntityIter = newServiceCategories.iterator();
+		ServiceCategoryEntity oldServiceCategory = null;
+		ServiceCategoryEntity newServiceCategory = null;
+
+		while (newServiceCategoryEntityIter.hasNext()) {
+			newServiceCategory = newServiceCategoryEntityIter.next();
+			Long newEntityId = newServiceCategory.getId();
+			if (newEntityId != null) {
+				while (oldServiceCategoryEntityIter.hasNext()) {
+					oldServiceCategory = oldServiceCategoryEntityIter.next();
+					Long oldEntityId = oldServiceCategory.getId();
+					if (Objects.equals(newEntityId, oldEntityId)) {
+						boolean outcome = serviceCategoryService.checkForUpdate(newServiceCategory, oldServiceCategory);
+						if (!outcome) {
+							result = true;
+							return result;
+						}
+					}
+					break;
+				}
+			} else {
+				boolean outcome = serviceCategoryService.checkForUpdate(newServiceCategory, oldServiceCategory);
+				if (!outcome) {
+					result = true;
+					return result;
+				}
+			}
+		}
+		return result;
+	}
+
+	private void deleteServiceCategory(Set<ServiceCategoryEntity> serviceCategories,ServiceClassEntity oldSvcClass,
+			List<Long> deletedServiceCategories,String conversionType) {
+		Iterator<ServiceCategoryEntity> serviceCategoryEntityIter = serviceCategories.iterator();
+		for (Long id : deletedServiceCategories) {
+			boolean found = false;
+			ServiceCategoryEntity oldServiceCategory = null;
+			while (serviceCategoryEntityIter.hasNext()) {
+				oldServiceCategory = serviceCategoryEntityIter.next();
+				if (Objects.equals(id, oldServiceCategory.getId())) {
+					found = true;
+					break;
+				}
+			}
+			if (found) {
+				if (conversionType.equals("src")){
+					oldSvcClass.getSrcSvcCategories().remove(oldServiceCategory);
+				}else if (conversionType.equals("dest")){
+					oldSvcClass.getDestSvcCategories().remove(oldServiceCategory);
+				}
+				serviceCategoryService.delete(id);
+			}
+		}
+	}
+
+	private void updateDestServiceCategories(ServiceClassEntity neu, ServiceClassEntity old)
+			throws EntityValidationException {
+		for (ServiceCategoryEntity newServiceCategory : neu.getDestSvcCategories()) {
+			ServiceCategoryEntity oldServiceCategory2 = null;
+			boolean found = false;
+			if (old.getDestSvcCategories() != null && !old.getDestSvcCategories().isEmpty()) {
+				for (ServiceCategoryEntity oldServiceCategory : old.getDestSvcCategories()) {
+					if (Objects.equals(newServiceCategory.getId(), oldServiceCategory.getId())) {
+						oldServiceCategory2 = oldServiceCategory;
+						found = true;
+						break;
+					}
+				} // end for old.getServiceCategories
+			} // end if old.getServiceCategories for src and dest
+
+			if (!found) {
+				// new ServiceCategory being added
+				newServiceCategory.setDestSvcClassRef(old);
+				newServiceCategory.setDestSvcClassCode(old.getSvcClassCode());
+				newServiceCategory.setRevisionControl(getRevisionControl());
+
+				serviceCategoryService.validate(newServiceCategory, false, EntityVdationType.PRE_INSERT);
+				old.getDestSvcCategories().add(newServiceCategory);
+			} else {
+				boolean serviceCategoryUpdated = serviceCategoryService.checkForUpdate(newServiceCategory,
+						oldServiceCategory2);
+				if (serviceCategoryUpdated) {
+					serviceCategoryService.update(newServiceCategory);
+				}
+			}
+
+		}
+	}
+
+	private void updateSrcServiceCategories(ServiceClassEntity neu, ServiceClassEntity old)
+			throws EntityValidationException {
+		for (ServiceCategoryEntity newServiceCategory : neu.getSrcSvcCategories()) {
+			ServiceCategoryEntity oldServiceCategory2 = null;
+			boolean found = false;
+			if (old.getSrcSvcCategories() != null && !old.getSrcSvcCategories().isEmpty()) {
+				for (ServiceCategoryEntity oldServiceCategory : old.getSrcSvcCategories()) {
+					if (Objects.equals(newServiceCategory.getId(), oldServiceCategory.getId())) {
+						oldServiceCategory2 = oldServiceCategory;
+						found = true;
+						break;
+					}
+				} // end for old.getAccountSubCategories
+			} // end if old.getAccountSubCategories
+
+			if (!found) {
+				// new AccountSubCategory being added
+				newServiceCategory.setSrcSvcClassRef(old);
+				newServiceCategory.setSrcSvcClassCode(old.getSvcClassCode());
+				newServiceCategory.setRevisionControl(getRevisionControl());
+
+				serviceCategoryService.validate(newServiceCategory, false, EntityVdationType.PRE_INSERT);
+				old.getSrcSvcCategories().add(newServiceCategory);
+			} else {
+				boolean serviceCategoryUpdated = serviceCategoryService.checkForUpdate(newServiceCategory,
+						oldServiceCategory2);
+				if (serviceCategoryUpdated) {
+					serviceCategoryService.update(newServiceCategory);
+				}
+			}
+
+		}
 	}
 
 	@Override

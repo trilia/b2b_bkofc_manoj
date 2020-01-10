@@ -1,6 +1,7 @@
 package com.olp.jpa.domain.docu.logist.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -10,7 +11,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import com.olp.jpa.common.CommonEnums.LifeCycleStatus;
-import com.olp.jpa.domain.docu.inv.model.UomConversion;
 import com.olp.jpa.common.RevisionControlBean;
 
 @XmlRootElement(name = "serviceClass", namespace = "http://trilia-cloud.com/schema/entity/wm")
@@ -164,6 +164,23 @@ public class ServiceClass implements Serializable {
 		bean.setSvcClassName(svcClassName);
 		bean.setRevisionControl(revisionControl);
 		bean.setLifeCycleStatus(lifeCycleStatus);
+		
+		Set<ServiceCategoryEntity> destServiceCategorySet = new HashSet<>();
+		for(ServiceCategory svcCat : destSvcCategories){
+			ServiceCategoryEntity svcCatgEntity =  svcCat.convertTo(0);
+			destServiceCategorySet.add(svcCatgEntity);
+		
+		}
+		
+		Set<ServiceCategoryEntity> srcServiceCategorySet = new HashSet<>();
+		for(ServiceCategory svcCat : srcSvcCategories){
+			ServiceCategoryEntity svcCatgEntity =  svcCat.convertTo(0);
+			srcServiceCategorySet.add(svcCatgEntity);
+		
+		}
+		
+		bean.setDestSvcCategories(destServiceCategorySet);
+		bean.setSrcSvcCategories(srcServiceCategorySet);
 		
 		return bean;
 	}

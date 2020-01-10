@@ -14,6 +14,9 @@ import com.olp.jpa.domain.docu.fin.model.FinEnums.TaxOffsetType;
 import com.olp.jpa.domain.docu.fin.model.TaxElementEntity;
 import com.olp.jpa.domain.docu.fin.model.TaxGroupEntity;
 import com.olp.jpa.domain.docu.logist.model.LogisticsCostEntity;
+import com.olp.jpa.domain.docu.logist.model.LogisticsEnum.Country;
+import com.olp.jpa.domain.docu.logist.model.LogisticsEnum.StateOrCounty;
+import com.olp.jpa.domain.docu.logist.model.ServiceAreaEntity;
 import com.olp.jpa.domain.docu.logist.model.ServiceCategoryEntity;
 import com.olp.jpa.domain.docu.logist.model.ServiceClassEntity;
 
@@ -98,4 +101,21 @@ public class LogistCommon extends BaseTest {
 		taxElementEntity.setTaxOffset(TaxOffsetType.OFFSET);
 		return taxElementEntity;
 	}
+	
+	public static ServiceAreaEntity makeServiceArea(){
+	   	String str = getRandom();
+	   	IContext ctx = ContextManager.getContext();
+	   	
+	   	ServiceAreaEntity entity = new ServiceAreaEntity();   	 
+	   	entity.setPartnerId("123");
+	   	entity.setCountry(Country.India);
+	   	entity.setPostalCodeFrom("123456");
+	   	entity.setPostalCodeTo("12345679");
+	   	entity.setPostalCodeExcept(new java.util.HashSet<String>());
+	   	entity.setRevisionControl(new RevisionControlBean());
+	   	entity.setStateOrCounty(StateOrCounty.India);
+	   	entity.setLifeCycleStatus(LifeCycleStatus.ACTIVE);
+	   	entity.setRevisionControl(new RevisionControlBean());
+	   	return entity;
+	   }
 }

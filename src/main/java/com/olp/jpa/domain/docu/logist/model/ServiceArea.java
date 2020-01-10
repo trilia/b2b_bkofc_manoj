@@ -7,13 +7,15 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+
+import com.olp.jpa.common.RevisionControlBean;
 import com.olp.jpa.common.CommonEnums.LifeCycleStatus;
 import com.olp.jpa.domain.docu.logist.model.LogisticsEnum.Country;
 
 @XmlRootElement(name = "serviceArea", namespace = "http://trilia-cloud.com/schema/entity/wm")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = { "id", "partnerId", "svcClassRef", "svcClassCode", "country", "postalCodeFrom", "postalCodeTo",
-		"postalCodeExcept", "lifecycleStatus" })
+		"postalCodeExcept", "lifecycleStatus"," revisionControl" })
 public class ServiceArea implements Serializable {
 
 	private static final long serialVersionUID = -1L;
@@ -41,9 +43,11 @@ public class ServiceArea implements Serializable {
 
 	@XmlElement
 	private Set<String> postalCodeExcept;
-
+	
 	@XmlElement
 	private LifeCycleStatus lifeCycleStatus;
+	
+	private RevisionControlBean revisionControl;
 
 	/**
 	 * @return the id
@@ -171,6 +175,20 @@ public class ServiceArea implements Serializable {
 		this.lifeCycleStatus = lifeCycleStatus;
 	}
 	
+	/**
+	 * @return the revisionControl
+	 */
+	public RevisionControlBean getRevisionControl() {
+		return revisionControl;
+	}
+
+	/**
+	 * @param revisionControl the revisionControl to set
+	 */
+	public void setRevisionControl(RevisionControlBean revisionControl) {
+		this.revisionControl = revisionControl;
+	}
+
 	public ServiceAreaEntity convertTo(int mode){
 		ServiceAreaEntity bean = new ServiceAreaEntity();
 		
@@ -182,6 +200,7 @@ public class ServiceArea implements Serializable {
 		bean.setPostalCodeFrom(postalCodeFrom);
 		bean.setPostalCodeTo(postalCodeTo);
 		bean.setSvcClassCode(svcClassCode);
+		bean.setRevisionControl(revisionControl);
 		//bean.setSvcClassRef(svcClassRef.getSvcClassCode());
 		
 		return bean;

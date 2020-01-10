@@ -539,6 +539,7 @@ public class WaveBatchServiceImpl extends AbstractServiceImpl<WaveBatchEntity, L
 				}
 			}
 			if (found) {
+				old.getWaveResoures().remove(oldWaveResource);
 				waveResourcesService.delete(id);
 			}
 		}
@@ -559,6 +560,7 @@ public class WaveBatchServiceImpl extends AbstractServiceImpl<WaveBatchEntity, L
 				}
 			}
 			if (found) {
+				old.getWaveTasks().remove(oldWaveTask);
 				waveTasksService.delete(id);
 			}
 		}

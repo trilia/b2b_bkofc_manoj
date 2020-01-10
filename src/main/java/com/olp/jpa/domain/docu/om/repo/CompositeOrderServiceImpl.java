@@ -230,6 +230,7 @@ public class CompositeOrderServiceImpl extends AbstractServiceImpl<CompositeOrde
 				}
 			}
 			if (found) {
+				old.getOrderLines().remove(oldCompOrderLine);
 				compositeOrderLineService.delete(id);
 			}
 		}

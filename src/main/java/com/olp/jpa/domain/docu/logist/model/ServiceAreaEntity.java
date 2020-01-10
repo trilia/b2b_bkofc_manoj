@@ -7,6 +7,7 @@ import javax.persistence.Cacheable;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -19,7 +20,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.ContainedIn;
@@ -28,18 +28,20 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Fields;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 
 import com.olp.annotations.MultiTenant;
 import com.olp.jpa.common.CommonEnums.LifeCycleStatus;
+import com.olp.jpa.common.RevisionControlBean;
 import com.olp.jpa.domain.docu.logist.model.LogisticsEnum.Country;
 import com.olp.jpa.domain.docu.logist.model.LogisticsEnum.StateOrCounty;
 
 @Entity
 @Table(name = "trl_service_area")
 @NamedQueries({
-		@NamedQuery(name = "ServiceAreaEntity.findBySvcClassCode", query = "SELECT t FROM ServiceAreaEntity t WHERE t.svcClassCode = :svcClassCode ") ,
-		@NamedQuery(name = "ServiceAreaEntity.findByCountry", query = "SELECT t FROM ServiceAreaEntity t WHERE t.country = :country ") ,
+		@NamedQuery(name = "ServiceAreaEntity.findBySvcClassCode", query = "SELECT t FROM ServiceAreaEntity t WHERE t.svcClassCode = :svcClassCode "),
+		@NamedQuery(name = "ServiceAreaEntity.findByCountry", query = "SELECT t FROM ServiceAreaEntity t WHERE t.country = :country "),
 		@NamedQuery(name = "ServiceAreaEntity.findByPartnerId", query = "SELECT t FROM ServiceAreaEntity t WHERE t.partnerId = :partnerId ") })
 @Cacheable(true)
 @Indexed(index = "SetupDataIndex")
@@ -53,14 +55,14 @@ public class ServiceAreaEntity implements Serializable {
 	@Column(name = "service_area_id", nullable = false)
 	@DocumentId
 	private Long id;
-	
+
 	@Column(name = "partner_id", nullable = false)
 	@Fields({ @Field(analyze = Analyze.NO, store = Store.NO) })
 	private String partnerId;
-	
-	//@Column(name = "svc_class_ref", nullable = false)
-	//@Fields({ @Field(analyze = Analyze.NO, store = Store.NO) })
-	@ManyToOne(optional=true)
+
+	// @Column(name = "svc_class_ref", nullable = false)
+	// @Fields({ @Field(analyze = Analyze.NO, store = Store.NO) })
+	@ManyToOne(optional = true)
 	@JoinColumn(name = "svc_class_ref")
 	@ContainedIn
 	private ServiceClassEntity svcClassRef;
@@ -68,12 +70,12 @@ public class ServiceAreaEntity implements Serializable {
 	@Column(name = "svc_class_code", nullable = false)
 	@Fields({ @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO) })
 	private String svcClassCode;
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "country", nullable = false)
 	@Fields({ @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO) })
 	private Country country;
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "state_or_county", nullable = false)
 	@Fields({ @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO) })
@@ -82,7 +84,7 @@ public class ServiceAreaEntity implements Serializable {
 	@Column(name = "postal_code_from", nullable = false)
 	@Fields({ @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO) })
 	private String postalCodeFrom;
-	
+
 	@Column(name = "postal_code_to", nullable = false)
 	@Fields({ @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO) })
 	private String postalCodeTo;
@@ -90,7 +92,11 @@ public class ServiceAreaEntity implements Serializable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "trl_svc_area_exceptions", joinColumns = { @JoinColumn(name = "svc_area_excp_id") })
 	private Set<String> postalCodeExcept;
-	
+
+	@Embedded
+	@IndexedEmbedded
+	private RevisionControlBean revisionControl;
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "lifecycle_status", nullable = false)
 	@Fields({ @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO) })
@@ -104,7 +110,8 @@ public class ServiceAreaEntity implements Serializable {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(Long id) {
 		this.id = id;
@@ -118,7 +125,8 @@ public class ServiceAreaEntity implements Serializable {
 	}
 
 	/**
-	 * @param partnerId the partnerId to set
+	 * @param partnerId
+	 *            the partnerId to set
 	 */
 	public void setPartnerId(String partnerId) {
 		this.partnerId = partnerId;
@@ -132,7 +140,8 @@ public class ServiceAreaEntity implements Serializable {
 	}
 
 	/**
-	 * @param svcClassRef the svcClassRef to set
+	 * @param svcClassRef
+	 *            the svcClassRef to set
 	 */
 	public void setSvcClassRef(ServiceClassEntity svcClassRef) {
 		this.svcClassRef = svcClassRef;
@@ -146,7 +155,8 @@ public class ServiceAreaEntity implements Serializable {
 	}
 
 	/**
-	 * @param svcClassCode the svcClassCode to set
+	 * @param svcClassCode
+	 *            the svcClassCode to set
 	 */
 	public void setSvcClassCode(String svcClassCode) {
 		this.svcClassCode = svcClassCode;
@@ -160,7 +170,8 @@ public class ServiceAreaEntity implements Serializable {
 	}
 
 	/**
-	 * @param country the country to set
+	 * @param country
+	 *            the country to set
 	 */
 	public void setCountry(Country country) {
 		this.country = country;
@@ -174,7 +185,8 @@ public class ServiceAreaEntity implements Serializable {
 	}
 
 	/**
-	 * @param stateOrCounty the stateOrCounty to set
+	 * @param stateOrCounty
+	 *            the stateOrCounty to set
 	 */
 	public void setStateOrCounty(StateOrCounty stateOrCounty) {
 		this.stateOrCounty = stateOrCounty;
@@ -188,7 +200,8 @@ public class ServiceAreaEntity implements Serializable {
 	}
 
 	/**
-	 * @param postalCodeFrom the postalCodeFrom to set
+	 * @param postalCodeFrom
+	 *            the postalCodeFrom to set
 	 */
 	public void setPostalCodeFrom(String postalCodeFrom) {
 		this.postalCodeFrom = postalCodeFrom;
@@ -202,7 +215,8 @@ public class ServiceAreaEntity implements Serializable {
 	}
 
 	/**
-	 * @param postalCodeTo the postalCodeTo to set
+	 * @param postalCodeTo
+	 *            the postalCodeTo to set
 	 */
 	public void setPostalCodeTo(String postalCodeTo) {
 		this.postalCodeTo = postalCodeTo;
@@ -216,10 +230,26 @@ public class ServiceAreaEntity implements Serializable {
 	}
 
 	/**
-	 * @param postalCodeExcept the postalCodeExcept to set
+	 * @param postalCodeExcept
+	 *            the postalCodeExcept to set
 	 */
 	public void setPostalCodeExcept(Set<String> postalCodeExcept) {
 		this.postalCodeExcept = postalCodeExcept;
+	}
+
+	/**
+	 * @return the revisionControl
+	 */
+	public RevisionControlBean getRevisionControl() {
+		return revisionControl;
+	}
+
+	/**
+	 * @param revisionControl
+	 *            the revisionControl to set
+	 */
+	public void setRevisionControl(RevisionControlBean revisionControl) {
+		this.revisionControl = revisionControl;
 	}
 
 	/**
@@ -230,13 +260,14 @@ public class ServiceAreaEntity implements Serializable {
 	}
 
 	/**
-	 * @param lifeCycleStatus the lifeCycleStatus to set
+	 * @param lifeCycleStatus
+	 *            the lifeCycleStatus to set
 	 */
 	public void setLifeCycleStatus(LifeCycleStatus lifeCycleStatus) {
 		this.lifeCycleStatus = lifeCycleStatus;
 	}
-	
-	public ServiceArea convertTo(int mode){
+
+	public ServiceArea convertTo(int mode) {
 		ServiceArea bean = new ServiceArea();
 		bean.setId(id);
 		bean.setCountry(country);
@@ -246,8 +277,9 @@ public class ServiceAreaEntity implements Serializable {
 		bean.setPostalCodeFrom(postalCodeFrom);
 		bean.setPostalCodeTo(postalCodeTo);
 		bean.setSvcClassCode(svcClassCode);
-		bean.setSvcClassRef(svcClassRef.getSvcClassCode());//need to check
-		
+		bean.setSvcClassRef(svcClassRef.getSvcClassCode());// need to check
+		bean.setRevisionControl(revisionControl);
+
 		return bean;
 	}
 }

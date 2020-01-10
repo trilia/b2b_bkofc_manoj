@@ -256,6 +256,7 @@ public class LovDefinitionServiceImpl extends AbstractServiceImpl<LovDefinitionE
 				}
 			}
 			if (found) {
+				old.getLovValues().remove(oldLovValues);
 				lovValuesService.delete(id);
 			}
 		}

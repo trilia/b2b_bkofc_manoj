@@ -321,6 +321,7 @@ public class LedgerServiceImpl extends AbstractServiceImpl<LedgerEntity, Long> i
 				}
 			}
 			if (found) {
+				old.getLedgerLines().remove(oldLedgerLine);
 				ledgerLineService.delete(id);
 			}
 		}

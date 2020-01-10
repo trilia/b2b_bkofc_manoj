@@ -124,6 +124,7 @@ public class ServiceAreaServiceImpl extends AbstractServiceImpl<ServiceAreaEntit
 		old.setPostalCodeFrom(neu.getPostalCodeFrom());
 		old.setPostalCodeTo(neu.getPostalCodeTo());
 		old.setSvcClassRef(neu.getSvcClassRef());
+		old.setStateOrCounty(neu.getStateOrCounty());
 
 		JpaUtil.updateRevisionControl(old, true);
 		// }

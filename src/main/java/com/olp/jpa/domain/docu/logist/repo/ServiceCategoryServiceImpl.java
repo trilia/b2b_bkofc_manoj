@@ -4,17 +4,20 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.olp.fwk.common.error.EntityValidationException;
 import com.olp.jpa.common.AbstractServiceImpl;
 import com.olp.jpa.common.CommonEnums.EntityVdationType;
 import com.olp.jpa.common.ITextRepository;
 import com.olp.jpa.domain.docu.logist.model.LogisticsCostEntity;
 import com.olp.jpa.domain.docu.logist.model.ServiceCategoryEntity;
+import com.olp.jpa.domain.docu.logist.model.ServiceClassEntity;
 
 @Service("serviceCategorySvc")
 public class ServiceCategoryServiceImpl extends AbstractServiceImpl<ServiceCategoryEntity, Long>
@@ -23,6 +26,10 @@ public class ServiceCategoryServiceImpl extends AbstractServiceImpl<ServiceCateg
 	@Autowired
 	@Qualifier("serviceCategoryRepository")
 	private ServiceCategoryRepository serviceCategoryRepository;
+
+	@Autowired
+	@Qualifier("serviceClassRepository")
+	private ServiceClassRepository serviceClassRepository;
 
 	@Autowired
 	@Qualifier("logisticsCostService")
@@ -59,7 +66,63 @@ public class ServiceCategoryServiceImpl extends AbstractServiceImpl<ServiceCateg
 
 	@Override
 	@Transactional(readOnly = true, noRollbackFor = { javax.persistence.NoResultException.class })
-	public void validate(ServiceCategoryEntity entity, EntityVdationType type) throws EntityValidationException {
+	public void validate(ServiceCategoryEntity entity, boolean valParent, EntityVdationType type)
+			throws EntityValidationException {
+		if (valParent) {
+
+			if (entity.getDestSvcClassRef() != null) {
+				// it is possible to have destination sc null
+				ServiceClassEntity sc = entity.getDestSvcClassRef(), sc2 = null;
+
+				if (sc.getId() == null) {
+					try {
+						sc2 = serviceClassRepository.findBySvcClassCode(sc.getSvcClassCode());
+					} catch (javax.persistence.NoResultException ex) {
+						throw new EntityValidationException(
+								"Could not find ServiceClass with code - " + sc.getSvcClassCode());
+					}
+				} else {
+					try {
+						sc2 = serviceClassRepository.findOne(sc.getId());
+					} catch (javax.persistence.NoResultException ex) {
+						throw new EntityValidationException("Could not find ServiceClass with id - " + sc.getId());
+					}
+				}
+
+				if (sc2 == null)
+					throw new EntityValidationException("Could not find ServiceClass using either code or id !");
+
+				entity.setDestSvcClassRef(sc2);
+				entity.setDestSvcClassCode(sc2.getSvcClassCode());
+			}
+
+			if (entity.getSrcSvcClassRef() != null) {
+				// it is possible to have src sc null
+				ServiceClassEntity sc = entity.getSrcSvcClassRef(), sc2 = null;
+
+				if (sc.getId() == null) {
+					try {
+						sc2 = serviceClassRepository.findBySvcClassCode(sc.getSvcClassCode());
+					} catch (javax.persistence.NoResultException ex) {
+						throw new EntityValidationException(
+								"Could not find ServiceClass with code - " + sc.getSvcClassCode());
+					}
+				} else {
+					try {
+						sc2 = serviceClassRepository.findOne(sc.getId());
+					} catch (javax.persistence.NoResultException ex) {
+						throw new EntityValidationException("Could not find ServiceClass with id - " + sc.getId());
+					}
+				}
+
+				if (sc2 == null)
+					throw new EntityValidationException("Could not find ServiceClass using either code or id !");
+
+				entity.setSrcSvcClassRef(sc2);
+				entity.setSrcSvcClassCode(sc2.getSvcClassCode());
+			}
+		}
+
 		List<LogisticsCostEntity> logisticsCosts = entity.getCostEstimate();
 		if (logisticsCosts != null && !logisticsCosts.isEmpty()) {
 			for (LogisticsCostEntity logisticsCost : logisticsCosts) {
@@ -107,7 +170,7 @@ public class ServiceCategoryServiceImpl extends AbstractServiceImpl<ServiceCateg
 			// carry out the update
 			if (neu.getCostEstimate() != null && !neu.getCostEstimate().isEmpty()) {
 				updateLogisticsCosts(neu, old); // end for
-														// neu.getCostEstimate
+												// neu.getCostEstimate
 			} // end if neu.getCostEstimate != null
 
 			if (!deletedLogisticsCost.isEmpty()) {
@@ -161,7 +224,7 @@ public class ServiceCategoryServiceImpl extends AbstractServiceImpl<ServiceCateg
 			break;
 		case UPDATE:
 		case UPDATE_BULK:
-			validate(entity, EntityVdationType.PRE_UPDATE);
+			validate(entity, true, EntityVdationType.PRE_UPDATE);
 		case DELETE:
 		case DELETE_BULK:
 			preDelete(entity);
@@ -173,7 +236,8 @@ public class ServiceCategoryServiceImpl extends AbstractServiceImpl<ServiceCateg
 		return (result);
 	}
 
-	private boolean checkForUpdate(ServiceCategoryEntity neu, ServiceCategoryEntity old) {
+	@Override
+	public boolean checkForUpdate(ServiceCategoryEntity neu, ServiceCategoryEntity old) {
 		boolean result = false;
 
 		if (!Objects.equals(neu.getDestSvcClassCode(), old.getDestSvcClassCode())
@@ -268,8 +332,7 @@ public class ServiceCategoryServiceImpl extends AbstractServiceImpl<ServiceCateg
 				logisticsCostService.validate(newLogisticsCost, false, EntityVdationType.PRE_INSERT);
 				old.getCostEstimate().add(newLogisticsCost);
 			} else {
-				boolean logisticsCostUpdated = logisticsCostService.checkForUpdate(newLogisticsCost,
-						oldLogisticsCost2);
+				boolean logisticsCostUpdated = logisticsCostService.checkForUpdate(newLogisticsCost, oldLogisticsCost2);
 				if (logisticsCostUpdated) {
 					logisticsCostService.update(newLogisticsCost);
 				}
@@ -291,18 +354,20 @@ public class ServiceCategoryServiceImpl extends AbstractServiceImpl<ServiceCateg
 				}
 			}
 			if (found) {
+				old.getCostEstimate().remove(oldLogisticsCost);
 				logisticsCostService.delete(id);
 			}
 		}
 	}
 
 	private void preProcessAdd(ServiceCategoryEntity entity) throws EntityValidationException {
-		validate(entity, EntityVdationType.PRE_INSERT);
+		validate(entity, false, EntityVdationType.PRE_INSERT);
 	}
 
 	private void preDelete(ServiceCategoryEntity entity) throws EntityValidationException {
-		if (!isPrivilegedContext())
+		if (!isPrivilegedContext()) {
 			throw new EntityValidationException("Cannot delete ServiceCategory. Only be TERMINATED.");
+		}
 	}
 
 	@Override

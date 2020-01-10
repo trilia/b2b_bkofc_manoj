@@ -302,6 +302,7 @@ public class LogisticPartnerServiceImpl extends AbstractServiceImpl<LogisticPart
 				}
 			}
 			if (found) {
+				old.getPartnerLocations().remove(oldPartnerLoc);
 				logisticPartnerLocService.delete(id);
 			}
 		}

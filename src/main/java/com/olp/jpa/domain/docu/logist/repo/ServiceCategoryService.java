@@ -16,7 +16,10 @@ public interface ServiceCategoryService extends IJpaService<ServiceCategoryEntit
 	public List<ServiceCategoryEntity> findByDestSvcClassCode(String svcClassCode);
 
 	public ServiceCategoryEntity findBySvcClassCode(String svcClassCode);
-	
-	public void validate(ServiceCategoryEntity entity, EntityVdationType type) throws EntityValidationException;
+
+	public boolean checkForUpdate(ServiceCategoryEntity newServiceCategoryEntity,
+			ServiceCategoryEntity oldServiceCategoryEntity);
+
+	public void validate(ServiceCategoryEntity newAccountSubCategory, boolean b, EntityVdationType preInsert) throws EntityValidationException;
 
 }

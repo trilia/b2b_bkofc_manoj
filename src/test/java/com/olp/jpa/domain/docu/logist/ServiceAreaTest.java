@@ -19,15 +19,18 @@ import com.olp.jpa.domain.docu.fin.model.TaxGroupEntity;
 import com.olp.jpa.domain.docu.fin.repo.TaxElementService;
 import com.olp.jpa.domain.docu.fin.repo.TaxGroupService;
 import com.olp.jpa.domain.docu.logist.model.LogisticsCostEntity;
+import com.olp.jpa.domain.docu.logist.model.LogisticsEnum.Country;
+import com.olp.jpa.domain.docu.logist.model.LogisticsEnum.StateOrCounty;
+import com.olp.jpa.domain.docu.logist.model.ServiceAreaEntity;
 import com.olp.jpa.domain.docu.logist.model.ServiceCategoryEntity;
-import com.olp.jpa.domain.docu.logist.model.ServiceClass;
 import com.olp.jpa.domain.docu.logist.model.ServiceClassEntity;
 import com.olp.jpa.domain.docu.logist.repo.LogisticsCostService;
+import com.olp.jpa.domain.docu.logist.repo.ServiceAreaService;
 import com.olp.jpa.domain.docu.logist.repo.ServiceCategoryService;
 import com.olp.jpa.domain.docu.logist.repo.ServiceClassRepository;
 import com.olp.jpa.domain.docu.logist.repo.ServiceClassService;
 
-public class ServiceClassTest extends BaseSpringAwareTest {
+public class ServiceAreaTest extends BaseSpringAwareTest {
 
 	@Autowired
 	@Qualifier("serviceClassRepository")
@@ -53,14 +56,18 @@ public class ServiceClassTest extends BaseSpringAwareTest {
 	@Qualifier("taxElementService")
 	private TaxElementService taxElementService;
 
+	@Autowired
+	@Qualifier("serviceAreaSvc")
+	private ServiceAreaService serviceAreaService;
+
 	@Before
 	public void before() {
-		taxElementService.deleteAll(false);
-		taxGroupService.deleteAll(false);
-		logisticsCostService.deleteAll(false);
-		serviceCategoryService.deleteAll(false);
-		serviceClassService.deleteAll(false);
-
+		/*taxElementService.deleteAll(true);
+		taxGroupService.deleteAll(true);
+		logisticsCostService.deleteAll(true);
+		serviceCategoryService.deleteAll(true);
+		serviceClassService.deleteAll(true);
+		serviceAreaService.deleteAll(true);*/
 		setup();
 	}
 
@@ -109,29 +116,32 @@ public class ServiceClassTest extends BaseSpringAwareTest {
 		serviceClass.setSrcSvcCategories(srcServiceCatgegories);
 
 		serviceClassService.add(serviceClass);
+
+		ServiceAreaEntity serviceArea = LogistCommon.makeServiceArea();
+		serviceArea.setSvcClassRef(serviceClass);
+		serviceArea.setSvcClassCode(serviceClass.getSvcClassCode());
+		serviceAreaService.add(serviceArea);
+
 	}
 
 	@Test
-	public void testServiceClass() {
-		List<ServiceClassEntity> svcClass = serviceClassService.findAll();
-		assertNotNull("ServiceClass list cannot be null", svcClass);
+	public void testServiceArea() {
+		List<ServiceAreaEntity> svcArea = serviceAreaService.findAll();
+		assertNotNull("ServiceArea list cannot be null", svcArea);
 	}
 
 	@Test
-	public void updateServiceClass() {
-		List<ServiceClassEntity> svcClass = serviceClassService.findAll();
-	
-		ServiceClassEntity svcClassEntity = svcClass.get(0);
-		ServiceClass serviceClass = svcClassEntity.convertTo(0);
-		serviceClass.setSvcClassName("updated one");
-		serviceClass.getDestSvcCategories().clear();
-		serviceClass.getSrcSvcCategories().clear();
+	public void updateServiceArea(){
+		List<ServiceAreaEntity> svcArea = serviceAreaService.findAll();
+		ServiceAreaEntity serviceAreaEntity = svcArea.get(0);
 		
-		serviceClassService.update(serviceClass.convertTo(0));
-		svcClass = serviceClassService.findAll();
-		assertEquals("serviceDestCategory size", svcClass.get(0).getDestSvcCategories().size(), 0);
-		assertEquals("serviceSvcCategory size", svcClass.get(0).getSrcSvcCategories().size(), 0);
-		assertEquals("SvcClassName", svcClass.get(0).getSvcClassName(),"updated one");
-
+		serviceAreaEntity.setCountry(Country.England);
+		serviceAreaEntity.setStateOrCounty(StateOrCounty.England);
+		
+		ServiceAreaEntity svcAreaUpdated = serviceAreaService.update(serviceAreaEntity);
+		//svcArea = serviceAreaService.findAll();
+		
+		assertEquals(svcAreaUpdated.getCountry(),Country.England);
+		assertEquals(svcAreaUpdated.getStateOrCounty(),StateOrCounty.England);
 	}
 }
