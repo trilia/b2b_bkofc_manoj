@@ -9,7 +9,7 @@ import com.olp.fwk.common.IContext;
 import com.olp.jpa.common.AbstractRepositoryImpl;
 import com.olp.jpa.domain.docu.llty.model.CustomerLoyaltyEntity;
 
-@Repository("loyaltyProgramRepository")
+@Repository("customerLoyaltyRepository")
 public class CustomerLoyaltyRepositoryImpl extends AbstractRepositoryImpl<CustomerLoyaltyEntity, Long> implements CustomerLoyaltyRepository {
 
 	@Override

@@ -44,7 +44,7 @@ import com.olp.jpa.domain.docu.llty.model.LoyaltyEnums.ParticipationStatus;
 
 @Entity
 @Table(name = "trl_customer_loyalty", uniqueConstraints = @UniqueConstraint(columnNames = { "tenant_id",
-		"csLoyaltyCode" }))
+		"cs_loyalty_code" }))
 @NamedQueries({
 		@NamedQuery(name = "CustomerLoyaltyEntity.findByCustProgCode", query = "SELECT t FROM CustomerLoyaltyEntity t WHERE t.customerCode = :customerCode and t.programCode = :programCode and t.tenantId = :tenant ") })
 @Cacheable(true)
