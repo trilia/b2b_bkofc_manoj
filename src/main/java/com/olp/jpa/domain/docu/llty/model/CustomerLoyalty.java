@@ -284,6 +284,8 @@ public class CustomerLoyalty implements Serializable {
 	public void setCsLoyaltyTxns(Set<CustomerLoyaltyTxn> csLoyaltyTxns) {
 		this.csLoyaltyTxns = csLoyaltyTxns;
 	}
+	
+	
 
 	/**
 	 * @return the revisionControl

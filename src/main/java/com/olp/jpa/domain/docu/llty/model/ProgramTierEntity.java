@@ -39,7 +39,8 @@ import com.olp.jpa.domain.docu.llty.model.LoyaltyEnums.LifecycleStatus;
 		"tier_code" }))
 @NamedQueries({
 		@NamedQuery(name = "ProgramTierEntity.findByTierCode", query = "SELECT t FROM ProgramTierEntity t WHERE t.tierCode = :tierCode and t.programCode = :programCode and t.tenantId = :tenant "),
-		@NamedQuery(name = "ProgramTierEntity.findByTierSequence", query = "SELECT t FROM ProgramTierEntity t WHERE t.programCode = :programCode and t.tierSequence = :sequence and t.tenantId = :tenant ")	
+		@NamedQuery(name = "ProgramTierEntity.findByTierSequence", query = "SELECT t FROM ProgramTierEntity t WHERE t.programCode = :programCode and t.tierSequence = :sequence and t.tenantId = :tenant "),
+		@NamedQuery(name = "ProgramTierEntity.findAllSequencesByProgramCode", query = "SELECT t.tierSequence FROM ProgramTierEntity t WHERE t.programCode = :programCode and t.tenantId = :tenant order by t.tierPointFrom desc")		
 })
 @Cacheable(true)
 @Indexed(index = "SetupDataIndex")

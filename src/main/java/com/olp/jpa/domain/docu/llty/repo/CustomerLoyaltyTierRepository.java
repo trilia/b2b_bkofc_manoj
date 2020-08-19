@@ -12,4 +12,6 @@ import com.olp.jpa.domain.docu.llty.model.CustomerLoyaltyTierEntity;
 public interface CustomerLoyaltyTierRepository extends JpaRepository<CustomerLoyaltyTierEntity, Long>, ITextRepository<CustomerLoyaltyTierEntity, Long>{
 
 	public List<CustomerLoyaltyTierEntity> findByCustTierCode(String customerCode, String programCode, String tierCode);
+	
+	public List<CustomerLoyaltyTierEntity> findByCustomerTierCode(String customerCode);
 }

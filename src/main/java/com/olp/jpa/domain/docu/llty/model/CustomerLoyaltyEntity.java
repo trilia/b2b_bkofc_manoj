@@ -46,7 +46,9 @@ import com.olp.jpa.domain.docu.llty.model.LoyaltyEnums.ParticipationStatus;
 @Table(name = "trl_customer_loyalty", uniqueConstraints = @UniqueConstraint(columnNames = { "tenant_id",
 		"cs_loyalty_code" }))
 @NamedQueries({
-		@NamedQuery(name = "CustomerLoyaltyEntity.findByCustProgCode", query = "SELECT t FROM CustomerLoyaltyEntity t WHERE t.customerCode = :customerCode and t.programCode = :programCode and t.tenantId = :tenant ") })
+		@NamedQuery(name = "CustomerLoyaltyEntity.findByCustProgCode", query = "SELECT t FROM CustomerLoyaltyEntity t WHERE t.customerCode = :customerCode and t.programCode = :programCode and t.tenantId = :tenant "),
+		@NamedQuery(name = "CustomerLoyaltyEntity.findByCustomerCode", query = "SELECT t FROM CustomerLoyaltyEntity t WHERE t.customerCode = :customerCode and t.tenantId = :tenant order by t.startDate")		
+		})
 @Cacheable(true)
 @Indexed(index = "SetupDataIndex")
 @MultiTenant(level = MultiTenant.Levels.ONE_TENANT)
@@ -372,19 +374,19 @@ public class CustomerLoyaltyEntity implements Serializable {
 		
 		List<CustomerLoyaltyTier> customerLoyaltyTiers = new ArrayList<>();
 		for(CustomerLoyaltyTierEntity customerLoyaltyTierEntity: csLoyaltyTiers ){
-			//customerLoyaltyTiers.add(customerLoyaltyTierEntity.convertTo(0));
+			customerLoyaltyTiers.add(customerLoyaltyTierEntity.convertTo(0));
 		}
 		bean.setCsLoyaltyTiers(customerLoyaltyTiers);
 		Set<CustomerLoyaltyTxn> customerLoyaltyTxns = new HashSet<>();
-		for(CustomerLoyaltyTxn customerLoyaltyTxn : customerLoyaltyTxns){
-			//customerLoyaltyTxns.add(customerLoyaltyTxn.convertTo(0));
+		for(CustomerLoyaltyTxnEntity customerLoyaltyTxn : csLoyaltyTxns){
+			customerLoyaltyTxns.add(customerLoyaltyTxn.convertTo(0));
 		}
 		bean.setCsLoyaltyTxns(customerLoyaltyTxns);
 		bean.setCustomerRef(customerRef.getCustomerCode());
 		bean.setEndDate(endDate);
 		bean.setExpiredCredit(expiredCredit);
 		bean.setId(id);
-		bean.setProgrameRef(programRef.getProgramCode());
+		bean.setProgramRef(programRef.getProgramCode());
 		bean.setRedeemedCredit(redeemedCredit);
 		bean.setRevisionControl(revisionControl);
 		bean.setStartDate(startDate);

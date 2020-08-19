@@ -13,4 +13,6 @@ import com.olp.jpa.domain.docu.llty.model.CustomerLoyaltyTxnEntity;
 public interface CustomerLoyaltyTxnRepository extends JpaRepository<CustomerLoyaltyTxnEntity, Long>, ITextRepository<CustomerLoyaltyTxnEntity, Long>{
 
 	public List<CustomerLoyaltyTxnEntity> findByCustProgCode(String customerCode, Date fromDate, Date toDate);
+	
+	public List<CustomerLoyaltyTxnEntity> findByCustomerCode(String customerCode);
 }

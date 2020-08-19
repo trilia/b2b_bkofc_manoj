@@ -30,6 +30,20 @@ public class CustomerLoyaltyTxnRepositoryImpl extends AbstractRepositoryImpl<Cus
         return(bean);
 	}
 	
+	@Override
+	@Transactional(readOnly=true)
+	public List<CustomerLoyaltyTxnEntity> findByCustomerCode(String customerCode){
+		IContext ctx = ContextManager.getContext();
+        String tid = ctx.getTenantId();
+        
+        TypedQuery<CustomerLoyaltyTxnEntity> query = getEntityManager().createNamedQuery("CustomerLoyaltyTxnEntity.findByCustomerCode", CustomerLoyaltyTxnEntity.class);
+        query.setParameter("customerCode", customerCode);
+        query.setParameter("tenant", tid);
+        List<CustomerLoyaltyTxnEntity> bean = query.getResultList();
+        
+        return(bean);
+	}
+	
 
 	@Override
 	public String getLazyLoadElements() {

@@ -19,4 +19,6 @@ public interface CustomerLoyaltyTierService extends IJpaService<CustomerLoyaltyT
 
 	public boolean checkForUpdate(CustomerLoyaltyTierEntity newCustomerLoyaltyTier,
 			CustomerLoyaltyTierEntity oldCustomerLoyaltyTier2);
+	
+	public List<CustomerLoyaltyTierEntity> findByCustomerTierCode(String customerCode);
 }

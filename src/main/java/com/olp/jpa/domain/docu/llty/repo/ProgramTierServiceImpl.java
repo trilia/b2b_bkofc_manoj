@@ -1,5 +1,6 @@
 package com.olp.jpa.domain.docu.llty.repo;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
 import com.olp.fwk.common.error.EntityValidationException;
 import com.olp.jpa.common.AbstractServiceImpl;
 import com.olp.jpa.common.CommonEnums.EntityVdationType;
@@ -35,6 +38,12 @@ public class ProgramTierServiceImpl extends AbstractServiceImpl<ProgramTierEntit
 	@Override
 	protected ITextRepository<ProgramTierEntity, Long> getTextRepository() {
 		return programTierRepository;
+	}
+	
+	@Transactional(readOnly = true, noRollbackFor = { javax.persistence.NoResultException.class })
+	public List<ProgramTierEntity> findAllSequencesByProgramCode(String programCode){
+		List<ProgramTierEntity> listOfProgramTiers = programTierRepository.findAllSequencesByProgramCode(programCode);
+		return listOfProgramTiers;
 	}
 
 	@Override
@@ -70,7 +79,17 @@ public class ProgramTierServiceImpl extends AbstractServiceImpl<ProgramTierEntit
 			}
 
 		}
-
+		
+		ProgramTierEntity programTierExists = programTierRepository.findByTierCode(entity.getProgramCode(), entity.getTierCode());
+		if(!StringUtils.isEmpty(programTierExists)){
+			if(!entity.getEffectiveFrom().after(programTierExists.getEffectiveUpto())){
+				throw new EntityValidationException("There should not be overlap in tierPointFrom and tierPointTo");
+			}
+			if(!entity.getEffectiveUpto().after(entity.getEffectiveFrom())){
+				throw new EntityValidationException("There should not be overlap in tierPointFrom and tierPointTo");
+			}
+		}
+		
 		if (EntityVdationType.PRE_INSERT == type) {
 			this.updateTenantWithRevision(entity);
 		} else if (EntityVdationType.PRE_UPDATE == type) {
@@ -216,6 +235,12 @@ public class ProgramTierServiceImpl extends AbstractServiceImpl<ProgramTierEntit
 
 	private void preProcessAdd(ProgramTierEntity entity) throws EntityValidationException {
 		validate(entity, false, EntityVdationType.PRE_INSERT);
+		entity.setLifecycleStatus(LifecycleStatus.INACTIVE);
+		List<ProgramTierEntity> listOfProgramTiers = findAllSequencesByProgramCode(entity.getProgramCode());
+		if(!listOfProgramTiers.isEmpty()){
+			ProgramTierEntity programTierDb = listOfProgramTiers.get(0);
+			entity.setTierSequence(Math.addExact(programTierDb.getTierSequence(),10));
+		}
 		this.updateTenantWithRevision(entity);
 	}
 
