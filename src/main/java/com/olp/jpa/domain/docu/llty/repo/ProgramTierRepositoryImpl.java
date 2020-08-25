@@ -20,10 +20,10 @@ public class ProgramTierRepositoryImpl extends AbstractRepositoryImpl<ProgramTie
 		IContext ctx = ContextManager.getContext();
         String tid = ctx.getTenantId();
         
-        TypedQuery<ProgramTierEntity> query = getEntityManager().createNamedQuery("ProgramTierEntity.findByProgramCode", ProgramTierEntity.class);
+        TypedQuery<ProgramTierEntity> query = getEntityManager().createNamedQuery("ProgramTierEntity.findByTierCode", ProgramTierEntity.class);
         query.setParameter("programCode", programCode);
         query.setParameter("tierCode", tierCode);
-        query.setParameter("tenant", tid);
+        query.setParameter("tenantId", tid);
         ProgramTierEntity bean = query.getSingleResult();
         
         return bean;
@@ -38,7 +38,7 @@ public class ProgramTierRepositoryImpl extends AbstractRepositoryImpl<ProgramTie
         TypedQuery<ProgramTierEntity> query = getEntityManager().createNamedQuery("ProgramTierEntity.findByTierSequence", ProgramTierEntity.class);
         query.setParameter("programCode", programCode);
         query.setParameter("sequence", sequence);
-        query.setParameter("tenant", tid);
+        query.setParameter("tenantId", tid);
         ProgramTierEntity bean = query.getSingleResult();
         
         return bean;
@@ -50,9 +50,9 @@ public class ProgramTierRepositoryImpl extends AbstractRepositoryImpl<ProgramTie
 		IContext ctx = ContextManager.getContext();
         String tid = ctx.getTenantId();
         
-        TypedQuery<ProgramTierEntity> query = getEntityManager().createNamedQuery("ProgramTierEntity.findByTierSequence", ProgramTierEntity.class);
+        TypedQuery<ProgramTierEntity> query = getEntityManager().createNamedQuery("ProgramTierEntity.findAllSequencesByProgramCode", ProgramTierEntity.class);
         query.setParameter("programCode", programCode);
-        query.setParameter("tenant", tid);
+        query.setParameter("tenantId", tid);
         List<ProgramTierEntity> listOfSequences = query.getResultList();
         
         return listOfSequences;

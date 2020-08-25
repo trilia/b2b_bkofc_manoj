@@ -75,18 +75,6 @@ public class ProgramTierServiceImpl extends AbstractServiceImpl<ProgramTierEntit
 
 				entity.setProgramRef(lp2);
 				entity.setProgramCode(lp2.getProgramCode());
-
-			}
-
-		}
-		
-		ProgramTierEntity programTierExists = programTierRepository.findByTierCode(entity.getProgramCode(), entity.getTierCode());
-		if(!StringUtils.isEmpty(programTierExists)){
-			if(!entity.getEffectiveFrom().after(programTierExists.getEffectiveUpto())){
-				throw new EntityValidationException("There should not be overlap in tierPointFrom and tierPointTo");
-			}
-			if(!entity.getEffectiveUpto().after(entity.getEffectiveFrom())){
-				throw new EntityValidationException("There should not be overlap in tierPointFrom and tierPointTo");
 			}
 		}
 		
@@ -222,6 +210,7 @@ public class ProgramTierServiceImpl extends AbstractServiceImpl<ProgramTierEntit
 			break;
 		case UPDATE:
 		case UPDATE_BULK:
+			preProcessUpdate(entity);
 			validate(entity, true, EntityVdationType.PRE_UPDATE);
 		case DELETE:
 		case DELETE_BULK:
@@ -235,22 +224,63 @@ public class ProgramTierServiceImpl extends AbstractServiceImpl<ProgramTierEntit
 
 	private void preProcessAdd(ProgramTierEntity entity) throws EntityValidationException {
 		validate(entity, false, EntityVdationType.PRE_INSERT);
-		entity.setLifecycleStatus(LifecycleStatus.INACTIVE);
+		this.updateTenantWithRevision(entity);
 		List<ProgramTierEntity> listOfProgramTiers = findAllSequencesByProgramCode(entity.getProgramCode());
 		if(!listOfProgramTiers.isEmpty()){
 			ProgramTierEntity programTierDb = listOfProgramTiers.get(0);
 			entity.setTierSequence(Math.addExact(programTierDb.getTierSequence(),10));
+		}else {
+			entity.setTierSequence(10);
 		}
+		try{
+			ProgramTierEntity programTierExists = findByTierCode(entity.getProgramCode(), entity.getTierCode());
+			if(!StringUtils.isEmpty(programTierExists)){
+				if(!entity.getEffectiveFrom().after(programTierExists.getEffectiveUpto())){
+					throw new EntityValidationException("There should not be overlap in tierPointFrom and tierPointTo");
+				}
+				if(!entity.getEffectiveUpto().after(entity.getEffectiveFrom())){
+					throw new EntityValidationException("There should not be overlap in tierPointFrom and tierPointTo");
+				}
+			}
+		}catch(javax.persistence.NoResultException ex){
+			//NO results
+		}
+		entity.setLifecycleStatus(LifecycleStatus.INACTIVE);
+	}
+	
+	private void preProcessUpdate(ProgramTierEntity entity) throws EntityValidationException {
+		validate(entity, false, EntityVdationType.PRE_UPDATE);
 		this.updateTenantWithRevision(entity);
+		List<ProgramTierEntity> listOfProgramTiers = findAllSequencesByProgramCode(entity.getProgramCode());
+		if(!listOfProgramTiers.isEmpty()){
+			ProgramTierEntity programTierDb = listOfProgramTiers.get(0);
+			entity.setTierSequence(Math.addExact(programTierDb.getTierSequence(),10));
+		}else {
+			entity.setTierSequence(10);
+		}
+		try{
+			ProgramTierEntity programTierExists = findByTierCode(entity.getProgramCode(), entity.getTierCode());
+			if(!StringUtils.isEmpty(programTierExists)){
+				if(!entity.getEffectiveFrom().after(programTierExists.getEffectiveUpto())){
+					throw new EntityValidationException("There should not be overlap in tierPointFrom and tierPointTo");
+				}
+				if(!entity.getEffectiveUpto().after(entity.getEffectiveFrom())){
+					throw new EntityValidationException("There should not be overlap in tierPointFrom and tierPointTo");
+				}
+			}
+		}catch(javax.persistence.NoResultException ex){
+			//NO results
+		}
+		entity.setLifecycleStatus(LifecycleStatus.INACTIVE);
 	}
 
 	private void preDelete(ProgramTierEntity entity) throws EntityValidationException {
-		if (entity.getProgramRef() != null) {
+		/*if (entity.getProgramRef() != null) {
 			LoyaltyProgramEntity loyaltyProgram = entity.getProgramRef();
 			if (!isPrivilegedContext() && loyaltyProgram.getLifecycleStatus() != LifecycleStatus.INACTIVE)
 				throw new EntityValidationException(
 						"Cannot delete programtier when programtier status is " + loyaltyProgram.getLifecycleStatus());
-		}
+		}*/
 	}
 
 }

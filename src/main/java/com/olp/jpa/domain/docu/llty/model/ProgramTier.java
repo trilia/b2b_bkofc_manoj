@@ -40,7 +40,7 @@ public class ProgramTier implements Serializable {
 	private String programRef;
 
 	@XmlElement
-	private String tieName;
+	private String tierName;
 
 	@XmlElement
 	private String description;
@@ -150,18 +150,18 @@ public class ProgramTier implements Serializable {
 	}
 
 	/**
-	 * @return the tieName
+	 * @return the tierName
 	 */
-	public String getTieName() {
-		return tieName;
+	public String getTierName() {
+		return tierName;
 	}
 
 	/**
 	 * @param tieName
-	 *            the tieName to set
+	 *            the tierName to set
 	 */
-	public void setTieName(String tieName) {
-		this.tieName = tieName;
+	public void setTierName(String tierName) {
+		this.tierName = tierName;
 	}
 
 	/**
@@ -346,6 +346,7 @@ public class ProgramTier implements Serializable {
 		bean.setSpendConvRate(spendConvRate);
 		bean.setTenantId(tenantId);
 		bean.setTierCode(tierCode);
+		bean.setTierName(tierName);
 		bean.setTierPointFrom(tierPointFrom);
 		bean.setTierPointUpto(tierPointUpto);
 		bean.setTierSequence(tierSequence);

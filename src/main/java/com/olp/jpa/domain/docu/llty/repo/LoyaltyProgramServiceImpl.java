@@ -301,6 +301,15 @@ public class LoyaltyProgramServiceImpl extends AbstractServiceImpl<LoyaltyProgra
 				newProgramTier.setProgramCode(old.getProgramCode());
 				newProgramTier.setRevisionControl(getRevisionControl());
 				newProgramTier.setTenantId(getTenantId());
+				newProgramTier.setLifecycleStatus(LifecycleStatus.INACTIVE);
+				
+				List<ProgramTierEntity> listOfProgramTiers = programTierService.findAllSequencesByProgramCode(newProgramTier.getProgramCode());
+				if(!listOfProgramTiers.isEmpty()){
+					ProgramTierEntity programTierDb = listOfProgramTiers.get(0);
+					newProgramTier.setTierSequence(Math.addExact(programTierDb.getTierSequence(),10));
+				}else {
+					newProgramTier.setTierSequence(10);
+				}
 
 				programTierService.validate(newProgramTier, false, EntityVdationType.PRE_INSERT);
 				old.getProgramTiers().add(newProgramTier);
@@ -417,9 +426,9 @@ public class LoyaltyProgramServiceImpl extends AbstractServiceImpl<LoyaltyProgra
 	}
 
 	private void preDelete(LoyaltyProgramEntity entity) throws EntityValidationException {
-		if (!isPrivilegedContext() && entity.getLifecycleStatus() != LifecycleStatus.ACTIVE)
+		/*if (!isPrivilegedContext() && entity.getLifecycleStatus() != LifecycleStatus.ACTIVE)
 			throw new EntityValidationException(
 					"Cannot delete loyaltyProgram when state is " + entity.getLifecycleStatus());
-	}
+	*/}
 
 }
