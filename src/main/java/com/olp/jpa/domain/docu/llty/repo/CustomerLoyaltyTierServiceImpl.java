@@ -1,5 +1,6 @@
 package com.olp.jpa.domain.docu.llty.repo;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,12 @@ public class CustomerLoyaltyTierServiceImpl extends AbstractServiceImpl<Customer
 		buff.append("{ \"customerLoyaltyTier\" : \"").append(entity.getCsLoyaltyTierCode()).append("\" }");
 
 		return (buff.toString());
+	}
+	
+	@Override
+	@Transactional(readOnly = true, noRollbackFor = { javax.persistence.NoResultException.class })
+	public List<CustomerLoyaltyTierEntity> findByCustomerTierCode(String customerCode){
+		return customerLoyaltyTierRepository.findByCustomerTierCode(customerCode);
 	}
 
 	@Override
@@ -115,6 +122,19 @@ public class CustomerLoyaltyTierServiceImpl extends AbstractServiceImpl<Customer
 
 		}
 
+
+		List<CustomerLoyaltyTierEntity> customerLoyaltyTierEntityList = findByCustomerTierCode(entity.getCustomerCode());
+		if(!customerLoyaltyTierEntityList.isEmpty()){
+			CustomerLoyaltyTierEntity previousRecord = customerLoyaltyTierEntityList.get(0);
+			Calendar calendar = java.util.Calendar.getInstance();
+			calendar.setTime(previousRecord.getEndDate());
+			calendar.add(Calendar.DATE, -1);
+			
+			if(calendar.getTime().compareTo(entity.getStartDate()) !=0 ){
+				throw new EntityValidationException("should have an endDate 1 day less than the current record’s startDate");
+			}
+		}
+		
 		if (EntityVdationType.PRE_INSERT == type) {
 			entity.setStatus(ParticipationStatus.ACTIVE);
 			entity.setEndDate(null);

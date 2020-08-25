@@ -1,5 +1,6 @@
 package com.olp.jpa.domain.docu.llty.repo;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
 import com.olp.fwk.common.error.EntityValidationException;
 import com.olp.jpa.common.AbstractServiceImpl;
 import com.olp.jpa.common.CommonEnums.EntityVdationType;
@@ -35,6 +38,12 @@ public class ProgramTierServiceImpl extends AbstractServiceImpl<ProgramTierEntit
 	@Override
 	protected ITextRepository<ProgramTierEntity, Long> getTextRepository() {
 		return programTierRepository;
+	}
+	
+	@Transactional(readOnly = true, noRollbackFor = { javax.persistence.NoResultException.class })
+	public List<ProgramTierEntity> findAllSequencesByProgramCode(String programCode){
+		List<ProgramTierEntity> listOfProgramTiers = programTierRepository.findAllSequencesByProgramCode(programCode);
+		return listOfProgramTiers;
 	}
 
 	@Override
@@ -66,11 +75,9 @@ public class ProgramTierServiceImpl extends AbstractServiceImpl<ProgramTierEntit
 
 				entity.setProgramRef(lp2);
 				entity.setProgramCode(lp2.getProgramCode());
-
 			}
-
 		}
-
+		
 		if (EntityVdationType.PRE_INSERT == type) {
 			this.updateTenantWithRevision(entity);
 		} else if (EntityVdationType.PRE_UPDATE == type) {
@@ -203,6 +210,7 @@ public class ProgramTierServiceImpl extends AbstractServiceImpl<ProgramTierEntit
 			break;
 		case UPDATE:
 		case UPDATE_BULK:
+			preProcessUpdate(entity);
 			validate(entity, true, EntityVdationType.PRE_UPDATE);
 		case DELETE:
 		case DELETE_BULK:
@@ -217,15 +225,62 @@ public class ProgramTierServiceImpl extends AbstractServiceImpl<ProgramTierEntit
 	private void preProcessAdd(ProgramTierEntity entity) throws EntityValidationException {
 		validate(entity, false, EntityVdationType.PRE_INSERT);
 		this.updateTenantWithRevision(entity);
+		List<ProgramTierEntity> listOfProgramTiers = findAllSequencesByProgramCode(entity.getProgramCode());
+		if(!listOfProgramTiers.isEmpty()){
+			ProgramTierEntity programTierDb = listOfProgramTiers.get(0);
+			entity.setTierSequence(Math.addExact(programTierDb.getTierSequence(),10));
+		}else {
+			entity.setTierSequence(10);
+		}
+		try{
+			ProgramTierEntity programTierExists = findByTierCode(entity.getProgramCode(), entity.getTierCode());
+			if(!StringUtils.isEmpty(programTierExists)){
+				if(!entity.getEffectiveFrom().after(programTierExists.getEffectiveUpto())){
+					throw new EntityValidationException("There should not be overlap in tierPointFrom and tierPointTo");
+				}
+				if(!entity.getEffectiveUpto().after(entity.getEffectiveFrom())){
+					throw new EntityValidationException("There should not be overlap in tierPointFrom and tierPointTo");
+				}
+			}
+		}catch(javax.persistence.NoResultException ex){
+			//NO results
+		}
+		entity.setLifecycleStatus(LifecycleStatus.INACTIVE);
+	}
+	
+	private void preProcessUpdate(ProgramTierEntity entity) throws EntityValidationException {
+		validate(entity, false, EntityVdationType.PRE_UPDATE);
+		this.updateTenantWithRevision(entity);
+		List<ProgramTierEntity> listOfProgramTiers = findAllSequencesByProgramCode(entity.getProgramCode());
+		if(!listOfProgramTiers.isEmpty()){
+			ProgramTierEntity programTierDb = listOfProgramTiers.get(0);
+			entity.setTierSequence(Math.addExact(programTierDb.getTierSequence(),10));
+		}else {
+			entity.setTierSequence(10);
+		}
+		try{
+			ProgramTierEntity programTierExists = findByTierCode(entity.getProgramCode(), entity.getTierCode());
+			if(!StringUtils.isEmpty(programTierExists)){
+				if(!entity.getEffectiveFrom().after(programTierExists.getEffectiveUpto())){
+					throw new EntityValidationException("There should not be overlap in tierPointFrom and tierPointTo");
+				}
+				if(!entity.getEffectiveUpto().after(entity.getEffectiveFrom())){
+					throw new EntityValidationException("There should not be overlap in tierPointFrom and tierPointTo");
+				}
+			}
+		}catch(javax.persistence.NoResultException ex){
+			//NO results
+		}
+		entity.setLifecycleStatus(LifecycleStatus.INACTIVE);
 	}
 
 	private void preDelete(ProgramTierEntity entity) throws EntityValidationException {
-		if (entity.getProgramRef() != null) {
+		/*if (entity.getProgramRef() != null) {
 			LoyaltyProgramEntity loyaltyProgram = entity.getProgramRef();
 			if (!isPrivilegedContext() && loyaltyProgram.getLifecycleStatus() != LifecycleStatus.INACTIVE)
 				throw new EntityValidationException(
 						"Cannot delete programtier when programtier status is " + loyaltyProgram.getLifecycleStatus());
-		}
+		}*/
 	}
 
 }

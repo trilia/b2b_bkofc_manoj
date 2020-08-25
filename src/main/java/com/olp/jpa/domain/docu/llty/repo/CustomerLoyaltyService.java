@@ -15,4 +15,6 @@ public interface CustomerLoyaltyService extends IJpaService<CustomerLoyaltyEntit
 	public void validate(CustomerLoyaltyEntity entity, EntityVdationType type) throws EntityValidationException;
 
 	public List<CustomerLoyaltyEntity> findByCustProgCode(String customerCode, String programCode);
+	
+	public List<CustomerLoyaltyEntity> findByCustomerCode(String customerCode);
 }

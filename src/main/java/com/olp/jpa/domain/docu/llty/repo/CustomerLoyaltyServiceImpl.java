@@ -1,6 +1,7 @@
 package com.olp.jpa.domain.docu.llty.repo;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -62,6 +63,12 @@ public class CustomerLoyaltyServiceImpl extends AbstractServiceImpl<CustomerLoya
 	@Transactional(readOnly = true, noRollbackFor = { javax.persistence.NoResultException.class })
 	public List<CustomerLoyaltyEntity> findByCustProgCode(String customerCode, String programCode) {
 		return customerLoyaltyRepository.findByCustProgCode(customerCode, programCode);
+	}
+	
+	@Override
+	@Transactional(readOnly = true, noRollbackFor = { javax.persistence.NoResultException.class })
+	public List<CustomerLoyaltyEntity> findByCustomerCode(String customerCode){
+		return customerLoyaltyRepository.findByCustomerCode(customerCode);
 	}
 
 	@Override
@@ -143,10 +150,20 @@ public class CustomerLoyaltyServiceImpl extends AbstractServiceImpl<CustomerLoya
 			entity.setProgramRef(lp2);
 			entity.setProgramCode(lp2.getProgramCode());
 		}
+		
+		List<CustomerLoyaltyEntity> customerLoyaltyEntityList = findByCustomerCode(entity.getCustomerCode());
+		if(!customerLoyaltyEntityList.isEmpty()){
+			CustomerLoyaltyEntity previousRecord = customerLoyaltyEntityList.get(0);
+			Calendar calendar = java.util.Calendar.getInstance();
+			calendar.setTime(previousRecord.getEndDate());
+			calendar.add(Calendar.DATE, -1);
+			
+			if(calendar.getTime().compareTo(entity.getStartDate()) !=0 ){
+				throw new EntityValidationException("should have an endDate 1 day less than the current record’s startDate");
+			}
+		}
 
 		if (EntityVdationType.PRE_INSERT == type) {
-			entity.setStatus(ParticipationStatus.ACTIVE);
-			entity.setEndDate(null);
 			this.updateTenantWithRevision(entity);
 		} else if (EntityVdationType.PRE_UPDATE == type) {
 
@@ -173,6 +190,7 @@ public class CustomerLoyaltyServiceImpl extends AbstractServiceImpl<CustomerLoya
 		case UPDATE_BULK:
 		case DELETE:
 		case DELETE_BULK:
+			postProcess(entity);
 		default:
 			break;
 		}
@@ -621,7 +639,23 @@ public class CustomerLoyaltyServiceImpl extends AbstractServiceImpl<CustomerLoya
 
 	private void preProcessAdd(CustomerLoyaltyEntity entity) throws EntityValidationException {
 		validate(entity, EntityVdationType.PRE_INSERT);
+		entity.setStatus(ParticipationStatus.ACTIVE);
+		entity.setEndDate(null);
 		this.updateTenantWithRevision(entity);
+	}
+	
+	private void postProcess(CustomerLoyaltyEntity entity) throws EntityValidationException {
+		Calendar calendar = java.util.Calendar.getInstance();
+		calendar.add(Calendar.DATE, -1);
+		entity.setEndDate(calendar.getTime());
+		entity.setStatus(ParticipationStatus.INACTIVE);
+		
+		List<CustomerLoyaltyTierEntity> listOfLoyaltyTiers = entity.getCsLoyaltyTiers();
+		if(!listOfLoyaltyTiers.isEmpty()){
+			for(CustomerLoyaltyTierEntity customerLoyaltyTierEntity:listOfLoyaltyTiers){
+				customerLoyaltyTierEntity.setEndDate(calendar.getTime());
+			}
+		}		
 	}
 
 	private void preDelete(CustomerLoyaltyEntity entity) throws EntityValidationException {

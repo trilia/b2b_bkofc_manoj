@@ -38,7 +38,9 @@ import com.olp.jpa.domain.docu.llty.model.LoyaltyEnums.ParticipationStatus;
 @Table(name = "trl_cs_loyalty_tier", uniqueConstraints = @UniqueConstraint(columnNames = { "tenant_id",
 		"cs_loyalty_tier_code" }))
 @NamedQueries({
-		@NamedQuery(name = "CustomerLoyaltyTierEntity.findByCustTierCode", query = "SELECT t FROM CustomerLoyaltyTierEntity t WHERE t.programTierCode = :programCode and t.customerCode = :customerCode and t.tierCode = :tierCode and t.tenantId = :tenant ") })
+		@NamedQuery(name = "CustomerLoyaltyTierEntity.findByCustTierCode", query = "SELECT t FROM CustomerLoyaltyTierEntity t WHERE t.programTierCode = :programCode and t.customerCode = :customerCode and t.tierCode = :tierCode and t.tenantId = :tenant ") ,
+		@NamedQuery(name = "CustomerLoyaltyTierEntity.findByCustomerTierCode", query = "SELECT t FROM CustomerLoyaltyTierEntity t WHERE t.customerCode = :customerCode and t.tenantId = :tenant order by t.startDate ") ,
+		})
 @Cacheable(true)
 @Indexed(index = "SetupDataIndex")
 @MultiTenant(level = MultiTenant.Levels.ONE_TENANT)

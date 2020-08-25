@@ -53,6 +53,12 @@ public class CustomerLoyaltyTxnServiceImpl extends AbstractServiceImpl<CustomerL
 
 		return (buff.toString());
 	}
+	
+	@Override
+	public List<CustomerLoyaltyTxnEntity> findByCustomerCode(String customerCode){
+		List<CustomerLoyaltyTxnEntity> listOfCustomerLoyaltyTxns = customerLoyaltyTxnRepository.findByCustomerCode(customerCode);
+		return listOfCustomerLoyaltyTxns;
+	}
 
 	@Override
 	@Transactional(readOnly = true, noRollbackFor = { javax.persistence.NoResultException.class })
@@ -264,6 +270,12 @@ public class CustomerLoyaltyTxnServiceImpl extends AbstractServiceImpl<CustomerL
 	}
 
 	private void preProcessAdd(CustomerLoyaltyTxnEntity entity) throws EntityValidationException {
+		List<CustomerLoyaltyTxnEntity> listOfTxns = findByCustomerCode(entity.getCustomerCode());
+		if(!listOfTxns.isEmpty()){
+			CustomerLoyaltyTxnEntity customerEntityTxnLatest = listOfTxns.get(0);
+			entity.setTotalCreditPoints(customerEntityTxnLatest.getTotalCreditPoints().add(
+					entity.getCreditPoints()));
+		}
 		validate(entity, false, EntityVdationType.PRE_INSERT);
 		this.updateTenantWithRevision(entity);
 	}

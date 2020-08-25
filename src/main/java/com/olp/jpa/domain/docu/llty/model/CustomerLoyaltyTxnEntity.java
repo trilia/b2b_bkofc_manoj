@@ -36,7 +36,9 @@ import com.olp.jpa.domain.docu.llty.model.LoyaltyEnums.TxnType;
 @Entity
 @Table(name = "trl_cs_loyalty_txn", uniqueConstraints = @UniqueConstraint(columnNames = { "tenant_id", "txn_code" }))
 @NamedQueries({
-		@NamedQuery(name = "CustomerLoyaltyTxnEntity.findByCustProgCode", query = "SELECT t FROM CustomerLoyaltyTxnEntity t WHERE t.customerCode = :customerCode and t.txnDate between :toDate and :fromDate and t.tenantId = :tenant ") })
+		@NamedQuery(name = "CustomerLoyaltyTxnEntity.findByCustProgCode", query = "SELECT t FROM CustomerLoyaltyTxnEntity t WHERE t.customerCode = :customerCode and t.txnDate between :toDate and :fromDate and t.tenantId = :tenant "),
+		@NamedQuery(name = "CustomerLoyaltyTxnEntity.findByCustomerCode", query = "SELECT t FROM CustomerLoyaltyTxnEntity t WHERE t.customerCode = :customerCode and t.tenantId = :tenant order by t.id desc")
+		})
 @Cacheable(true)
 @Indexed(index = "SetupDataIndex")
 @MultiTenant(level = MultiTenant.Levels.ONE_TENANT)

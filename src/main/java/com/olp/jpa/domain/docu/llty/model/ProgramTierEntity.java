@@ -24,6 +24,7 @@ import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Fields;
+import org.hibernate.search.annotations.FullTextFilterDef;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
@@ -32,14 +33,16 @@ import org.hibernate.search.annotations.Store;
 import com.olp.annotations.KeyAttribute;
 import com.olp.annotations.MultiTenant;
 import com.olp.jpa.common.RevisionControlBean;
+import com.olp.jpa.common.TenantBasedSearchFilterFactory;
 import com.olp.jpa.domain.docu.llty.model.LoyaltyEnums.LifecycleStatus;
 
 @Entity
-@Table(name = "trl_program_tier", uniqueConstraints = @UniqueConstraint(columnNames = { "tenant_id",
-		"tier_code" }))
+@Table(name = "trl_program_tier"/*, uniqueConstraints = @UniqueConstraint(columnNames = { "tenant_id",
+		"tier_code" })*/)
 @NamedQueries({
-		@NamedQuery(name = "ProgramTierEntity.findByTierCode", query = "SELECT t FROM ProgramTierEntity t WHERE t.tierCode = :tierCode and t.programCode = :programCode and t.tenantId = :tenant "),
-		@NamedQuery(name = "ProgramTierEntity.findByTierSequence", query = "SELECT t FROM ProgramTierEntity t WHERE t.programCode = :programCode and t.tierSequence = :sequence and t.tenantId = :tenant ")	
+		@NamedQuery(name = "ProgramTierEntity.findByTierCode", query = "SELECT t FROM ProgramTierEntity t WHERE t.tierCode = :tierCode and t.programCode = :programCode and t.tenantId = :tenantId "),
+		@NamedQuery(name = "ProgramTierEntity.findByTierSequence", query = "SELECT t FROM ProgramTierEntity t WHERE t.programCode = :programCode and t.tierSequence = :sequence and t.tenantId = :tenantId "),
+		@NamedQuery(name = "ProgramTierEntity.findAllSequencesByProgramCode", query = "SELECT t FROM ProgramTierEntity t WHERE t.programCode = :programCode and t.tenantId = :tenantId order by t.tierPointFrom desc")		
 })
 @Cacheable(true)
 @Indexed(index = "SetupDataIndex")
@@ -390,6 +393,7 @@ public class ProgramTierEntity implements Serializable {
 		bean.setSpendConvRate(spendConvRate);
 		bean.setTenantId(tenantId);
 		bean.setTierCode(tierCode);
+		bean.setTierName(tierName);
 		bean.setTierPointFrom(tierPointFrom);
 		bean.setTierPointUpto(tierPointUpto);
 		bean.setTierSequence(tierSequence);

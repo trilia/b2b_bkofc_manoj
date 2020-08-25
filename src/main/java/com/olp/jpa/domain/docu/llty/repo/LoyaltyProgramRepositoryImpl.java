@@ -25,7 +25,7 @@ public class LoyaltyProgramRepositoryImpl extends AbstractRepositoryImpl<Loyalty
         
         TypedQuery<LoyaltyProgramEntity> query = getEntityManager().createNamedQuery("LoyaltyProgramEntity.findByProgramCode", LoyaltyProgramEntity.class);
         query.setParameter("programCode", programCode);
-        query.setParameter("tenant", tid);
+        query.setParameter("tenantId", tid);
         LoyaltyProgramEntity bean = query.getSingleResult();
         
         return(bean);
