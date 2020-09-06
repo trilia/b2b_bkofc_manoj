@@ -33,7 +33,7 @@ public class CustomerLoyaltyRepositoryImpl extends AbstractRepositoryImpl<Custom
 		IContext ctx = ContextManager.getContext();
         String tid = ctx.getTenantId();
         
-        TypedQuery<CustomerLoyaltyEntity> query = getEntityManager().createNamedQuery("CustomerLoyaltyEntity.findByCustProgCode", CustomerLoyaltyEntity.class);
+        TypedQuery<CustomerLoyaltyEntity> query = getEntityManager().createNamedQuery("CustomerLoyaltyEntity.findByCustomerCode", CustomerLoyaltyEntity.class);
         query.setParameter("customerCode", customerCode);
         query.setParameter("tenant", tid);
         List<CustomerLoyaltyEntity> bean = query.getResultList();

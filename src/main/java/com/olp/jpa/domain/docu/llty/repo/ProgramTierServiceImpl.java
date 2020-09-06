@@ -160,8 +160,8 @@ public class ProgramTierServiceImpl extends AbstractServiceImpl<ProgramTierEntit
 
 	@Override
 	@Transactional(readOnly = true, noRollbackFor = { javax.persistence.NoResultException.class })
-	public ProgramTierEntity findByTierCode(String programCode, String tierCode) {
-		return programTierRepository.findByTierCode(programCode, tierCode);
+	public ProgramTierEntity findByTierCode( String tierCode) {
+		return programTierRepository.findByTierCode( tierCode);
 	}
 
 	@Override
@@ -233,13 +233,13 @@ public class ProgramTierServiceImpl extends AbstractServiceImpl<ProgramTierEntit
 			entity.setTierSequence(10);
 		}
 		try{
-			ProgramTierEntity programTierExists = findByTierCode(entity.getProgramCode(), entity.getTierCode());
+			ProgramTierEntity programTierExists = findByTierCode(/*entity.getProgramCode(),*/ entity.getTierCode());
 			if(!StringUtils.isEmpty(programTierExists)){
 				if(!entity.getEffectiveFrom().after(programTierExists.getEffectiveUpto())){
-					throw new EntityValidationException("There should not be overlap in tierPointFrom and tierPointTo");
+					//throw new EntityValidationException("There should not be overlap in tierPointFrom and tierPointTo");
 				}
 				if(!entity.getEffectiveUpto().after(entity.getEffectiveFrom())){
-					throw new EntityValidationException("There should not be overlap in tierPointFrom and tierPointTo");
+					//throw new EntityValidationException("There should not be overlap in tierPointFrom and tierPointTo");
 				}
 			}
 		}catch(javax.persistence.NoResultException ex){
@@ -259,13 +259,13 @@ public class ProgramTierServiceImpl extends AbstractServiceImpl<ProgramTierEntit
 			entity.setTierSequence(10);
 		}
 		try{
-			ProgramTierEntity programTierExists = findByTierCode(entity.getProgramCode(), entity.getTierCode());
+			ProgramTierEntity programTierExists = findByTierCode(entity.getTierCode());
 			if(!StringUtils.isEmpty(programTierExists)){
 				if(!entity.getEffectiveFrom().after(programTierExists.getEffectiveUpto())){
-					throw new EntityValidationException("There should not be overlap in tierPointFrom and tierPointTo");
+					//throw new EntityValidationException("There should not be overlap in tierPointFrom and tierPointTo");
 				}
 				if(!entity.getEffectiveUpto().after(entity.getEffectiveFrom())){
-					throw new EntityValidationException("There should not be overlap in tierPointFrom and tierPointTo");
+					//throw new EntityValidationException("There should not be overlap in tierPointFrom and tierPointTo");
 				}
 			}
 		}catch(javax.persistence.NoResultException ex){

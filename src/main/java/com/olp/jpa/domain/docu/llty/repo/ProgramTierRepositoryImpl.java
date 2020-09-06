@@ -16,12 +16,12 @@ public class ProgramTierRepositoryImpl extends AbstractRepositoryImpl<ProgramTie
 
 	@Override
 	@Transactional(readOnly=true)
-	public ProgramTierEntity findByTierCode(String programCode, String tierCode) {
+	public ProgramTierEntity findByTierCode( String tierCode) {
 		IContext ctx = ContextManager.getContext();
         String tid = ctx.getTenantId();
         
         TypedQuery<ProgramTierEntity> query = getEntityManager().createNamedQuery("ProgramTierEntity.findByTierCode", ProgramTierEntity.class);
-        query.setParameter("programCode", programCode);
+        //query.setParameter("programCode", programCode);
         query.setParameter("tierCode", tierCode);
         query.setParameter("tenantId", tid);
         ProgramTierEntity bean = query.getSingleResult();
@@ -38,6 +38,20 @@ public class ProgramTierRepositoryImpl extends AbstractRepositoryImpl<ProgramTie
         TypedQuery<ProgramTierEntity> query = getEntityManager().createNamedQuery("ProgramTierEntity.findByTierSequence", ProgramTierEntity.class);
         query.setParameter("programCode", programCode);
         query.setParameter("sequence", sequence);
+        query.setParameter("tenantId", tid);
+        ProgramTierEntity bean = query.getSingleResult();
+        
+        return bean;
+	}
+	
+	@Override
+	@Transactional(readOnly=true)
+	public ProgramTierEntity findByProgramCode(String programCode) {
+		IContext ctx = ContextManager.getContext();
+        String tid = ctx.getTenantId();
+        
+        TypedQuery<ProgramTierEntity> query = getEntityManager().createNamedQuery("ProgramTierEntity.findByProgramCode", ProgramTierEntity.class);
+        query.setParameter("programCode", programCode);
         query.setParameter("tenantId", tid);
         ProgramTierEntity bean = query.getSingleResult();
         

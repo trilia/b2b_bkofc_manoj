@@ -213,7 +213,7 @@ public class CustomerLoyaltyTier implements Serializable {
 		bean.setEndDate(endDate);
 		bean.setId(id);
 		ProgramTierEntity programTierEntity = new ProgramTierEntity();
-		programTierEntity.setProgramCode(programTierRef);
+		programTierEntity.setTierCode(programTierRef);
 		bean.setProgramTierRef(programTierEntity);
 		bean.setRevisionControl(revisionControl);
 		bean.setStartDate(startDate);

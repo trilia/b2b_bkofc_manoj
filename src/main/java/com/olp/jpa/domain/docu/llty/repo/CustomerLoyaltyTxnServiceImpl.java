@@ -281,8 +281,8 @@ public class CustomerLoyaltyTxnServiceImpl extends AbstractServiceImpl<CustomerL
 	}
 
 	private void preDelete(CustomerLoyaltyTxnEntity entity) throws EntityValidationException {
-		if (!isPrivilegedContext())
+		/*if (!isPrivilegedContext())
 			throw new EntityValidationException(
-					"Cannot delete customerLoyaltyTxn when txn code is " + entity.getTxnCode());
+					"Cannot delete customerLoyaltyTxn when txn code is " + entity.getTxnCode());*/
 	}
 }

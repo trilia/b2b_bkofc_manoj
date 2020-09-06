@@ -44,7 +44,7 @@ import com.olp.jpa.domain.docu.llty.model.LoyaltyEnums.TierValidity;
 @Table(name = "trl_loyalty_program", uniqueConstraints = @UniqueConstraint(columnNames = { "tenant_id",
 		"program_code" }))
 @NamedQueries({
-		@NamedQuery(name = "LoyaltyProgramEntity.findbyCategoryCode", query = "SELECT t FROM LoyaltyProgramEntity t WHERE t.programCode = :programCode and t.tenantId = :tenantId ") })
+		@NamedQuery(name = "LoyaltyProgramEntity.findByProgramCode", query = "SELECT t FROM LoyaltyProgramEntity t WHERE t.programCode = :programCode and t.tenantId = :tenantId ") })
 @Cacheable(true)
 @Indexed(index = "SetupDataIndex")
 @MultiTenant(level = MultiTenant.Levels.ONE_TENANT)

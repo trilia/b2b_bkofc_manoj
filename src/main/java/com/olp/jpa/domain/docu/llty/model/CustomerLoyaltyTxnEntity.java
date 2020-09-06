@@ -36,8 +36,8 @@ import com.olp.jpa.domain.docu.llty.model.LoyaltyEnums.TxnType;
 @Entity
 @Table(name = "trl_cs_loyalty_txn", uniqueConstraints = @UniqueConstraint(columnNames = { "tenant_id", "txn_code" }))
 @NamedQueries({
-		@NamedQuery(name = "CustomerLoyaltyTxnEntity.findByCustProgCode", query = "SELECT t FROM CustomerLoyaltyTxnEntity t WHERE t.customerCode = :customerCode and t.txnDate between :toDate and :fromDate and t.tenantId = :tenant "),
-		@NamedQuery(name = "CustomerLoyaltyTxnEntity.findByCustomerCode", query = "SELECT t FROM CustomerLoyaltyTxnEntity t WHERE t.customerCode = :customerCode and t.tenantId = :tenant order by t.id desc")
+		@NamedQuery(name = "CustomerLoyaltyTxnEntity.findByCustProgCode", query = "SELECT t FROM CustomerLoyaltyTxnEntity t WHERE t.customerCode = :customerCode and t.txnDate between :toDate and :fromDate and t.tenantId = :tenantId "),
+		@NamedQuery(name = "CustomerLoyaltyTxnEntity.findByCustomerCode", query = "SELECT t FROM CustomerLoyaltyTxnEntity t WHERE t.customerCode = :customerCode and t.tenantId = :tenantId order by t.id desc")
 		})
 @Cacheable(true)
 @Indexed(index = "SetupDataIndex")
@@ -60,7 +60,7 @@ public class CustomerLoyaltyTxnEntity implements Serializable {
 	@Fields({ @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO) })
 	private String txnCode;
 
-	@ManyToOne
+	@ManyToOne(optional=true)
 	@JoinColumn(name = "cs_loyalty_ref")
 	@ContainedIn
 	private CustomerLoyaltyEntity csLoyaltyRef;
@@ -392,7 +392,6 @@ public class CustomerLoyaltyTxnEntity implements Serializable {
 		bean.setCsLoyaltyRef(csLoyaltyRef.getCsLoyaltyCode());
 		bean.setDescription(description);
 		bean.setId(id);
-		bean.setCsLoyaltyRef(csLoyaltyRef.getCustomerCode());
 		bean.setRevisionControl(revisionControl);
 		bean.setTenantId(tenantId);
 		bean.setTotalCreditPoints(totalCreditPoints);

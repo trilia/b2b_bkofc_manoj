@@ -40,7 +40,8 @@ import com.olp.jpa.domain.docu.llty.model.LoyaltyEnums.LifecycleStatus;
 @Table(name = "trl_program_tier"/*, uniqueConstraints = @UniqueConstraint(columnNames = { "tenant_id",
 		"tier_code" })*/)
 @NamedQueries({
-		@NamedQuery(name = "ProgramTierEntity.findByTierCode", query = "SELECT t FROM ProgramTierEntity t WHERE t.tierCode = :tierCode and t.programCode = :programCode and t.tenantId = :tenantId "),
+		@NamedQuery(name = "ProgramTierEntity.findByTierCode", query = "SELECT t FROM ProgramTierEntity t WHERE t.tierCode = :tierCode and t.tenantId = :tenantId "),
+		@NamedQuery(name = "ProgramTierEntity.findByProgramCode", query = "SELECT t FROM ProgramTierEntity t WHERE t.programCode = :programCode and t.tenantId = :tenantId "),
 		@NamedQuery(name = "ProgramTierEntity.findByTierSequence", query = "SELECT t FROM ProgramTierEntity t WHERE t.programCode = :programCode and t.tierSequence = :sequence and t.tenantId = :tenantId "),
 		@NamedQuery(name = "ProgramTierEntity.findAllSequencesByProgramCode", query = "SELECT t FROM ProgramTierEntity t WHERE t.programCode = :programCode and t.tenantId = :tenantId order by t.tierPointFrom desc")		
 })

@@ -25,7 +25,7 @@ public class CustomerLoyaltyTierRepositoryImpl extends AbstractRepositoryImpl<Cu
 		query.setParameter("customerCode", customerCode);
 		query.setParameter("programCode", programCode);
 		query.setParameter("tierCode", tierCode);
-		query.setParameter("tenant", tid);
+		query.setParameter("tenantId", tid);
 		List<CustomerLoyaltyTierEntity> bean = query.getResultList();
 
 		return (bean);
@@ -40,7 +40,7 @@ public class CustomerLoyaltyTierRepositoryImpl extends AbstractRepositoryImpl<Cu
 		TypedQuery<CustomerLoyaltyTierEntity> query = getEntityManager()
 				.createNamedQuery("CustomerLoyaltyTierEntity.findByCustomerTierCode", CustomerLoyaltyTierEntity.class);
 		query.setParameter("customerCode", customerCode);
-		query.setParameter("tenant", tid);
+		query.setParameter("tenantId", tid);
 		List<CustomerLoyaltyTierEntity> bean = query.getResultList();
 
 		return (bean);
