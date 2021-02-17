@@ -158,9 +158,9 @@ public class CustomerLoyaltyServiceImpl extends AbstractServiceImpl<CustomerLoya
 			calendar.setTime(previousRecord.getEndDate());
 			calendar.add(Calendar.DATE, -1);
 			
-			if(calendar.getTime().compareTo(entity.getStartDate()) !=0 ){
+			/*if(calendar.getTime().compareTo(entity.getStartDate()) !=0 ){
 				throw new EntityValidationException("should have an endDate 1 day less than the current record’s startDate");
-			}
+			}*/
 		}
 
 		if (EntityVdationType.PRE_INSERT == type) {
@@ -263,7 +263,7 @@ public class CustomerLoyaltyServiceImpl extends AbstractServiceImpl<CustomerLoya
 						deletedCustomerLoyaltyTiers.add(oldCustomerLoyaltyTier.getId());
 					} else {
 						throw new EntityValidationException(
-								"Cannot delete CustomerLoyaltyTiers  " + oldCustomerLoyaltyTier.getTierCode());
+								"Cannot delete CustomerLoyaltyTiers  " + oldCustomerLoyaltyTier.getCsLoyaltyTierCode());
 					}
 
 				}
@@ -659,8 +659,8 @@ public class CustomerLoyaltyServiceImpl extends AbstractServiceImpl<CustomerLoya
 	}
 
 	private void preDelete(CustomerLoyaltyEntity entity) throws EntityValidationException {
-		if (!isPrivilegedContext())
-			throw new EntityValidationException("Cannot delete customerLoyal when state is " + entity.getStatus());
+		/*if (!isPrivilegedContext())
+			throw new EntityValidationException("Cannot delete customerLoyal when state is " + entity.getStatus());*/
 	}
 
 }

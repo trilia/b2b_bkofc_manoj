@@ -92,7 +92,7 @@ public class CustomerLoyaltyEntity implements Serializable {
 	@Fields({ @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO) })
 	private Date startDate;
 	
-	@Column(name = "end_date", nullable = false)
+	@Column(name = "end_date", nullable = true)
 	@Fields({ @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO) })
 	private Date endDate;
 	

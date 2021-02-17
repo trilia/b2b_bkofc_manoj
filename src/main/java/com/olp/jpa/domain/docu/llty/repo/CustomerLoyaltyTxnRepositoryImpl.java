@@ -24,7 +24,7 @@ public class CustomerLoyaltyTxnRepositoryImpl extends AbstractRepositoryImpl<Cus
         query.setParameter("customerCode", customerCode);
         query.setParameter("fromDate", fromDate);
         query.setParameter("toDate", toDate);
-        query.setParameter("tenant", tid);
+        query.setParameter("tenantId", tid);
         List<CustomerLoyaltyTxnEntity> bean = query.getResultList();
         
         return(bean);
@@ -38,7 +38,7 @@ public class CustomerLoyaltyTxnRepositoryImpl extends AbstractRepositoryImpl<Cus
         
         TypedQuery<CustomerLoyaltyTxnEntity> query = getEntityManager().createNamedQuery("CustomerLoyaltyTxnEntity.findByCustomerCode", CustomerLoyaltyTxnEntity.class);
         query.setParameter("customerCode", customerCode);
-        query.setParameter("tenant", tid);
+        query.setParameter("tenantId", tid);
         List<CustomerLoyaltyTxnEntity> bean = query.getResultList();
         
         return(bean);

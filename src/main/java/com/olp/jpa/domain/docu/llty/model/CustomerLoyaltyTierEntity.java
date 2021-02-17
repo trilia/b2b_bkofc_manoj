@@ -38,8 +38,8 @@ import com.olp.jpa.domain.docu.llty.model.LoyaltyEnums.ParticipationStatus;
 @Table(name = "trl_cs_loyalty_tier", uniqueConstraints = @UniqueConstraint(columnNames = { "tenant_id",
 		"cs_loyalty_tier_code" }))
 @NamedQueries({
-		@NamedQuery(name = "CustomerLoyaltyTierEntity.findByCustTierCode", query = "SELECT t FROM CustomerLoyaltyTierEntity t WHERE t.programTierCode = :programCode and t.customerCode = :customerCode and t.tierCode = :tierCode and t.tenantId = :tenant ") ,
-		@NamedQuery(name = "CustomerLoyaltyTierEntity.findByCustomerTierCode", query = "SELECT t FROM CustomerLoyaltyTierEntity t WHERE t.customerCode = :customerCode and t.tenantId = :tenant order by t.startDate ") ,
+		@NamedQuery(name = "CustomerLoyaltyTierEntity.findByCustTierCode", query = "SELECT t FROM CustomerLoyaltyTierEntity t WHERE t.programTierCode = :programCode and t.customerCode = :customerCode and t.csLoyaltyTierCode = :tierCode and t.tenantId = :tenantId ") ,
+		@NamedQuery(name = "CustomerLoyaltyTierEntity.findByCustomerTierCode", query = "SELECT t FROM CustomerLoyaltyTierEntity t WHERE t.customerCode = :customerCode and t.tenantId = :tenantId order by t.startDate ") ,
 		})
 @Cacheable(true)
 @Indexed(index = "SetupDataIndex")
@@ -58,15 +58,11 @@ public class CustomerLoyaltyTierEntity implements Serializable {
 	@Fields({ @Field(analyze = Analyze.NO, store = Store.YES) })
 	private String tenantId;
 
-	@Column(name = "tier_code", nullable = false)
-	@Fields({ @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO) })
-	private String tierCode;
-
 	@Column(name = "cs_loyalty_tier_code", nullable = false)
 	@Fields({ @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO) })
 	private String csLoyaltyTierCode;
 
-	@ManyToOne
+	@ManyToOne(optional=true)
 	@JoinColumn(name = "cs_loyalty_ref")
 	@ContainedIn
 	private CustomerLoyaltyEntity csLoyaltyRef;
@@ -92,7 +88,7 @@ public class CustomerLoyaltyTierEntity implements Serializable {
 	@Fields({ @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO) })
 	private Date startDate;
 
-	@Column(name = "end_date", nullable = false)
+	@Column(name = "end_date", nullable = true)
 	@Fields({ @Field(index = Index.YES, analyze = Analyze.NO, store = Store.NO) })
 	private Date endDate;
 
@@ -133,21 +129,6 @@ public class CustomerLoyaltyTierEntity implements Serializable {
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
-	}
-
-	/**
-	 * @return the tierCode
-	 */
-	public String getTierCode() {
-		return tierCode;
-	}
-
-	/**
-	 * @param tierCode
-	 *            the tierCode to set
-	 */
-	public void setTierCode(String tierCode) {
-		this.tierCode = tierCode;
 	}
 
 	/**
@@ -307,7 +288,7 @@ public class CustomerLoyaltyTierEntity implements Serializable {
 		bean.setCustomerCode(customerCode);
 		bean.setEndDate(endDate);
 		bean.setId(id);
-		bean.setProgramTierRef(programTierRef.getProgramCode());
+		bean.setProgramTierRef(programTierRef.getTierCode());
 		bean.setRevisionControl(revisionControl);
 		bean.setStartDate(startDate);
 		bean.setStatus(status);

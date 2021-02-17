@@ -327,11 +327,13 @@ public class CustomerLoyalty implements Serializable {
 		LoyaltyProgramEntity loyaltyProgramEntity = new LoyaltyProgramEntity();
 		loyaltyProgramEntity.setProgramCode(programRef);
 		bean.setProgramRef(loyaltyProgramEntity);
+		bean.setProgramCode(programRef);
 		bean.setRedeemedCredit(redeemedCredit);
 		bean.setRevisionControl(revisionControl);
 		bean.setStartDate(startDate);
 		bean.setStatus(status);
 		bean.setTenantId(tenantId);
+		bean.setTotalCredit(totalCredit);
 
 		return bean;
 	}

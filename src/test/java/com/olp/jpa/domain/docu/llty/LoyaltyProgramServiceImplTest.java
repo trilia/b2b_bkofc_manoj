@@ -1,4 +1,4 @@
-package com.olp.jpa.domain.docu.llty;
+package com.olp.jpa.domain.docu.llty.repo;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -53,7 +53,7 @@ public class LoyaltyProgramServiceImplTest extends BaseSpringAwareTest{
 	}
 
 	@Test
-	public void updateAccountCategory(){
+	public void updateLoyaltyProgram(){
 		List<LoyaltyProgramEntity> loyaltyPrograms = loyaltyProgramService.findAll();
 		LoyaltyProgram loyaltyProgram = loyaltyPrograms.get(0).convertTo(0);
 		

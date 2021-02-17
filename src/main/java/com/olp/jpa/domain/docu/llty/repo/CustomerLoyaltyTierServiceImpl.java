@@ -100,7 +100,7 @@ public class CustomerLoyaltyTierServiceImpl extends AbstractServiceImpl<Customer
 
 				if (pt.getId() == null) {
 					try {
-						pt2 = programTierRepository.findByTierCode(pt.getProgramCode(), pt.getTierCode());
+						pt2 = programTierRepository.findByTierCode(pt.getTierCode());
 					} catch (javax.persistence.NoResultException ex) {
 						throw new EntityValidationException(
 								"Could not find ProgramTier with program code - " + pt.getProgramCode());
@@ -117,7 +117,7 @@ public class CustomerLoyaltyTierServiceImpl extends AbstractServiceImpl<Customer
 					throw new EntityValidationException("Could not find ProgramTier using either code or id !");
 
 				entity.setProgramTierRef(pt2);
-				entity.setProgramTierCode(pt2.getProgramCode());
+				entity.setProgramTierCode(pt2.getTierCode());
 			}
 
 		}
@@ -131,7 +131,7 @@ public class CustomerLoyaltyTierServiceImpl extends AbstractServiceImpl<Customer
 			calendar.add(Calendar.DATE, -1);
 			
 			if(calendar.getTime().compareTo(entity.getStartDate()) !=0 ){
-				throw new EntityValidationException("should have an endDate 1 day less than the current record’s startDate");
+				//throw new EntityValidationException("should have an endDate 1 day less than the current record’s startDate");
 			}
 		}
 		
@@ -161,8 +161,7 @@ public class CustomerLoyaltyTierServiceImpl extends AbstractServiceImpl<Customer
 				|| !Objects.equals(neu.getEndDate(), old.getEndDate())
 				|| !Objects.equals(neu.getProgramTierCode(), old.getProgramTierCode())
 				|| !Objects.equals(neu.getStartDate(), old.getStartDate())
-				|| !Objects.equals(neu.getStatus(), old.getStatus())
-				|| !Objects.equals(neu.getTierCode(), old.getTierCode())) {
+				|| !Objects.equals(neu.getStatus(), old.getStatus())) {
 			result = true;
 		}
 
@@ -217,7 +216,6 @@ public class CustomerLoyaltyTierServiceImpl extends AbstractServiceImpl<Customer
 			old.setProgramTierRef(neu.getProgramTierRef());
 			old.setStartDate(neu.getStartDate());
 			old.setStatus(neu.getStatus());
-			old.setTierCode(neu.getTierCode());
 
 			JpaUtil.updateRevisionControl(old, true);
 		}
@@ -275,13 +273,13 @@ public class CustomerLoyaltyTierServiceImpl extends AbstractServiceImpl<Customer
 	}
 
 	private void preDelete(CustomerLoyaltyTierEntity entity) throws EntityValidationException {
-		if (entity.getCsLoyaltyRef() != null) {
+		/*if (entity.getCsLoyaltyRef() != null) {
 			CustomerLoyaltyEntity customerLoyalty = entity.getCsLoyaltyRef();
 			if (!isPrivilegedContext())
 				throw new EntityValidationException(
 						"Cannot delete CustomerLoyaltyTier when CustomerLoyaltyTierEntity status is "
 								+ customerLoyalty.getStatus());
-		}
+		}*/
 	}
 
 }

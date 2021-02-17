@@ -17,7 +17,7 @@ public interface ProgramTierService extends IJpaService<ProgramTierEntity, Long>
 	public boolean checkForUpdate(ProgramTierEntity newprogramTierEntity,
 			ProgramTierEntity oldprogramTierEntity);
 	
-	public ProgramTierEntity findByTierCode(String programCode, String tierCode);
+	public ProgramTierEntity findByTierCode(String tierCode);
 
 	public ProgramTierEntity findByTierSequence(String programCode, int sequence);
 	
